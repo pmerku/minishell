@@ -72,7 +72,7 @@ $(NAME): $(addprefix $(OUT_DIR)/,$(OBJ))
 	@ar rc $(NAME) $(addprefix $(OUT_DIR)/,$(OBJ))
 	@ranlib $(NAME)
 
-$(OUT_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS) $(LIBMLX)
+$(OUT_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
 	@echo "$(PREFIX)$(GREEN)Compiling file $(END)$< $(GREEN)to $(END)$@"
 	@mkdir -p $(dir $@)
 	@$(CC) $(COMPILE_FLAGS) $(DEBUG_FLAG) -I./incl/ -c -o $@ $<
