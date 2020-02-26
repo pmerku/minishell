@@ -20,14 +20,13 @@ DEBUG_FLAG		= -O3
 # Files
 SRC_DIR			= src
 OUT_DIR			= out
-SRC				= ft_strcpy.c ft_min.c ft_dabs.c ft_hash_g1.c ft_hash_g2.c \
-	ft_hash_ints.c ft_max.c ft_abs.c ft_strchr.c ft_strip_chars.c \
+SRC				= ft_strcpy.c ft_min.c ft_dabs.c \
+	ft_max.c ft_abs.c ft_strchr.c ft_strip_chars.c \
 	ft_nullcheck.c ft_checked_malloc.c ft_checked_calloc.c ft_strarr_append.c \
 	ft_strdup.c ft_strempty.c ft_strtrim.c ft_calloc.c ft_isdigit.c ft_atoi.c \
 	ft_bzero.c ft_free.c ft_malloc.c ft_memset.c ft_split.c ft_strcmp.c \
-	ft_strdup.c ft_strlen.c get_next_line.c get_next_line_utils.c \
-	ft_strends_with.c ft_isspace.c ft_stris_empty.c ft_strarr_free.c \
-	ft_nsplit.c ft_exit.c ft_err_exit.c ft_strarr_size.c ft_substr.c
+	ft_strdup.c ft_strlen.c ft_strends_with.c ft_isspace.c ft_stris_empty.c \
+	ft_strarr_free.c ft_nsplit.c ft_exit.c ft_strarr_size.c ft_substr.c
 SRC				+= printf/ft_eprintf.c printf/ft_fprintf.c \
 	printf/ft_vfprintf.c printf/ft_vprintf.c printf/spec/spec_base.c \
 	printf/spec/spec_charsprinted.c printf/spec/spec_ptr.c \
@@ -72,7 +71,7 @@ $(NAME): $(addprefix $(OUT_DIR)/,$(OBJ))
 $(OUT_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS) $(LIBMLX)
 	@echo "$(PREFIX)$(GREEN)Compiling file $(END)$< $(GREEN)to $(END)$@"
 	@mkdir -p $(dir $@)
-	@$(CC) $(COMPILE_FLAGS) $(DEBUG_FLAG) -I./incl/ -o -c $@ $<
+	@$(CC) $(COMPILE_FLAGS) $(DEBUG_FLAG) -I./incl/ -c -o $@ $<
 
 clean:
 	@echo "$(PREFIX)$(GREEN)Removing directory $(END)$(OUT_DIR)"

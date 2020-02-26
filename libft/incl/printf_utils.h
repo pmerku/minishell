@@ -13,8 +13,8 @@
 #ifndef PRINTF_UTILS_H
 # define PRINTF_UTILS_H
 
-# include <stdarg.h>
 # include <stddef.h>
+# include <stdarg.h>
 
 enum				e_length
 {
@@ -26,7 +26,7 @@ enum				e_length
 	j,
 	t,
 	z,
-	q
+	q,
 };
 
 typedef struct		s_buf_fd

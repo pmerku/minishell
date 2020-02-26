@@ -18,9 +18,9 @@ char	*ft_substr(const char *s, unsigned int start, size_t len)
 	char			*block;
 	unsigned int	i;
 
-	if (len == 0 || start < 0 || start > ft_strlen(s))
+	if (len == 0 || start > ft_strlen(s))
 		return (ft_strempty());
-	if (len < 0 || s == NULL)
+	if (s == NULL)
 		return (NULL);
 	if (len > ft_strlen(s) - start)
 		len = ft_strlen(s) - start;

@@ -12,13 +12,18 @@
 
 #include <unistd.h>
 #include <printf_utils.h>
+#include <stdlib.h>
 
 void	buf_fd_flush(void *raw)
 {
 	t_buf_fd *buf;
 
 	buf = raw;
-	write(buf->fd, buf->buf, buf->offset);
+	ssize_t result = write(buf->fd, buf->buf, buf->offset);
+	if (result == -1)
+	{
+		exit(1);
+	}
 	buf->printed += buf->offset;
 	buf->offset = 0;
 }
