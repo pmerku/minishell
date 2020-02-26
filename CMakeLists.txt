@@ -26,6 +26,14 @@ add_executable(minishell
         libft/src/printf/buf/fd/buf_fd_putstr.c
         libft/src/printf/buf/fd/buf_fd_putstri.c
         libft/src/printf/buf/fd/buf_fd_reset.c
+        libft/src/printf/buf/str/buf_str_chars_printed.c
+        libft/src/printf/buf/str/buf_str_create.c
+        libft/src/printf/buf/str/buf_str_flush.c
+        libft/src/printf/buf/str/buf_str_putchar.c
+        libft/src/printf/buf/str/buf_str_putchars.c
+        libft/src/printf/buf/str/buf_str_putstr.c
+        libft/src/printf/buf/str/buf_str_putstri.c
+        libft/src/printf/buf/str/buf_str_reset.c
         libft/src/printf/buf/buf_chars_printed.c
         libft/src/printf/buf/buf_flush.c
         libft/src/printf/buf/buf_putchar.c
@@ -83,4 +91,4 @@ add_executable(minishell
         libft/src/ft_stris_empty.c
         libft/src/ft_strlen.c
         libft/src/ft_strtrim.c
-        libft/src/ft_substr.c)
+        libft/src/ft_substr.c libft/src/printf/ft_snprintf.c)

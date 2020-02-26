@@ -14,6 +14,7 @@
 # define PRINTF_H
 
 # include <stdarg.h>
+# include <stddef.h>
 
 /*
 ** Performs a printf, writing the output to STDOUT
@@ -44,5 +45,21 @@ int		ft_vprintf(const char *str, va_list arg);
 ** function in your project.
 */
 void	ft_eprintf(int code, const char *str, ...);
+
+/*
+** Performs a formatted print, writing to a string. The string will always be
+** null-terminated. The print will continue running, even if there is no space
+** left in the string. Characters that do not fit in the string anymore will not
+** be printed, though.
+**
+** The entire string will be used, and null-terminated at the last character.
+** This means that in reality, `size - 1` characters can be printed to the
+** buffer, since the last byte is reserved for the null terminator.
+**
+** The unsafe counterpart, sprintf, is not added to this library for very
+** obvious reasons. We don't want you to cause segfaults and risk having a
+** buffer overflow vulnerability.
+*/
+int		ft_snprintf(char *str, size_t size, const char *fmt, ...);
 
 #endif

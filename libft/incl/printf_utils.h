@@ -39,6 +39,13 @@ typedef struct		s_buf_fd
 	size_t			total_written;
 }					t_buf_fd;
 
+typedef struct		s_buf_str
+{
+	size_t			offset;
+	char			*out;
+	size_t			buf_size;
+}					t_buf_str;
+
 struct				s_col_combo
 {
 	char			key;
@@ -115,6 +122,19 @@ void				buf_fd_putchar(void *buf, char c);
 void				buf_fd_putchars(void *buf, char c, size_t n);
 void				buf_fd_flush(void *buf);
 int					buf_fd_chars_printed(void *buf);
+
+/*
+** String buffer implementation
+*/
+void				buf_str_create(t_buf *buf, t_buf_str *str_buf, char *str,
+		size_t buf_size);
+void				buf_str_reset(void *buf);
+void				buf_str_putstr(void *buf, char *s);
+void				buf_str_putstri(void *buf, char *s, size_t n);
+void				buf_str_putchar(void *buf, char c);
+void				buf_str_putchars(void *buf, char c, size_t n);
+void				buf_str_flush(void *buf);
+int					buf_str_chars_printed(void *buf);
 
 /*
 ** Format reading

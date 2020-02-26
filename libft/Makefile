@@ -41,8 +41,12 @@ SRC				+= printf/ft_eprintf.c printf/ft_fprintf.c \
 	printf/buf/fd/buf_fd_putchar.c printf/buf/fd/buf_fd_putchars.c \
 	printf/buf/fd/buf_fd_putstr.c printf/buf/fd/buf_fd_putstri.c \
 	printf/buf/fd/buf_fd_reset.c printf/buf/fd/buf_fd_chars_printed.c \
+	printf/buf/str/buf_str_create.c printf/buf/str/buf_str_flush.c \
+	printf/buf/str/buf_str_putchar.c printf/buf/str/buf_str_putchars.c \
+	printf/buf/str/buf_str_putstr.c printf/buf/str/buf_str_putstri.c \
+	printf/buf/str/buf_str_reset.c printf/buf/str/buf_str_chars_printed.c \
 	printf/utils/ft_ulltoa.c printf/utils/ft_ulltoa_base.c \
-	printf/utils/ft_lltoa.c
+	printf/utils/ft_lltoa.c printf/ft_snprintf.c
 SRC				+= collections/linked_list/linked_list_clear.c \
 	collections/linked_list/linked_list_free.c \
 	collections/linked_list/linked_list_iter.c \
