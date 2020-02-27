@@ -25,7 +25,7 @@ SRC				= ft_strcpy.c ft_min.c ft_dabs.c \
 	ft_nullcheck.c ft_checked_malloc.c ft_checked_calloc.c ft_strarr_append.c \
 	ft_strdup.c ft_strempty.c ft_strtrim.c ft_calloc.c ft_isdigit.c ft_atoi.c \
 	ft_bzero.c ft_free.c ft_malloc.c ft_memset.c ft_split.c ft_strcmp.c \
-	ft_strdup.c ft_strends_with.c ft_isspace.c ft_stris_empty.c \
+	ft_strdup.c ft_strends_with.c ft_isspace.c ft_stris_empty.c ft_strlen.s \
 	ft_strarr_free.c ft_nsplit.c ft_exit.c ft_strarr_size.c ft_substr.c
 SRC				+= printf/ft_eprintf.c printf/ft_fprintf.c \
 	printf/ft_vfprintf.c printf/ft_vprintf.c printf/spec/spec_base.c \

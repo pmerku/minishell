@@ -22,7 +22,7 @@ FN_LABEL(ft_strlen):
 
 strlen_loop:
 	add			rax,		16
-	vpcmpistri	xmm0,		[rdi + rax],	SSE42_EQUAL_EACH
+	pcmpistri	xmm0,		[rdi + rax],	SSE42_EQUAL_EACH
 	jnz			strlen_loop
 
 	add			rax,		rcx
