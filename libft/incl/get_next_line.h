@@ -1,6 +1,6 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*   Project: minishell                                   ::::::::            */
+/*   Project: github_minishell                            ::::::::            */
 /*   Members: dvoort, prmerku                           :+:    :+:            */
 /*   Copyright: 2020                                   +:+                    */
 /*                                                    +#+                     */
@@ -10,20 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stddef.h>
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
-char	*ft_strchr(const char *s, int c)
-{
-	size_t	i;
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 128
+# endif
 
-	i = 0;
-	if (!s)
-		return (NULL);
-	while (s[i] != c)
-	{
-		if (s[i] == '\0')
-			return (NULL);
-		i++;
-	}
-	return ((char *)(s + i));
-}
+int		get_next_line(int fd, char **line);
+
+#endif

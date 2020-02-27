@@ -1,6 +1,6 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*   Project: minishell                                   ::::::::            */
+/*   Project: github_minishell                            ::::::::            */
 /*   Members: dvoort, prmerku                           :+:    :+:            */
 /*   Copyright: 2020                                   +:+                    */
 /*                                                    +#+                     */
@@ -10,20 +10,41 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stddef.h>
+#include <get_next_line.h>
+#include <libft.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <stdlib.h>
 
-char	*ft_strchr(const char *s, int c)
+int		main(void)
 {
-	size_t	i;
+	int		fd0, fd1;
+	char	*line;
+	int		res0, res1;
 
-	i = 0;
-	if (!s)
-		return (NULL);
-	while (s[i] != c)
+	fd0 = open("main.c", O_RDONLY);
+	fd1 = 0;
+	res0 = res1 = 1;
+	while (res0 > 0 || res1 > 0)
 	{
-		if (s[i] == '\0')
-			return (NULL);
-		i++;
+		if (res0 > 0)
+		{
+			res0 = get_next_line(fd0, &line);
+			if (res0 == 0)
+				printf("%s", line);
+			else
+				printf("%s\n", line);
+			free(line);
+		}
+		if (res1 > 0)
+		{
+			res1 = get_next_line(fd1, &line);
+			if (res1 == 0)
+				printf("%s", line);
+			else
+				printf("%s\n", line);
+			free(line);
+		}
 	}
-	return ((char *)(s + i));
+	return (0);
 }

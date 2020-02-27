@@ -5,12 +5,7 @@ set(CMAKE_C_STANDARD 11)
 
 include_directories(libft/incl)
 
-add_executable(minishell
-        libft/incl/libft.h
-        libft/incl/linked_list.h
-        libft/incl/memmgmt.h
-        libft/incl/printf.h
-        libft/incl/printf_utils.h
+add_library(libft
         libft/src/collections/linked_list/linked_list_clear.c
         libft/src/collections/linked_list/linked_list_free.c
         libft/src/collections/linked_list/linked_list_iter.c
@@ -89,6 +84,14 @@ add_executable(minishell
         libft/src/ft_strends_with.c
         libft/src/ft_strip_chars.c
         libft/src/ft_stris_empty.c
-        libft/src/ft_strlen.c
+        libft/src/ft_strlen.s
         libft/src/ft_strtrim.c
-        libft/src/ft_substr.c libft/src/printf/ft_snprintf.c libft/bench_bruh.c)
+        libft/src/ft_substr.c
+        libft/src/printf/ft_snprintf.c
+        libft/src/ft_memcpy.c
+        libft/src/ft_strjoin.c
+        libft/src/get_next_line/get_next_line.c
+        )
+
+add_executable(minishell
+        main.c)
