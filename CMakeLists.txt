@@ -91,4 +91,4 @@ add_executable(minishell
         libft/src/ft_stris_empty.c
         libft/src/ft_strlen.c
         libft/src/ft_strtrim.c
-        libft/src/ft_substr.c libft/src/printf/ft_snprintf.c)
+        libft/src/ft_substr.c libft/src/printf/ft_snprintf.c libft/bench_bruh.c)

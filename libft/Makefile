@@ -25,7 +25,7 @@ SRC				= ft_strcpy.c ft_min.c ft_dabs.c \
 	ft_nullcheck.c ft_checked_malloc.c ft_checked_calloc.c ft_strarr_append.c \
 	ft_strdup.c ft_strempty.c ft_strtrim.c ft_calloc.c ft_isdigit.c ft_atoi.c \
 	ft_bzero.c ft_free.c ft_malloc.c ft_memset.c ft_split.c ft_strcmp.c \
-	ft_strdup.c ft_strlen.c ft_strends_with.c ft_isspace.c ft_stris_empty.c \
+	ft_strdup.c ft_strends_with.c ft_isspace.c ft_stris_empty.c \
 	ft_strarr_free.c ft_nsplit.c ft_exit.c ft_strarr_size.c ft_substr.c
 SRC				+= printf/ft_eprintf.c printf/ft_fprintf.c \
 	printf/ft_vfprintf.c printf/ft_vprintf.c printf/spec/spec_base.c \
@@ -53,8 +53,9 @@ SRC				+= collections/linked_list/linked_list_clear.c \
 	collections/linked_list/linked_list_new.c \
 	collections/linked_list/linked_list_push_back.c \
 	collections/linked_list/linked_list_push.c \
-	collections/linked_list/linked_list_size.c
+	collections/linked_list/linked_list_size.c ft_test.s
 OBJ				= $(patsubst %.c,%.o,$(SRC))
+OBJ				:= $(patsubst %.s,%.o,$(OBJ))
 HEADERS			= libft.h memmgmt.h linked_list.h printf.h
 HEADERS			:= $(addprefix incl/,$(HEADERS))
 
@@ -76,6 +77,11 @@ $(OUT_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
 	@echo "$(PREFIX)$(GREEN)Compiling file $(END)$< $(GREEN)to $(END)$@"
 	@mkdir -p $(dir $@)
 	@$(CC) $(COMPILE_FLAGS) $(DEBUG_FLAG) -I./incl/ -c -o $@ $<
+
+$(OUT_DIR)/%.o: $(SRC_DIR)/%.s $(HEADERS)
+	@echo "$(PREFIX)$(GREEN)Compiling file $(END)$< $(GREEN)to $(END)$@"
+	@mkdir -p $(dir $@)
+	@nasm -f macho64 -o $@ $<
 
 clean:
 	@echo "$(PREFIX)$(GREEN)Removing directory $(END)$(OUT_DIR)"
