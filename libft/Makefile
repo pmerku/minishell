@@ -53,7 +53,7 @@ SRC				+= collections/linked_list/linked_list_clear.c \
 	collections/linked_list/linked_list_new.c \
 	collections/linked_list/linked_list_push_back.c \
 	collections/linked_list/linked_list_push.c \
-	collections/linked_list/linked_list_size.c ft_test.s
+	collections/linked_list/linked_list_size.c
 OBJ				= $(patsubst %.c,%.o,$(SRC))
 OBJ				:= $(patsubst %.s,%.o,$(OBJ))
 HEADERS			= libft.h memmgmt.h linked_list.h printf.h
