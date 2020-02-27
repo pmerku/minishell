@@ -27,6 +27,10 @@ SRC				= ft_strcpy.s ft_min.c ft_dabs.c \
 	ft_bzero.c ft_free.c ft_malloc.c ft_memset.c ft_split.c ft_strcmp.c \
 	ft_strdup.c ft_strends_with.c ft_isspace.c ft_stris_empty.c ft_strlen.s \
 	ft_strarr_free.c ft_nsplit.c ft_exit.c ft_strarr_size.c ft_substr.c
+	ft_strends_with.c ft_isspace.c ft_stris_empty.c ft_strarr_free.c \
+	ft_nsplit.c ft_exit.c ft_strarr_size.c ft_substr.c \
+	ft_strjoin.c ft_memcpy.c ft_strlen.s
+
 SRC				+= printf/ft_eprintf.c printf/ft_fprintf.c \
 	printf/ft_vfprintf.c printf/ft_vprintf.c printf/spec/spec_base.c \
 	printf/spec/spec_charsprinted.c printf/spec/spec_ptr.c \
@@ -47,6 +51,7 @@ SRC				+= printf/ft_eprintf.c printf/ft_fprintf.c \
 	printf/buf/str/buf_str_reset.c printf/buf/str/buf_str_chars_printed.c \
 	printf/utils/ft_ulltoa.c printf/utils/ft_ulltoa_base.c \
 	printf/utils/ft_lltoa.c printf/ft_snprintf.c
+
 SRC				+= collections/linked_list/linked_list_clear.c \
 	collections/linked_list/linked_list_free.c \
 	collections/linked_list/linked_list_iter.c \
@@ -54,6 +59,8 @@ SRC				+= collections/linked_list/linked_list_clear.c \
 	collections/linked_list/linked_list_push_back.c \
 	collections/linked_list/linked_list_push.c \
 	collections/linked_list/linked_list_size.c
+
+SRC				+= get_next_line/get_next_line.c
 OBJ				= $(patsubst %.c,%.o,$(SRC))
 OBJ				:= $(patsubst %.s,%.o,$(OBJ))
 HEADERS			= libft.h memmgmt.h linked_list.h printf.h

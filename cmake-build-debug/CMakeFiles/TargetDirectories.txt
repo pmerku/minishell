@@ -1,3 +1,0 @@
-/Users/dvoort/CLionProjects/minishell/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/Users/dvoort/CLionProjects/minishell/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/dvoort/CLionProjects/minishell/cmake-build-debug/CMakeFiles/minishell.dir

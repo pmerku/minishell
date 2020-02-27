@@ -1,6 +1,6 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*   Project: minishell                                   ::::::::            */
+/*   Project: github_minishell                            ::::::::            */
 /*   Members: dvoort, prmerku                           :+:    :+:            */
 /*   Copyright: 2020                                   +:+                    */
 /*                                                    +#+                     */
@@ -12,18 +12,23 @@
 
 #include <stddef.h>
 
-char	*ft_strchr(const char *s, int c)
+void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
-	size_t	i;
+	char		*d;
+	const char	*s;
 
-	i = 0;
-	if (!s)
+	if (n == 0 || dst == src)
+		return (dst);
+	d = (char*)dst;
+	s = (const char*)src;
+	if (!d && !s)
 		return (NULL);
-	while (s[i] != c)
+	while (n)
 	{
-		if (s[i] == '\0')
-			return (NULL);
-		i++;
+		*d = *s;
+		d++;
+		s++;
+		n--;
 	}
-	return ((char *)(s + i));
+	return ((char *)dst);
 }

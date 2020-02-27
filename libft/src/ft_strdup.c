@@ -13,21 +13,17 @@
 #include <memmgmt.h>
 #include <libft.h>
 
-char	*ft_strdup(const char *str)
+char	*ft_strdup(const char *s)
 {
-	char *dup;
-	char *ptr;
+	size_t len;
+	char *str;
 
-	if (str == NULL)
+	if (!s)
 		return (NULL);
-	dup = ft_malloc(sizeof(char) * (ft_strlen(str)));
-	ptr = dup;
-	while (*str != '\0')
-	{
-		*ptr = *str;
-		str++;
-		ptr++;
-	}
-	*ptr = '\0';
-	return (dup);
+	len = ft_strlen(s);
+	str = ft_malloc(sizeof(char) * (len + 1));
+	if (!str)
+		return (NULL);
+	ft_memcpy(str, s, len + 1);
+	return (str);
 }
