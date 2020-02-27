@@ -87,4 +87,3 @@ dkms.conf
 out
 gen
 /cmake-build-debug/
-CMakeLists.txt
