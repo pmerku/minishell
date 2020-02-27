@@ -18,11 +18,11 @@ section .text
 FN_LABEL(ft_strlen):
 	mov			rax,		-16
 	mov			rcx,		rdi
-	vpxor		ymm0,		ymm0
+	pxor		xmm0,		xmm0
 
 strlen_loop:
 	add			rax,		16
-	vpcmpistri	xmm0,		[rdi + rax],	SSE42_EQUAL_EACH
+	pcmpistri	xmm0,		[rdi + rax],	SSE42_EQUAL_EACH
 	jnz			strlen_loop
 
 	add			rax,		rcx

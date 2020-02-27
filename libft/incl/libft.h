@@ -31,7 +31,7 @@ int				ft_stris_empty(const char *str);
 char			*ft_strempty(void);
 char			*ft_substr(const char *s, unsigned int start, size_t len);
 char			*ft_strchr(const char *s, int c);
-char			*ft_strcpy(char *dst, const char *str);
+extern char		*ft_strcpy(char *dst, const char *str);
 
 char			*ft_strjoin(const char *s1, const char *s2);
 void			*ft_memcpy(void *dst, const void *src, size_t n);
