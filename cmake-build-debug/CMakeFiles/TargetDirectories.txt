@@ -1,4 +1,0 @@
-/Users/prmerku/Documents/github_minishell/cmake-build-debug/CMakeFiles/minishell.dir
-/Users/prmerku/Documents/github_minishell/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/Users/prmerku/Documents/github_minishell/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/prmerku/Documents/github_minishell/cmake-build-debug/CMakeFiles/libft.dir
