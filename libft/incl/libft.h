@@ -31,7 +31,7 @@ int				ft_stris_empty(const char *str);
 char			*ft_strempty(void);
 char			*ft_substr(const char *s, unsigned int start, size_t len);
 char			*ft_strchr(const char *s, int c);
-char			*ft_strcpy(char *dst, const char *str);
+extern char		*ft_strcpy(char *dst, const char *str);
 
 int				ft_isspace(char c);
 int				ft_isdigit(char c);

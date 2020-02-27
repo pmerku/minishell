@@ -83,7 +83,6 @@ add_executable(minishell
         libft/src/ft_strarr_size.c
         libft/src/ft_strchr.c
         libft/src/ft_strcmp.c
-        libft/src/ft_strcpy.c
         libft/src/ft_strdup.c
         libft/src/ft_strempty.c
         libft/src/ft_strends_with.c
@@ -91,4 +90,4 @@ add_executable(minishell
         libft/src/ft_stris_empty.c
         libft/src/ft_strlen.c
         libft/src/ft_strtrim.c
-        libft/src/ft_substr.c libft/src/printf/ft_snprintf.c libft/bench_bruh.c)
+        libft/src/ft_substr.c libft/src/printf/ft_snprintf.c)
