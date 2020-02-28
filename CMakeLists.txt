@@ -92,5 +92,7 @@ add_library(libft
         libft/src/ft_substr.c
         libft/src/printf/ft_snprintf.c)
 
-add_executable(
-        project_files/src/main.c)
+add_executable(minishell
+        project_files/src/main.c
+        project_files/src/lex/lex.c
+        project_files/incl/lex.h)

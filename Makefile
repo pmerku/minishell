@@ -1,6 +1,6 @@
 # **************************************************************************** #
 #                                                                              #
-#    Project: project_files                                   ::::::::           #
+#    Project: minishell                                   ::::::::             #
 #    Members: dvoort, prmerku                           :+:    :+:             #
 #    Copyright: 2020                                   +:+                     #
 #                                                     +#+                      #
@@ -25,6 +25,11 @@ SRC				= main.c
 OBJ				= $(patsubst %.c,%.o,$(SRC))
 OBJ				:= $(patsubst %.s,%.o,$(OBJ))
 HEADERS			=
+
+# Sub-modules
+include	project_files/src/lex/lex.mk
+
+# Add prefix to headers
 HEADERS			:= $(addprefix project_files/incl/,$(HEADERS))
 
 # Colours
