@@ -1,6 +1,6 @@
 # **************************************************************************** #
 #                                                                              #
-#    Project: minishell                                   ::::::::             #
+#    Project: project_files                                   ::::::::             #
 #    Members: dvoort, prmerku                           :+:    :+:             #
 #    Copyright: 2020                                   +:+                     #
 #                                                     +#+                      #
@@ -67,9 +67,9 @@ HEADERS			= libft.h memmgmt.h linked_list.h printf.h
 HEADERS			:= $(addprefix incl/,$(HEADERS))
 
 # Colours
-DARK_GREEN		= \x1b[32m
-GREEN			= \x1b[92m
-END				= \x1b[0m
+DARK_GREEN		= \033[0;32m
+GREEN			= \033[0;92m
+END				= \033[0;0m
 
 PREFIX			= $(DARK_GREEN)$(NAME) $(END)\xc2\xbb
 

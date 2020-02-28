@@ -1,6 +1,6 @@
 ; **************************************************************************** ;
 ;                                                                              ;
-;    Project: minishell                                   ::::::::             ;
+;    Project: project_files                                   ::::::::             ;
 ;    Members: dvoort, prmerku                           :+:    :+:             ;
 ;    Copyright: 2020                                   +:+                     ;
 ;                                                     +#+                      ;
