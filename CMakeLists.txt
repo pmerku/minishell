@@ -4,6 +4,7 @@ project(project_files C)
 set(CMAKE_C_STANDARD 11)
 
 include_directories(libft/incl)
+include_directories(project_files/incl)
 
 add_library(libft
         libft/incl/libft.h

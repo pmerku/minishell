@@ -22,9 +22,6 @@ SRC_DIR			= project_files/src
 OUT_DIR			= project_files/out
 INC_DIR			= project_files/incl
 SRC				= main.c
-
-OBJ				= $(patsubst %.c,%.o,$(SRC))
-OBJ				:= $(patsubst %.s,%.o,$(OBJ))
 HEADERS			=
 
 LIBFT			= libft/libft.a
@@ -32,7 +29,9 @@ INC_LIBFT		= libft/incl
 # Sub-modules
 include	project_files/src/lex/lex.mk
 
-# Add prefix to headers
+# Fix sources and headers
+OBJ				= $(patsubst %.c,%.o,$(SRC))
+OBJ				:= $(patsubst %.s,%.o,$(OBJ))
 HEADERS			:= $(addprefix $(INC_DIR)/,$(HEADERS))
 
 # Colours
