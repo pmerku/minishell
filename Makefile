@@ -20,17 +20,20 @@ DEBUG_FLAG		= -O3
 # Files
 SRC_DIR			= project_files/src
 OUT_DIR			= project_files/out
+INC_DIR			= project_files/incl
 SRC				= main.c
 
 OBJ				= $(patsubst %.c,%.o,$(SRC))
 OBJ				:= $(patsubst %.s,%.o,$(OBJ))
 HEADERS			=
 
+LIBFT			= libft/libft.a
+INC_LIBFT		= libft/incl
 # Sub-modules
 include	project_files/src/lex/lex.mk
 
 # Add prefix to headers
-HEADERS			:= $(addprefix project_files/incl/,$(HEADERS))
+HEADERS			:= $(addprefix $(INC_DIR)/,$(HEADERS))
 
 # Colours
 DARK_GREEN		= \033[0;32m
@@ -41,27 +44,33 @@ PREFIX			= $(DARK_GREEN)$(NAME) $(END)\xc2\xbb
 
 all: $(NAME)
 
-$(NAME): $(addprefix $(OUT_DIR)/,$(OBJ))
+$(NAME): $(addprefix $(OUT_DIR)/,$(OBJ)) $(LIBFT)
 	@echo "$(PREFIX)$(GREEN)Bundling objects...$(END)"
-	@$(CC) $(COMPILE_FLAGS) $(DEBUG_FLAG) -o $(NAME) libft/libft.a $(addprefix $(OUT_DIR)/,$(OBJ))
+	@$(CC) $(COMPILE_FLAGS) $(DEBUG_FLAG) -o $(NAME) $(LIBFT) $(addprefix $(OUT_DIR)/,$(OBJ))
 
 $(OUT_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
 	@echo "$(PREFIX)$(GREEN)Compiling file $(END)$< $(GREEN)to $(END)$@"
 	@mkdir -p $(dir $@)
-	@$(CC) $(COMPILE_FLAGS) $(DEBUG_FLAG) -I./project_files/incl/ -I./libft/incl/ -c -o $@ $<
+	@$(CC) $(COMPILE_FLAGS) $(DEBUG_FLAG) -I./$(INC_DIR) -I./$(INC_LIBFT) -c -o $@ $<
 
 $(OUT_DIR)/%.o: $(SRC_DIR)/%.s $(HEADERS)
 	@echo "$(PREFIX)$(GREEN)Compiling file $(END)$< $(GREEN)to $(END)$@"
 	@mkdir -p $(dir $@)
 	@nasm -f macho64 -o $@ $<
 
+$(LIBFT):
+	@echo "$(PREFIX)$(GREEN)Bundling libft...$(END)"
+	@$(MAKE) -C libft > /dev/null
+
 clean:
-	@echo "$(PREFIX)$(GREEN)Removing directory $(END)$(OUT_DIR)"
+	@echo "$(PREFIX)$(GREEN)Removing directory $(END)$(OUT_DIR), libft/out"
 	@rm -rf $(OUT_DIR)
+	@$(MAKE) -C libft clean > /dev/null
 
 fclean: clean
-	@echo "$(PREFIX)$(GREEN)Removing file $(END)$(NAME)"
+	@echo "$(PREFIX)$(GREEN)Removing file $(END)$(NAME), $(LIBFT)"
 	@rm -f $(NAME)
+	@$(MAKE) -C libft fclean > /dev/null
 
 re: fclean $(NAME)
 
