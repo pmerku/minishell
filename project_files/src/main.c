@@ -13,6 +13,7 @@
 #include <get_next_line.h>
 #include <printf.h>
 #include <memmgmt.h>
+#include <lex.h>
 
 int		main(void)
 {
@@ -25,6 +26,7 @@ int		main(void)
 		ft_printf("&b&l$miniShell > &r");
 		gnl_ret = get_next_line(0, &line);
 		ft_printf("Execute: %s\n", line);
+		lex(line);
 		ft_free(line);
 	}
 	return (0);
