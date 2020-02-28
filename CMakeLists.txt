@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(minishell C)
+project(project_files C)
 
 set(CMAKE_C_STANDARD 11)
 
@@ -93,4 +93,6 @@ add_library(libft
         libft/src/printf/ft_snprintf.c)
 
 add_executable(minishell
-        main.c)
+        project_files/src/main.c
+        project_files/src/lex/lex.c
+        project_files/incl/lex.h)

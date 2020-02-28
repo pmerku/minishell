@@ -1,6 +1,6 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*   Project: github_minishell                            ::::::::            */
+/*   Project: project_files                                   ::::::::            */
 /*   Members: dvoort, prmerku                           :+:    :+:            */
 /*   Copyright: 2020                                   +:+                    */
 /*                                                    +#+                     */
@@ -11,40 +11,21 @@
 /* ************************************************************************** */
 
 #include <get_next_line.h>
-#include <libft.h>
-#include <stdio.h>
-#include <fcntl.h>
-#include <stdlib.h>
+#include <printf.h>
+#include <memmgmt.h>
 
 int		main(void)
 {
-	int		fd0, fd1;
 	char	*line;
-	int		res0, res1;
+	int 	gnl_ret;
 
-	fd0 = open("main.c", O_RDONLY);
-	fd1 = 0;
-	res0 = res1 = 1;
-	while (res0 > 0 || res1 > 0)
+	gnl_ret = 1;
+	while (gnl_ret == 1)
 	{
-		if (res0 > 0)
-		{
-			res0 = get_next_line(fd0, &line);
-			if (res0 == 0)
-				printf("%s", line);
-			else
-				printf("%s\n", line);
-			free(line);
-		}
-		if (res1 > 0)
-		{
-			res1 = get_next_line(fd1, &line);
-			if (res1 == 0)
-				printf("%s", line);
-			else
-				printf("%s\n", line);
-			free(line);
-		}
+		ft_printf("&b&l$miniShell > &r");
+		gnl_ret = get_next_line(0, &line);
+		ft_printf("Execute: %s\n", line);
+		ft_free(line);
 	}
 	return (0);
 }
