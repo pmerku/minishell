@@ -45,7 +45,7 @@ all: $(NAME)
 
 $(NAME): $(addprefix $(OUT_DIR)/,$(OBJ)) $(LIBFT)
 	@echo "$(PREFIX)$(GREEN)Bundling objects...$(END)"
-	@$(CC) $(COMPILE_FLAGS) $(DEBUG_FLAG) -o $(NAME) $(LIBFT) $(addprefix $(OUT_DIR)/,$(OBJ))
+	@$(CC) $(COMPILE_FLAGS) $(DEBUG_FLAG) -o $(NAME) $(addprefix $(OUT_DIR)/,$(OBJ)) $(LIBFT)
 
 $(OUT_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
 	@echo "$(PREFIX)$(GREEN)Compiling file $(END)$< $(GREEN)to $(END)$@"

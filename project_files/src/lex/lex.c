@@ -52,6 +52,33 @@ static char		is_non_identifier_char(char c)
 	return (1);
 }
 
+static char		*escape_chars(char str_type, char *str)
+{
+	size_t idx;
+	size_t cur;
+
+	idx = 0;
+	cur = 0;
+	ft_printf("escape chars: %s\n", str);
+	if (str_type == '\'')
+		return (str);
+	while (str[cur] != '\0')
+	{
+		if (str[cur] == '\\')
+		{
+			if (str_type == '"' && (str[cur + 1] == '$' || str[cur + 1] == '`' || str[cur + 1] == '"'))
+				cur++;
+			else if (str_type == '\0')
+				cur++;
+		}
+		str[idx] = str[cur];
+		idx++;
+		cur++;
+	}
+	str[idx] = '\0';
+	return (str);
+}
+
 static char 	*read_str(t_lex_state *state, char str_type)
 {
 	size_t	start;
@@ -63,26 +90,31 @@ static char 	*read_str(t_lex_state *state, char str_type)
 	while ((c = lex_next_char(state)) != '\0'){
 		if (str_type == '\0' && !is_non_identifier_char(c) && c != str_type)
 			break ;
-		if (c == '\\')
+		if (c == '\\' && str_type != '\'')
 		{
-			next = lex_next_char(state);
+			next = peek_current_char(state);
 			if (next == '\0')
 				break ;
-			if ((str_type == '\'' && next == '\''))
-				continue ;
 			if ((str_type == '"' && next == '"'))
+			{
+				skip_next_char(state);
+				continue;
+			}
+			else if (str_type == '\0')
+			{
+				skip_next_char(state);
 				continue ;
-			continue ;
+			}
 		}
 		if (c == str_type)
 			break ;
 	}
-	if ((str_type == '\0' && c != '\0'))
+	if (str_type == '\0' && c != '\0' && peek_current_char(state) != '\0')
 		state->offset--;
 	end = state->offset;
 	if ((str_type != '\0' && c == str_type))
 		end--;
-	return (ft_substr(state->str, start, end - start));
+	return (escape_chars(str_type, ft_substr(state->str, start, end - start)));
 }
 
 static void		del_elem(void *ptr)
@@ -265,4 +297,5 @@ t_linked_list	*lex(char *str)
 
 	ft_printf("&e&lLexical Analysis result:&r\n");
 	linked_list_iter(lst, (void (*)(void *))&print_token);
+	return (lst);
 }
