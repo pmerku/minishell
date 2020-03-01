@@ -137,19 +137,28 @@ static char 		*ft_strjoin3(char *a, char *b, char *c)
 	return (str);
 }
 
+static char *test_path(char *path)
+{
+	struct stat	stat_buffer;
+	if (stat(path, &stat_buffer) == 0 && S_ISREG(stat_buffer.st_mode))
+		return (path);
+	return (NULL);
+}
+
 char 		*env_resolve_path_file(t_env *env, char *file)
 {
 	char		**path;
 	char 		*working_dir;
 	char		*joined_path;
-	struct stat	stat_buffer;
 
+	if (test_path(file) != NULL)
+		return (ft_strdup(file));
 	if (file[0] == '.')
 	{
 		working_dir = getcwd(NULL, 0);
 		joined_path = ft_strjoin3(working_dir, "/", file);
 		free(working_dir);
-		if (stat(joined_path, &stat_buffer) == 0 && S_ISREG(stat_buffer.st_mode))
+		if (test_path(joined_path) != NULL)
 			return (joined_path);
 		ft_free(joined_path);
 	}
@@ -157,7 +166,7 @@ char 		*env_resolve_path_file(t_env *env, char *file)
 	while (*path != NULL)
 	{
 		joined_path = ft_strjoin3(*path, "/", file);
-		if (stat(joined_path, &stat_buffer) == 0 && S_ISREG(stat_buffer.st_mode))
+		if (test_path(joined_path) != NULL)
 			return (joined_path);
 		ft_free(joined_path);
 		path++;
