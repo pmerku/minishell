@@ -88,7 +88,7 @@ $(OUT_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
 $(OUT_DIR)/%.o: $(SRC_DIR)/%.s $(HEADERS)
 	@echo "$(PREFIX)$(GREEN)Compiling file $(END)$< $(GREEN)to $(END)$@"
 	@mkdir -p $(dir $@)
-	@nasm -f macho64 -o $@ $<
+	@nasm -f elf64 -o $@ $<
 
 clean:
 	@echo "$(PREFIX)$(GREEN)Removing directory $(END)$(OUT_DIR)"

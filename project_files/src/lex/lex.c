@@ -16,6 +16,30 @@
 #include <memmgmt.h>
 #include <linked_list.h>
 
+static void		compound_string_push(t_compound_string **compound, char *str, t_token_type type)
+{
+	t_compound_string	*last;
+	t_compound_string	*new_compound;
+
+	new_compound = ft_checked_malloc(sizeof(t_compound_string));
+	new_compound->str = str;
+	new_compound->type = type;
+	new_compound->next = NULL;
+	if (*compound == NULL)
+	{
+		*compound = new_compound;
+	}
+	else
+	{
+		last = *compound;
+		while (last->next != NULL)
+		{
+			last = last->next;
+		}
+		last->next = new_compound;
+	}
+}
+
 static char 	lex_next_char(t_lex_state *state)
 {
 	char c;
@@ -78,39 +102,130 @@ static char		*escape_chars(char str_type, char *str)
 	return (str);
 }
 
-static char 	*read_str(t_lex_state *state, char str_type)
+/*
+** Reads a string surrounded with '. Need to come up with a better name
+*/
+static void		read_escaped_string(t_compound_string **str, t_lex_state *state)
 {
 	size_t	start;
 	size_t	end;
 	char	c;
-	char	next;
 
 	start = state->offset;
-	while ((c = lex_next_char(state)) != '\0'){
-		if (str_type == '\0' && !is_non_identifier_char(c) && c != str_type)
+	while ((c = lex_next_char(state)) != '\0' && c != '\'') ;
+	if (c != '\'')
+		ft_printf("&cTODO - Handle unterminated string\n");
+	end = state->offset;
+	if (c == '\'')
+		end--;
+	compound_string_push(str, ft_substr(state->str, start, end - start), STRING);
+}
+
+static char 	is_valid_env_var_char(char c, int is_first_char)
+{
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_')
+		return (1);
+	if ((c >= '0' && c <= '9') && is_first_char == 0)
+		return (1);
+	return (0);
+}
+
+
+static void		read_env_var(t_compound_string **str, t_lex_state *state)
+{
+	size_t	start;
+	char 	c;
+
+	start = state->offset;
+	while ((c = peek_current_char(state)) != '\0')
+	{
+		if (!is_valid_env_var_char(c, state->offset == start + 1))
 			break ;
-		if (c == '\\' && str_type != '\'')
+		skip_next_char(state);
+	}
+	compound_string_push(str, ft_substr(state->str, start, state->offset - start), ENV_STRING);
+}
+
+/*
+** Reads a string surrounded by nothing. Need to come up with a better name
+*/
+static void		read_raw_str(t_compound_string **str, t_lex_state *state)
+{
+	size_t	start;
+	size_t	end;
+	char	c;
+
+	start = state->offset;
+	while ((c = lex_next_char(state)) != '\0' && c != ' ')
+	{
+		if (!is_non_identifier_char(c))
+			break ;
+		if (c == '\\')
 		{
-			next = peek_current_char(state);
-			if (next == '\0')
-				break ;
-			if ((str_type == '"' && next == '"') || str_type == '\0')
+			if (peek_current_char(state) == '\0')
+				break;
+			skip_next_char(state);
+		}
+		if (c == '$')
+		{
+			if (start != state->offset - 1)
+				compound_string_push(str, escape_chars('\0', ft_substr(state->str, start, state->offset - start - 1)), STRING);
+			read_env_var(str, state);
+			start = state->offset;
+			if (!is_non_identifier_char(peek_current_char(state)))
+				return ;
+		}
+	}
+	if (start != state->offset - 1)
+	{
+		if (c != '\0' && peek_current_char(state) != '\0')
+			state->offset--;
+		end = state->offset;
+		compound_string_push(str, escape_chars('\0',ft_substr(state->str, start,end - start)), STRING);
+	}
+}
+
+/*
+** Reads a string surrounded by double quotes. Need to come up with a better name
+*/
+static void		read_quoted_str(t_compound_string **str, t_lex_state *state)
+{
+	size_t	start;
+	size_t	end;
+	char	c;
+
+	start = state->offset;
+	while ((c = lex_next_char(state)) != '\0')
+	{
+		if (c == '\\')
+		{
+			if (peek_current_char(state) == '\0')
+				break;
+			if (peek_current_char(state) == '"')
 			{
 				skip_next_char(state);
 				continue ;
 			}
 		}
-		if (c == str_type)
+		if (c == '$')
+		{
+			if (start != state->offset - 1)
+				compound_string_push(str, escape_chars('\0', ft_substr(state->str, start, state->offset - start - 1)), STRING);
+			read_env_var(str, state);
+			start = state->offset;
+		}
+		if (c == '"')
 			break ;
 	}
-	if (str_type != c && str_type != '\0')
-		ft_printf("&cTODO - Handle unterminated string\n");
-	if (str_type == '\0' && c != '\0' && peek_current_char(state) != '\0')
-		state->offset--;
-	end = state->offset;
-	if ((str_type != '\0' && c == str_type))
-		end--;
-	return (escape_chars(str_type, ft_substr(state->str, start, end - start)));
+	if (start != state->offset - 1)
+	{
+		if (c != '"')
+			ft_printf("&cTODO - Handle unterminated string: %c\n", c);
+		end = state->offset;
+		if (c == '"')
+			end--;
+		compound_string_push(str, escape_chars('\0',ft_substr(state->str, start,end - start)), STRING);
+	}
 }
 
 static void		del_elem(void *ptr)
@@ -138,30 +253,6 @@ static t_token	*create_compound_token(t_compound_string *str)
 	return (token);
 }
 
-static void		compound_string_push(t_compound_string **compound, char *str, t_token_type type)
-{
-	t_compound_string	*last;
-	t_compound_string	*new_compound;
-
-	new_compound = ft_checked_malloc(sizeof(t_compound_string));
-	new_compound->str = str;
-	new_compound->type = type;
-	new_compound->next = NULL;
-	if (*compound == NULL)
-	{
-		*compound = new_compound;
-	}
-	else
-	{
-		last = *compound;
-		while (last->next != NULL)
-		{
-			last = last->next;
-		}
-		last->next = new_compound;
-	}
-}
-
 static char 	*token_to_str(t_token_type type)
 {
 	if (type == PIPE)
@@ -172,8 +263,8 @@ static char 	*token_to_str(t_token_type type)
 		return ("BRACKET_CLOSE");
 	else if (type == STRING)
 		return ("STRING");
-	else if (type == STRING_LITERAL)
-		return ("STRING_LITERAL");
+	else if (type == ENV_STRING)
+		return ("ENV_STRING");
 	else if (type == SEMICOLUMN)
 		return ("SEMICOLUMN");
 	else if (type == REDIR_L)
@@ -268,16 +359,16 @@ t_linked_list	*lex(char *str)
 		}
 		else if (c == '\'')
 		{
-			compound_string_push(&current_string, read_str(&state, '\''), STRING_LITERAL);
+			read_escaped_string(&current_string, &state);
 		}
 		else if (c == '"')
 		{
-			compound_string_push(&current_string, read_str(&state, '"'), STRING);
+			read_quoted_str(&current_string, &state);
 		}
 		else if (is_non_identifier_char(c))
 		{
 			state.offset--;
-			compound_string_push(&current_string, read_str(&state, '\0'), STRING);
+			read_raw_str(&current_string, &state);
 		}
 		else if (c == ' ' && current_string != NULL)
 		{

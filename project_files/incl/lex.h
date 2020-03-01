@@ -22,8 +22,8 @@
 ** PIPE				|
 ** BRACKET_OPEN		(
 ** BRACKET_CLOSE	)
-** STRING			A string where environmental variables get parsed
-** STRING_LITERAL	A string where environmental variables don't get parsed
+** STRING			A string literal
+** ENV_STRING		A string representing the key of an environmental variable
 ** SEMICOLUMN		;
 ** REDIR_L			<
 ** REDIR_LL			<<
@@ -38,7 +38,7 @@ typedef enum			e_token_type {
 	BRACKET_OPEN,
 	BRACKET_CLOSE,
 	STRING,
-	STRING_LITERAL,
+	ENV_STRING,
 	SEMICOLUMN,
 	REDIR_L,
 	REDIR_LL,
