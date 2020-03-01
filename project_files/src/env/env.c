@@ -26,7 +26,7 @@ t_env		*env_from(char **envp)
 	while (envp[i] != NULL)
 	{
 		parts = ft_nsplit(envp[i], '=', 2);
-		if (ft_strarr_size(parts) == 1 && !ft_strends_with(envp[0], "="))
+		if (ft_strarr_size(parts) == 1 && !ft_strends_with(envp[i], "="))
 			ft_eprintf(1, "Invalid environmental variable %s\n", envp[i]);
 		if (parts[1] == NULL)
 			env_set(&env, parts[0], ft_strdup(""));
