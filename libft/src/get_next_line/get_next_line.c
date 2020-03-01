@@ -20,7 +20,7 @@ static int	clean(int fd, char *store[fd], int x)
 {
 	if (store[fd] && x == -1)
 	{
-		free(store[fd]);
+		ft_free(store[fd]);
 		store[fd] = NULL;
 	}
 	return (x);
@@ -42,7 +42,7 @@ static int	ft_read(int fd, char *store[fd])
 	{
 		tmp = store[fd];
 		store[fd] = ft_strjoin(tmp, buf);
-		free(tmp);
+		ft_free(tmp);
 	}
 	if (!store[fd])
 		return (clean(fd, store, -1));
@@ -70,7 +70,7 @@ int			get_next_line(int fd, char **line)
 		*line = ft_strdup(store[fd]);
 		tmp = store[fd];
 		store[fd] = ft_strdup(ptr + 1);
-		free(tmp);
+		ft_free(tmp);
 		return ((!(*line) || !store[fd]) ? clean(fd, store, -1) : 1);
 	}
 	*line = ft_strdup(store[fd]);
