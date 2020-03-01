@@ -135,15 +135,21 @@ static void		read_env_var(t_compound_string **str, t_lex_state *state)
 {
 	size_t	start;
 	char 	c;
+	char 	is_bracket;
 
+	is_bracket = peek_current_char(state) == '{' ? 1 : 0;
+	state->offset += is_bracket;
 	start = state->offset;
 	while ((c = peek_current_char(state)) != '\0')
 	{
-		if (!is_valid_env_var_char(c, state->offset == start + 1))
+		if (is_bracket && c == '}')
+			break ;
+		else if (!is_valid_env_var_char(c, state->offset == start + 1))
 			break ;
 		skip_next_char(state);
 	}
 	compound_string_push(str, ft_substr(state->str, start, state->offset - start), ENV_STRING);
+	state->offset += is_bracket;
 }
 
 /*
