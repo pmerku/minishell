@@ -26,7 +26,9 @@ HEADERS			=
 
 LIBFT			= libft/libft.a
 INC_LIBFT		= libft/incl
+
 # Sub-modules
+include	project_files/src/env/env.mk
 include	project_files/src/lex/lex.mk
 
 # Fix sources and headers
@@ -45,6 +47,7 @@ all: $(NAME)
 
 $(NAME): $(addprefix $(OUT_DIR)/,$(OBJ)) $(LIBFT)
 	@echo "$(PREFIX)$(GREEN)Bundling objects...$(END)"
+	@echo "$(addprefix $(OUT_DIR)/,$(OBJ))"
 	@$(CC) $(COMPILE_FLAGS) $(DEBUG_FLAG) -o $(NAME) $(addprefix $(OUT_DIR)/,$(OBJ)) $(LIBFT)
 
 $(OUT_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)

@@ -10,11 +10,11 @@
 #                                                                              #
 # **************************************************************************** #
 
-LEX_DIR		= lex
+ENV_DIR		= env
 
-LEX_SOURCES = lex.c
-LEX_SOURCES := $(addprefix $(LEX_DIR)/,$(LEX_SOURCES))
+ENV_SOURCES = env.c
+ENV_SOURCES := $(addprefix $(ENV_DIR)/,$(ENV_SOURCES))
 
-SRC			+= $(LEX_SOURCES)
+SRC			+= $(ENV_SOURCES)
 
-HEADERS		+= lex.h
+HEADERS		+= ft_env.h

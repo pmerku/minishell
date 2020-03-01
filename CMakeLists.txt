@@ -89,6 +89,7 @@ add_library(libft
         libft/src/ft_strends_with.c
         libft/src/ft_strip_chars.c
         libft/src/ft_stris_empty.c
+        libft/src/ft_strjoin.c
         libft/src/ft_strtrim.c
         libft/src/ft_substr.c
         libft/src/printf/ft_snprintf.c)
@@ -96,4 +97,4 @@ add_library(libft
 add_executable(minishell
         project_files/src/main.c
         project_files/src/lex/lex.c
-        project_files/incl/lex.h)
+        project_files/incl/lex.h project_files/incl/ft_env.h project_files/src/env/env.c)

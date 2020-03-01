@@ -1,6 +1,6 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*   Project: minishell                                   ::::::::            */
+/*   Project: project_files                               ::::::::            */
 /*   Members: dvoort, prmerku                           :+:    :+:            */
 /*   Copyright: 2020                                   +:+                    */
 /*                                                    +#+                     */
@@ -10,24 +10,22 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <printf_utils.h>
-#include <stdlib.h>
-#include <memmgmt.h>
+#ifndef FT_ENV_H
+# define FT_ENV_H
 
-void	ft_eprintf(int code, const char *fmt, ...)
-{
-	va_list			args;
-	t_ft_printf		printf;
-	t_buf			buf;
-	t_buf_fd		fd_inner;
+# include <lex.h>
 
-	buf_fd_create(&buf, &fd_inner, 2);
-	buf_reset(&buf);
-	buf_putstr(&buf, "\033[91m\033[4m\033[1mError\033[0m\033[91m ");
-	printf.buf = &buf;
-	va_start(args, fmt);
-	printf.args = &args;
-	ft_inner_printf(&printf, fmt);
-	va_end(args);
-	ft_exit(code);
-}
+typedef struct		s_env {
+	struct s_env	*next;
+	char 			*key;
+	char 			*value;
+}					t_env;
+
+t_env				*env_from(char **envp);
+void				env_set(t_env **env, char *key, char *value);
+void				*env_remove(t_env **env, char *key);
+char 				*env_get(t_env *env, char *key);
+char				*env_parse_string(t_env *env, t_compound_string *string);
+void				env_print_all(t_env *env);
+
+#endif
