@@ -312,52 +312,7 @@ t_linked_list	*lex(char *str)
 	current_string = NULL;
 	lst = linked_list_new(&del_elem);
 	while ((c = lex_next_char(&state)) != '\0') {
-		if (c == '|') {
-			if (peek_current_char(&state) == '|') {
-				skip_next_char(&state);
-				linked_list_push_back(lst, create_token(OR));
-			} else {
-				linked_list_push_back(lst, create_token(PIPE));
-			}
-		}
-		else if (c == '<') {
-			if (peek_current_char(&state) == '<') {
-				skip_next_char(&state);
-				linked_list_push_back(lst, create_token(REDIR_LL));
-			} else {
-				linked_list_push_back(lst, create_token(REDIR_L));
-			}
-		}
-		else if (c == '>') {
-			if (peek_current_char(&state) == '>') {
-				skip_next_char(&state);
-				linked_list_push_back(lst, create_token(REDIR_RR));
-			} else {
-				linked_list_push_back(lst, create_token(REDIR_R));
-			}
-		}
-		else if (c == '&')
-		{
-			if (peek_current_char(&state) == '&') {
-				skip_next_char(&state);
-				linked_list_push_back(lst, create_token(AND));
-			} else {
-				linked_list_push_back(lst, create_token(AMPERSAND));
-			}
-		}
-		else if (c == '(')
-		{
-			linked_list_push_back(lst, create_token(BRACKET_OPEN));
-		}
-		else if (c == ')')
-		{
-			linked_list_push_back(lst, create_token(BRACKET_CLOSE));
-		}
-		else if (c == ';')
-		{
-			linked_list_push_back(lst, create_token(SEMICOLUMN));
-		}
-		else if (c == '\'')
+		if (c == '\'')
 		{
 			read_escaped_string(&current_string, &state);
 		}
@@ -370,10 +325,59 @@ t_linked_list	*lex(char *str)
 			state.offset--;
 			read_raw_str(&current_string, &state);
 		}
-		else if (c == ' ' && current_string != NULL)
+		else
 		{
-			linked_list_push_back(lst, create_compound_token(current_string));
-			current_string = NULL;
+			if (current_string != NULL)
+			{
+				ft_printf("current_string != null @ %c\n", c);
+				linked_list_push_back(lst, create_compound_token(current_string));
+				current_string = NULL;
+			}
+			if (c == '|') {
+				if (peek_current_char(&state) == '|') {
+					skip_next_char(&state);
+					linked_list_push_back(lst, create_token(OR));
+				} else {
+					linked_list_push_back(lst, create_token(PIPE));
+				}
+			}
+			else if (c == '<') {
+				if (peek_current_char(&state) == '<') {
+					skip_next_char(&state);
+					linked_list_push_back(lst, create_token(REDIR_LL));
+				} else {
+					linked_list_push_back(lst, create_token(REDIR_L));
+				}
+			}
+			else if (c == '>') {
+				if (peek_current_char(&state) == '>') {
+					skip_next_char(&state);
+					linked_list_push_back(lst, create_token(REDIR_RR));
+				} else {
+					linked_list_push_back(lst, create_token(REDIR_R));
+				}
+			}
+			else if (c == '&')
+			{
+				if (peek_current_char(&state) == '&') {
+					skip_next_char(&state);
+					linked_list_push_back(lst, create_token(AND));
+				} else {
+					linked_list_push_back(lst, create_token(AMPERSAND));
+				}
+			}
+			else if (c == '(')
+			{
+				linked_list_push_back(lst, create_token(BRACKET_OPEN));
+			}
+			else if (c == ')')
+			{
+				linked_list_push_back(lst, create_token(BRACKET_CLOSE));
+			}
+			else if (c == ';')
+			{
+				linked_list_push_back(lst, create_token(SEMICOLUMN));
+			}
 		}
 	}
 	if (current_string != NULL)
