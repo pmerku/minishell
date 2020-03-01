@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <lex.h>
+#include <ft_lex.h>
 #include <printf.h>
 #include <libft.h>
 #include <memmgmt.h>

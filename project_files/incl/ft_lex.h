@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEX_H
-# define LEX_H
+#ifndef FT_LEX_H
+# define FT_LEX_H
 
 # include <stddef.h>
 # include <linked_list.h>

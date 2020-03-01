@@ -13,7 +13,7 @@
 #ifndef FT_ENV_H
 # define FT_ENV_H
 
-# include <lex.h>
+# include <ft_lex.h>
 
 typedef struct		s_env {
 	struct s_env	*next;

@@ -17,4 +17,4 @@ LEX_SOURCES := $(addprefix $(LEX_DIR)/,$(LEX_SOURCES))
 
 SRC			+= $(LEX_SOURCES)
 
-HEADERS		+= lex.h
+HEADERS		+= ft_lex.h

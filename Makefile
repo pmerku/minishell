@@ -47,7 +47,6 @@ all: $(NAME)
 
 $(NAME): $(addprefix $(OUT_DIR)/,$(OBJ)) $(LIBFT)
 	@echo "$(PREFIX)$(GREEN)Bundling objects...$(END)"
-	@echo "$(addprefix $(OUT_DIR)/,$(OBJ))"
 	@$(CC) $(COMPILE_FLAGS) $(DEBUG_FLAG) -o $(NAME) $(addprefix $(OUT_DIR)/,$(OBJ)) $(LIBFT)
 
 $(OUT_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)

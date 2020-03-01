@@ -13,7 +13,7 @@
 #include <get_next_line.h>
 #include <printf.h>
 #include <memmgmt.h>
-#include <lex.h>
+#include <ft_lex.h>
 #include <ft_env.h>
 #include <unistd.h>
 
