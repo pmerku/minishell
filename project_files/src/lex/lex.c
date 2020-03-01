@@ -59,7 +59,6 @@ static char		*escape_chars(char str_type, char *str)
 
 	idx = 0;
 	cur = 0;
-	ft_printf("escape chars: %s\n", str);
 	if (str_type == '\'')
 		return (str);
 	while (str[cur] != '\0')
@@ -95,12 +94,7 @@ static char 	*read_str(t_lex_state *state, char str_type)
 			next = peek_current_char(state);
 			if (next == '\0')
 				break ;
-			if ((str_type == '"' && next == '"'))
-			{
-				skip_next_char(state);
-				continue;
-			}
-			else if (str_type == '\0')
+			if ((str_type == '"' && next == '"') || str_type == '\0')
 			{
 				skip_next_char(state);
 				continue ;
@@ -109,6 +103,8 @@ static char 	*read_str(t_lex_state *state, char str_type)
 		if (c == str_type)
 			break ;
 	}
+	if (str_type != c && str_type != '\0')
+		ft_printf("&cTODO - Handle unterminated string\n");
 	if (str_type == '\0' && c != '\0' && peek_current_char(state) != '\0')
 		state->offset--;
 	end = state->offset;
