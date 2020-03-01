@@ -230,7 +230,19 @@ static void		read_quoted_str(t_compound_string **str, t_lex_state *state)
 
 static void		del_elem(void *ptr)
 {
-	ft_printf("Delete %p\n", ptr);
+	t_token				*token;
+	t_compound_string	*tmp;
+	t_compound_string	*next;
+
+	token = ptr;
+	next = token->str;
+	while (next != NULL)
+	{
+		tmp = next;
+		ft_free(next->str);
+		ft_free(next);
+		next = tmp->next;
+	}
 }
 
 static t_token	*create_token(t_token_type type)
@@ -329,7 +341,6 @@ t_linked_list	*lex(char *str)
 		{
 			if (current_string != NULL)
 			{
-				ft_printf("current_string != null @ %c\n", c);
 				linked_list_push_back(lst, create_compound_token(current_string));
 				current_string = NULL;
 			}

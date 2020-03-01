@@ -56,6 +56,7 @@ int		main(int argc, char **argv, char **envp)
 		gnl_ret = get_next_line(0, &line);
 		lex_tokens = lex(line);
 		debug_tokens(lex_tokens, env);
+		linked_list_free(&lex_tokens);
 		ft_free(line);
 	}
 	return (0);
