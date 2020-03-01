@@ -13,12 +13,6 @@
 #ifndef LINKED_LIST_H
 # define LINKED_LIST_H
 
-typedef struct			s_linked_list
-{
-	void						(*del_fn)(void *);
-	void						*head;
-}						t_linked_list;
-
 /*
 ** Private struct - don't use.
 */
@@ -27,6 +21,12 @@ typedef struct			s_linked_list_node
 	void						*data;
 	struct s_linked_list_node	*next;
 }						t_linked_list_node;
+
+typedef struct			s_linked_list
+{
+	void						(*del_fn)(void *);
+	t_linked_list_node			*head;
+}						t_linked_list;
 
 t_linked_list			*linked_list_new(void (*del_fn)(void *));
 void					linked_list_push(t_linked_list *lst, void *data);

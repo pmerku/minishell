@@ -51,11 +51,21 @@ int		main(int argc, char **argv, char **envp)
 	gnl_ret = 1;
 	while (gnl_ret == 1)
 	{
-		working_dir = getcwd(NULL, 60);
+		working_dir = getcwd(NULL, 0);
 		ft_printf("\033[46;37m&f \xF0\x9F\x93\x81 %s&r ", working_dir);
 		gnl_ret = get_next_line(0, &line);
 		lex_tokens = lex(line);
 		debug_tokens(lex_tokens, env);
+
+		if (lex_tokens->head != NULL && ((t_token *)lex_tokens->head->data)->type == STRING)
+		{
+			char *parsed = env_parse_string(env, ((t_token *)lex_tokens->head->data)->str);
+			char *path = env_resolve_path_file(env, parsed);
+			ft_printf("Token: %s: %s\n", parsed, path);
+			ft_free(parsed);
+			ft_free(path);
+		}
+
 		linked_list_free(&lex_tokens);
 		ft_free(line);
 	}

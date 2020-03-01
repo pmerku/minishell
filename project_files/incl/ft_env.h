@@ -27,5 +27,6 @@ void				*env_remove(t_env **env, char *key);
 char 				*env_get(t_env *env, char *key);
 char				*env_parse_string(t_env *env, t_compound_string *string);
 void				env_print_all(t_env *env);
+char 				*env_resolve_path_file(t_env *env, char *binary);
 
 #endif

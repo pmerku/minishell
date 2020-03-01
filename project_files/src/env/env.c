@@ -14,6 +14,9 @@
 #include <libft.h>
 #include <memmgmt.h>
 #include <printf.h>
+#include <zconf.h>
+#include <stdlib.h>
+#include <sys/stat.h>
 
 t_env		*env_from(char **envp)
 {
@@ -110,4 +113,54 @@ char		*env_parse_string(t_env *env, t_compound_string *string)
 		string = string->next;
 	}
 	return (joined);
+}
+
+/*
+** TODO Refactor to its own file?
+*/
+static char 		*ft_strjoin3(char *a, char *b, char *c)
+{
+	size_t	len1;
+	size_t	len2;
+	size_t	len3;
+	char	*str;
+
+	if (!a || !b || !c)
+		return (NULL);
+	len1 = ft_strlen(a);
+	len2 = ft_strlen(b);
+	len3 = ft_strlen(c);
+	str = ft_checked_malloc(sizeof(char) * (len1 + len2 + len3 + 1));
+	ft_memcpy(str, a, len1 + 1);
+	ft_memcpy(str + len1, b, len2 + 1);
+	ft_memcpy(str + len1 + len2, c, len3 + 1);
+	return (str);
+}
+
+char 		*env_resolve_path_file(t_env *env, char *file)
+{
+	char		**path;
+	char 		*working_dir;
+	char		*joined_path;
+	struct stat	stat_buffer;
+
+	if (file[0] == '.')
+	{
+		working_dir = getcwd(NULL, 0);
+		joined_path = ft_strjoin3(working_dir, "/", file);
+		free(working_dir);
+		if (stat(joined_path, &stat_buffer) == 0 && S_ISREG(stat_buffer.st_mode))
+			return (joined_path);
+		ft_free(joined_path);
+	}
+	path = ft_split(env_get(env, "PATH"), ':');
+	while (*path != NULL)
+	{
+		joined_path = ft_strjoin3(*path, "/", file);
+		if (stat(joined_path, &stat_buffer) == 0 && S_ISREG(stat_buffer.st_mode))
+			return (joined_path);
+		ft_free(joined_path);
+		path++;
+	}
+	return (NULL);
 }
