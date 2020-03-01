@@ -15,7 +15,7 @@
 #include <memmgmt.h>
 #include <printf.h>
 
-t_env	*env_from(char **envp)
+t_env		*env_from(char **envp)
 {
 	char 	**parts;
 	t_env	*env;
@@ -37,7 +37,7 @@ t_env	*env_from(char **envp)
 	return (env);
 }
 
-void	env_set(t_env **env, char *key, char *value)
+void		env_set(t_env **env, char *key, char *value)
 {
 	t_env *new_elem;
 
@@ -51,7 +51,7 @@ void	env_set(t_env **env, char *key, char *value)
 	*env = new_elem;
 }
 
-void	env_print_all(t_env *env)
+void		env_print_all(t_env *env)
 {
 	ft_printf("&b&l&n%-20s &f= &b&l%-50s&r\n", "Key", "Value");
 	while (env != NULL)
@@ -61,7 +61,7 @@ void	env_print_all(t_env *env)
 	}
 }
 
-char 	*env_get(t_env *env, char *key)
+char 		*env_get(t_env *env, char *key)
 {
 	while (env != NULL)
 	{
@@ -72,7 +72,22 @@ char 	*env_get(t_env *env, char *key)
 	return (NULL);
 }
 
-char	*env_parse_string(t_env *env, t_compound_string *string)
+static char	*compound_to_string(t_env *env, t_compound_string *string)
+{
+	char *env_value;
+
+	if (string->type == STRING)
+	{
+		return (string->str);
+	}
+	else
+	{
+		env_value = env_get(env, string->str);
+		return (env_value == NULL ? "" : env_value);
+	}
+}
+
+char		*env_parse_string(t_env *env, t_compound_string *string)
 {
 	char	*joined;
 	char 	*tmp;
@@ -82,7 +97,7 @@ char	*env_parse_string(t_env *env, t_compound_string *string)
 	joined = NULL;
 	while (string != NULL)
 	{
-		to_join = ft_nullcheck(ft_strdup(string->str));
+		to_join = ft_nullcheck(ft_strdup(compound_to_string(env, string)));
 		if (joined == NULL)
 			joined = to_join;
 		else
