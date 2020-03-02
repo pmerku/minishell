@@ -150,6 +150,7 @@ char 		*env_resolve_path_file(t_env *env, char *file)
 	char		**path;
 	char 		*working_dir;
 	char		*joined_path;
+	size_t 		i;
 
 	if (test_path(file) != NULL)
 		return (ft_strdup(file));
@@ -162,14 +163,18 @@ char 		*env_resolve_path_file(t_env *env, char *file)
 			return (joined_path);
 		ft_free(joined_path);
 	}
+	i = 0;
 	path = ft_split(env_get(env, "PATH"), ':');
-	while (*path != NULL)
+	while (path[i])
 	{
-		joined_path = ft_strjoin3(*path, "/", file);
-		if (test_path(joined_path) != NULL)
+		joined_path = ft_strjoin3(path[i], "/", file);
+		if (test_path(joined_path) != NULL) {
+			ft_strarr_free(path);
 			return (joined_path);
+		}
 		ft_free(joined_path);
-		path++;
+		i++;
 	}
+	ft_strarr_free(path);
 	return (NULL);
 }
