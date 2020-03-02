@@ -96,5 +96,5 @@ add_library(libft
 
 add_executable(minishell
         project_files/src/main.c
-        project_files/src/lex/ft_lex.c
+        project_files/src/lex/lex.c
         project_files/incl/ft_lex.h project_files/incl/ft_env.h project_files/src/env/env.c)

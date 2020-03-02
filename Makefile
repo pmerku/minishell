@@ -64,6 +64,7 @@ $(LIBFT):
 	@$(MAKE) -C libft > /dev/null
 
 clean:
+	echo "$(addprefix $(OUT_DIR)/,$(OBJ))"
 	@echo "$(PREFIX)$(GREEN)Removing directory $(END)$(OUT_DIR), libft/out"
 	@rm -rf $(OUT_DIR)
 	@$(MAKE) -C libft clean > /dev/null

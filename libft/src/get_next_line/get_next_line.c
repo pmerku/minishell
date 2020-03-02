@@ -15,6 +15,7 @@
 #include <limits.h>
 #include <libft.h>
 #include <get_next_line.h>
+#include <memmgmt.h>
 
 static int	clean(int fd, char *store[fd], int x)
 {
