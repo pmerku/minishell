@@ -35,6 +35,7 @@ t_env		*env_from(char **envp)
 			env_set(&env, parts[0], ft_strdup(""));
 		else
 			env_set(&env, parts[0], parts[1]);
+		ft_free(parts);
 		i++;
 	}
 	return (env);

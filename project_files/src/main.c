@@ -16,6 +16,7 @@
 #include <ft_lex.h>
 #include <ft_env.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 // literally just for env variable parsing testing
 // remove this once they work
@@ -23,6 +24,7 @@ void	debug_tokens(t_linked_list *lst, t_env *env)
 {
 	t_linked_list_node	*node;
 	t_token				*token;
+	char 				*fuck_its_the_leaky_boii;
 
 	node = lst->head;
 	while (node != NULL)
@@ -30,7 +32,9 @@ void	debug_tokens(t_linked_list *lst, t_env *env)
 		token = (t_token *)node->data;
 		if (token->type == STRING)
 		{
-			ft_printf(" &a&l* &rParsed compound string: %s\n", env_parse_string(env, token->str));
+			fuck_its_the_leaky_boii = env_parse_string(env, token->str);
+			ft_printf(" &a&l* &rParsed compound string: %s\n", fuck_its_the_leaky_boii);
+			ft_free(fuck_its_the_leaky_boii);
 		}
 		node = node->next;
 	}
@@ -45,8 +49,9 @@ int		main(int argc, char **argv, char **envp)
 	char 			*working_dir;
 
 	env = env_from(envp);
-	env_print_all(env);
+//	env_print_all(env);
 	(void)argc;
+	(void)envp;
 	(void)argv;
 	gnl_ret = 1;
 	while (gnl_ret == 1)
@@ -68,6 +73,7 @@ int		main(int argc, char **argv, char **envp)
 
 		linked_list_free(&lex_tokens);
 		ft_free(line);
+		free(working_dir);
 	}
 	return (0);
 }

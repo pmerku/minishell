@@ -244,11 +244,12 @@ static void		del_elem(void *ptr)
 	next = token->str;
 	while (next != NULL)
 	{
-		tmp = next;
+		tmp = next->next;
 		ft_free(next->str);
 		ft_free(next);
-		next = tmp->next;
+		next = tmp;
 	}
+	ft_free(ptr);
 }
 
 static t_token	*create_token(t_token_type type)
