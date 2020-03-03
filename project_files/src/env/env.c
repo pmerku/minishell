@@ -57,15 +57,21 @@ t_env		*env_from(char **envp)
 	return (env);
 }
 
-//void		env_print_all(t_env *env)
-//{
-//	ft_printf("&b&l&n%-20s &f= &b&l%-50s&r\n", "Key", "Value");
-//	while (env != NULL)
-//	{
-//		ft_printf("&b%-20s &r= %s\n", env->key, env->value);
-//		env = env->next;
-//	}
-//}
+void		env_print_all(t_env *env)
+{
+	char **split;
+	char **list;
+
+	list = env->vars;
+	ft_printf("&b&l&n%-20s &f= &b&l%-50s&r\n", "Key", "Value");
+	while (*list != NULL)
+	{
+		split = ft_nsplit(*list, '=', 2);
+		ft_printf("&b%-20s &r= %s\n", split[0], split[1] == NULL ? "" : split[1]);
+		ft_strarr_free(split);
+		list++;
+	}
+}
 
 static char	*match_key(char *pair, char *key)
 {
@@ -103,16 +109,19 @@ void		env_set(t_env *env, char *key, char *value)
 void		env_remove(t_env *env, char *key)
 {
 	size_t	i;
+	char 	removed;
 
 	i = 0;
+	removed = 0;
 	while (env->vars[i] != '\0')
 	{
 		if (match_key(env->vars[i], key) != NULL)
 		{
-			ft_memcpy(env->vars + i + 1, env->vars + i,
-					ft_strarr_size(env->vars + i));
-			return ;
+			ft_free(env->vars[i]);
+			removed = 1;
 		}
+		if (removed)
+			env->vars[i] = env->vars[i + 1];
 		i++;
 	}
 }

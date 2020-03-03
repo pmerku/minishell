@@ -49,7 +49,7 @@ int		main(int argc, char **argv, char **envp)
 	char 			*working_dir;
 
 	env = env_from(envp);
-//	env_print_all(env);
+
 	(void)argc;
 	(void)envp;
 	(void)argv;
