@@ -48,7 +48,7 @@ t_env		*env_from(char **envp)
 	i = 0;
 	env = ft_checked_malloc(sizeof(t_env));
 	env->vars = ft_checked_malloc(sizeof(char *) * (1 + ft_strarr_size(envp)));
-	while (envp[i] != '\0')
+	while (envp[i] != NULL)
 	{
 		env->vars[i] = ft_nullcheck(ft_strdup(envp[i]));
 		i++;
@@ -93,7 +93,7 @@ void		env_set(t_env *env, char *key, char *value)
 		ft_eprintf(1, "Attempted to set NULL env var (k, v): '%s', '%s'",
 				key, value);
 	i = 0;
-	while (env->vars[i] != '\0')
+	while (env->vars[i] != NULL)
 	{
 		if (match_key(env->vars[i], key) != NULL)
 		{
@@ -113,7 +113,7 @@ void		env_remove(t_env *env, char *key)
 
 	i = 0;
 	removed = 0;
-	while (env->vars[i] != '\0')
+	while (env->vars[i] != NULL)
 	{
 		if (match_key(env->vars[i], key) != NULL)
 		{
