@@ -18,62 +18,119 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
+/*
+** TODO Refactor to its own file?
+*/
+static char 		*ft_strjoin3(char *a, char *b, char *c)
+{
+	size_t	len1;
+	size_t	len2;
+	size_t	len3;
+	char	*str;
+
+	if (!a || !b || !c)
+		return (NULL);
+	len1 = ft_strlen(a);
+	len2 = ft_strlen(b);
+	len3 = ft_strlen(c);
+	str = ft_checked_malloc(sizeof(char) * (len1 + len2 + len3 + 1));
+	ft_memcpy(str, a, len1 + 1);
+	ft_memcpy(str + len1, b, len2 + 1);
+	ft_memcpy(str + len1 + len2, c, len3 + 1);
+	return (str);
+}
+
 t_env		*env_from(char **envp)
 {
-	char 	**parts;
 	t_env	*env;
-	int		i;
+	size_t	i;
 
 	i = 0;
-	env = NULL;
-	while (envp[i] != NULL)
+	env = ft_checked_malloc(sizeof(t_env));
+	env->vars = ft_checked_malloc(sizeof(char *) * (1 + ft_strarr_size(envp)));
+	while (envp[i] != '\0')
 	{
-		parts = ft_nsplit(envp[i], '=', 2);
-		if (ft_strarr_size(parts) == 1 && !ft_strends_with(envp[i], "="))
-			ft_eprintf(1, "Invalid environmental variable %s\n", envp[i]);
-		if (parts[1] == NULL)
-			env_set(&env, parts[0], ft_strdup(""));
-		else
-			env_set(&env, parts[0], parts[1]);
-		ft_free(parts);
+		env->vars[i] = ft_nullcheck(ft_strdup(envp[i]));
 		i++;
 	}
+	envp[i] = NULL;
 	return (env);
 }
 
-void		env_set(t_env **env, char *key, char *value)
+//void		env_print_all(t_env *env)
+//{
+//	ft_printf("&b&l&n%-20s &f= &b&l%-50s&r\n", "Key", "Value");
+//	while (env != NULL)
+//	{
+//		ft_printf("&b%-20s &r= %s\n", env->key, env->value);
+//		env = env->next;
+//	}
+//}
+
+static char	*match_key(char *pair, char *key)
 {
-	t_env *new_elem;
+	size_t i;
+
+	i = 0;
+	while (pair[i] == key[i] && pair[i] && key[i] && pair[i] != '=')
+		i++;
+	if (pair[i] == '=')
+		return (pair + i + 1);
+	return (NULL);
+}
+
+void		env_set(t_env *env, char *key, char *value)
+{
+	size_t	i;
 
 	if (key == NULL || value == NULL)
 		ft_eprintf(1, "Attempted to set NULL env var (k, v): '%s', '%s'",
 				key, value);
-	new_elem = ft_checked_malloc(sizeof(t_env));
-	new_elem->next = *env;
-	new_elem->key = key;
-	new_elem->value = value;
-	*env = new_elem;
+	i = 0;
+	while (env->vars[i] != '\0')
+	{
+		if (match_key(env->vars[i], key) != NULL)
+		{
+			ft_free(env->vars[i]);
+			env->vars[i] = ft_strjoin3(key, "=", value);
+			return ;
+		}
+		i++;
+	}
+	ft_strarr_append(&env->vars, ft_strjoin3(key, "=", value));
 }
 
-void		env_print_all(t_env *env)
+void		env_remove(t_env *env, char *key)
 {
-	ft_printf("&b&l&n%-20s &f= &b&l%-50s&r\n", "Key", "Value");
-	while (env != NULL)
+	size_t	i;
+
+	i = 0;
+	while (env->vars[i] != '\0')
 	{
-		ft_printf("&b%-20s &r= %s\n", env->key, env->value);
-		env = env->next;
+		if (match_key(env->vars[i], key) != NULL)
+		{
+			ft_memcpy(env->vars + i + 1, env->vars + i,
+					ft_strarr_size(env->vars + i));
+			return ;
+		}
+		i++;
 	}
 }
 
 char 		*env_get(t_env *env, char *key)
 {
-	while (env != NULL)
+	char	**vars;
+	char	*match;
+
+	vars = env->vars;
+	while (*vars != NULL)
 	{
-		if (ft_strcmp(env->key, key) == 0)
-			return (env->value);
-		env = env->next;
+		match = match_key(*vars, key);
+		if (match != NULL)
+			return (match);
+		vars++;
 	}
-	return (NULL);
+	return ("");
 }
 
 static char	*compound_to_string(t_env *env, t_compound_string *string)
@@ -114,28 +171,6 @@ char		*env_parse_string(t_env *env, t_compound_string *string)
 		string = string->next;
 	}
 	return (joined);
-}
-
-/*
-** TODO Refactor to its own file?
-*/
-static char 		*ft_strjoin3(char *a, char *b, char *c)
-{
-	size_t	len1;
-	size_t	len2;
-	size_t	len3;
-	char	*str;
-
-	if (!a || !b || !c)
-		return (NULL);
-	len1 = ft_strlen(a);
-	len2 = ft_strlen(b);
-	len3 = ft_strlen(c);
-	str = ft_checked_malloc(sizeof(char) * (len1 + len2 + len3 + 1));
-	ft_memcpy(str, a, len1 + 1);
-	ft_memcpy(str + len1, b, len2 + 1);
-	ft_memcpy(str + len1 + len2, c, len3 + 1);
-	return (str);
 }
 
 static char *test_path(char *path)

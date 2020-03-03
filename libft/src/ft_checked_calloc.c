@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <memmgmt.h>
+#include <printf.h>
 
 void		*ft_checked_calloc(size_t n)
 {
@@ -18,6 +19,6 @@ void		*ft_checked_calloc(size_t n)
 
 	data = ft_calloc(n);
 	if (data == NULL)
-		ft_err_exit(1, "Error\nFailed checked calloc call\n");
+		ft_eprintf(1, "Error\nFailed checked calloc call\n");
 	return (data);
 }
