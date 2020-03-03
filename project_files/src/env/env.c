@@ -80,7 +80,7 @@ static char	*match_key(char *pair, char *key)
 	i = 0;
 	while (pair[i] == key[i] && pair[i] && key[i] && pair[i] != '=')
 		i++;
-	if (pair[i] == '=')
+	if (key[i] == '\0' && pair[i] == '=')
 		return (pair + i + 1);
 	return (NULL);
 }
