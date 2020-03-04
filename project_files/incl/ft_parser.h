@@ -30,7 +30,7 @@ typedef struct			s_redirection_out {
 }						t_redirection_out;
 
 typedef struct			s_parser_command {
-	t_composite_string	*command;
+	t_composite_string	*arguments;
 	t_redirection_in 	*redirections_in;
 	t_redirection_out 	*redirections_out;
 }						t_parser_command;
