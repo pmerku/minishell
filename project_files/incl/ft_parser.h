@@ -10,26 +10,29 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_ENV_H
-# define FT_ENV_H
+#ifndef FT_PARSER_H
+# define FT_PARSER_H
 
 # include <ft_lex.h>
 
-typedef struct		s_env {
-	char			**vars;
-}					t_env;
+typedef enum			e_redirection_type {
+	TRUNCATE,
+	APPEND
+}						t_redirection_type;
 
-t_env				*env_from(char **envp);
-void				env_set(t_env *env, char *key, char *value);
-void				env_remove(t_env *env, char *key);
+typedef struct			s_redirection_in {
+	t_compound_string 	*file;
+}						t_redirection_in;
 
-/*
-** DO NOT FREE THE ENV VAR RETURNED FROM THIS METHOD
-*/
-char 				*env_get(t_env *env, char *key);
+typedef struct			s_redirection_out {
+	t_compound_string 	*file;
+	t_redirection_type	*type;
+}						t_redirection_out;
 
-char				*env_parse_string(t_env *env, t_compound_string *string);
-void				env_print_all(t_env *env);
-char 				*env_resolve_path_file(t_env *env, char *binary);
+typedef struct			s_parser_command {
+	t_compound_string	*command;
+	t_redirection_in 	*redirections_in;
+	t_redirection_out 	*redirections_out;
+}						t_parser_command;
 
 #endif

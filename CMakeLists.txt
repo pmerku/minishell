@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(project_files C)
+project(minishell C)
 
 set(CMAKE_C_STANDARD 11)
 
@@ -97,4 +97,4 @@ add_library(libft
 add_executable(minishell
         project_files/src/main.c
         project_files/src/lex/lex.c
-        project_files/incl/ft_lex.h project_files/incl/ft_env.h project_files/src/env/env.c)
+        project_files/incl/ft_lex.h project_files/incl/ft_env.h project_files/src/env/env.c project_files/incl/ft_parser.h)
