@@ -33,7 +33,7 @@ void	debug_tokens(t_linked_list *lst, t_env *env)
 		if (token->type == STRING)
 		{
 			fuck_its_the_leaky_boii = env_parse_string(env, token->str);
-			ft_printf(" &a&l* &rParsed compound string: %s\n", fuck_its_the_leaky_boii);
+			ft_printf(" &a&l* &rParsed composite string: %s\n", fuck_its_the_leaky_boii);
 			ft_free(fuck_its_the_leaky_boii);
 		}
 		node = node->next;

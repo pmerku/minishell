@@ -50,8 +50,8 @@ typedef enum			e_token_type {
 }						t_token_type;
 
 /*
-** A compound string is a fancy linked list with string elements to support
-** compound strings just like Bash does.
+** A composite string is a fancy linked list with string elements to support
+** composite strings just like Bash does.
 **
 ** The following is a valid string in Bash, and will be evaluated to one
 ** string. Consider environmental variable 'EC' to be 'ec'
@@ -59,15 +59,15 @@ typedef enum			e_token_type {
 **
 ** Each "sub" string has to be evaluated individually.
 */
-typedef struct			s_compound_string {
+typedef struct			t_composite_string {
 	t_token_type 				type;
 	char 						*str;
-	struct s_compound_string	*next;
-}						t_compound_string;
+	struct t_composite_string	*next;
+}						t_composite_string;
 
 typedef struct			s_token {
 	t_token_type		type;
-	t_compound_string	*str;
+	t_composite_string	*str;
 }						t_token;
 
 typedef struct			s_lex_state {

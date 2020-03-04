@@ -21,16 +21,16 @@ typedef enum			e_redirection_type {
 }						t_redirection_type;
 
 typedef struct			s_redirection_in {
-	t_compound_string 	*file;
+	t_composite_string 	*file;
 }						t_redirection_in;
 
 typedef struct			s_redirection_out {
-	t_compound_string 	*file;
+	t_composite_string 	*file;
 	t_redirection_type	*type;
 }						t_redirection_out;
 
 typedef struct			s_parser_command {
-	t_compound_string	*command;
+	t_composite_string	*command;
 	t_redirection_in 	*redirections_in;
 	t_redirection_out 	*redirections_out;
 }						t_parser_command;

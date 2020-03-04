@@ -142,7 +142,7 @@ char 		*env_get(t_env *env, char *key)
 	return ("");
 }
 
-static char	*compound_to_string(t_env *env, t_compound_string *string)
+static char	*composite_to_string(t_env *env, t_composite_string *string)
 {
 	char *env_value;
 
@@ -157,7 +157,7 @@ static char	*compound_to_string(t_env *env, t_compound_string *string)
 	}
 }
 
-char		*env_parse_string(t_env *env, t_compound_string *string)
+char		*env_parse_string(t_env *env, t_composite_string *string)
 {
 	char	*joined;
 	char 	*tmp;
@@ -167,7 +167,7 @@ char		*env_parse_string(t_env *env, t_compound_string *string)
 	joined = NULL;
 	while (string != NULL)
 	{
-		to_join = ft_nullcheck(ft_strdup(compound_to_string(env, string)));
+		to_join = ft_nullcheck(ft_strdup(composite_to_string(env, string)));
 		if (joined == NULL)
 			joined = to_join;
 		else

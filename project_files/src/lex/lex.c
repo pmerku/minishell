@@ -16,27 +16,27 @@
 #include <memmgmt.h>
 #include <linked_list.h>
 
-static void		compound_string_push(t_compound_string **compound, char *str, t_token_type type)
+static void		composite_string_push(t_composite_string **composite, char *str, t_token_type type)
 {
-	t_compound_string	*last;
-	t_compound_string	*new_compound;
+	t_composite_string	*last;
+	t_composite_string	*new_composite;
 
-	new_compound = ft_checked_malloc(sizeof(t_compound_string));
-	new_compound->str = str;
-	new_compound->type = type;
-	new_compound->next = NULL;
-	if (*compound == NULL)
+	new_composite = ft_checked_malloc(sizeof(t_composite_string));
+	new_composite->str = str;
+	new_composite->type = type;
+	new_composite->next = NULL;
+	if (*composite == NULL)
 	{
-		*compound = new_compound;
+		*composite = new_composite;
 	}
 	else
 	{
-		last = *compound;
+		last = *composite;
 		while (last->next != NULL)
 		{
 			last = last->next;
 		}
-		last->next = new_compound;
+		last->next = new_composite;
 	}
 }
 
@@ -105,7 +105,7 @@ static char		*escape_chars(char str_type, char *str)
 /*
 ** Reads a string surrounded with '. Need to come up with a better name
 */
-static void		read_literal_string(t_compound_string **str, t_lex_state *state)
+static void		read_literal_string(t_composite_string **str, t_lex_state *state)
 {
 	size_t	start;
 	size_t	end;
@@ -118,7 +118,7 @@ static void		read_literal_string(t_compound_string **str, t_lex_state *state)
 	end = state->offset;
 	if (c == '\'')
 		end--;
-	compound_string_push(str, ft_substr(state->str, start, end - start), STRING);
+	composite_string_push(str, ft_substr(state->str, start, end - start), STRING);
 }
 
 static char 	is_valid_env_var_char(char c, int is_first_char)
@@ -131,7 +131,7 @@ static char 	is_valid_env_var_char(char c, int is_first_char)
 }
 
 
-static void		read_env_var(t_compound_string **str, t_lex_state *state)
+static void		read_env_var(t_composite_string **str, t_lex_state *state)
 {
 	size_t	start;
 	char 	c;
@@ -148,14 +148,14 @@ static void		read_env_var(t_compound_string **str, t_lex_state *state)
 			break ;
 		skip_next_char(state);
 	}
-	compound_string_push(str, ft_substr(state->str, start, state->offset - start), ENV_STRING);
+	composite_string_push(str, ft_substr(state->str, start, state->offset - start), ENV_STRING);
 	state->offset += is_bracket;
 }
 
 /*
 ** Reads a string surrounded by nothing. Need to come up with a better name
 */
-static void		read_raw_str(t_compound_string **str, t_lex_state *state)
+static void		read_raw_str(t_composite_string **str, t_lex_state *state)
 {
 	size_t	start;
 	size_t	end;
@@ -175,7 +175,7 @@ static void		read_raw_str(t_compound_string **str, t_lex_state *state)
 		if (c == '$')
 		{
 			if (start != state->offset - 1)
-				compound_string_push(str, escape_chars('\0', ft_substr(state->str, start, state->offset - start - 1)), STRING);
+				composite_string_push(str, escape_chars('\0', ft_substr(state->str, start, state->offset - start - 1)), STRING);
 			read_env_var(str, state);
 			start = state->offset;
 			if (!is_non_identifier_char(peek_current_char(state)))
@@ -187,14 +187,14 @@ static void		read_raw_str(t_compound_string **str, t_lex_state *state)
 		if (c != '\0' && peek_current_char(state) != '\0')
 			state->offset--;
 		end = state->offset;
-		compound_string_push(str, escape_chars('\0',ft_substr(state->str, start,end - start)), STRING);
+		composite_string_push(str, escape_chars('\0',ft_substr(state->str, start,end - start)), STRING);
 	}
 }
 
 /*
 ** Reads a string surrounded by double quotes. Need to come up with a better name
 */
-static void		read_quoted_str(t_compound_string **str, t_lex_state *state)
+static void		read_quoted_str(t_composite_string **str, t_lex_state *state)
 {
 	size_t	start;
 	size_t	end;
@@ -216,7 +216,7 @@ static void		read_quoted_str(t_compound_string **str, t_lex_state *state)
 		if (c == '$')
 		{
 			if (start != state->offset - 1)
-				compound_string_push(str, escape_chars('\0', ft_substr(state->str, start, state->offset - start - 1)), STRING);
+				composite_string_push(str, escape_chars('\0', ft_substr(state->str, start, state->offset - start - 1)), STRING);
 			read_env_var(str, state);
 			start = state->offset;
 		}
@@ -230,15 +230,15 @@ static void		read_quoted_str(t_compound_string **str, t_lex_state *state)
 		end = state->offset;
 		if (c == '"')
 			end--;
-		compound_string_push(str, escape_chars('\0',ft_substr(state->str, start,end - start)), STRING);
+		composite_string_push(str, escape_chars('\0',ft_substr(state->str, start,end - start)), STRING);
 	}
 }
 
 static void		del_elem(void *ptr)
 {
 	t_token				*token;
-	t_compound_string	*tmp;
-	t_compound_string	*next;
+	t_composite_string	*tmp;
+	t_composite_string	*next;
 
 	token = ptr;
 	next = token->str;
@@ -262,7 +262,7 @@ static t_token	*create_token(t_token_type type)
 	return (token);
 }
 
-static t_token	*create_compound_token(t_compound_string *str)
+static t_token	*create_composite_token(t_composite_string *str)
 {
 	t_token *token;
 
@@ -305,7 +305,7 @@ static char 	*token_to_str(t_token_type type)
 
 static void		print_token(t_token *token)
 {
-	t_compound_string  *str;
+	t_composite_string  *str;
 
 	ft_printf("&a&l * &rToken type &a%s&r\n", token_to_str(token->type));
 	if (token->type == STRING)
@@ -323,7 +323,7 @@ t_linked_list	*lex(char *str)
 {
 	t_lex_state			state;
 	t_linked_list		*lst;
-	t_compound_string	*current_string;
+	t_composite_string	*current_string;
 	char				c;
 
 	ft_bzero(&state, sizeof(t_lex_state));
@@ -348,7 +348,7 @@ t_linked_list	*lex(char *str)
 		{
 			if (current_string != NULL)
 			{
-				linked_list_push_back(lst, create_compound_token(current_string));
+				linked_list_push_back(lst, create_composite_token(current_string));
 				current_string = NULL;
 			}
 			if (c == '|') {
@@ -400,7 +400,7 @@ t_linked_list	*lex(char *str)
 	}
 	if (current_string != NULL)
 	{
-		linked_list_push_back(lst, create_compound_token(current_string));
+		linked_list_push_back(lst, create_composite_token(current_string));
 		current_string = NULL;
 	}
 
