@@ -11,10 +11,10 @@
 /* ************************************************************************** */
 
 #include <ft_lex.h>
-#include <printf.h>
-#include <libft.h>
-#include <memmgmt.h>
-#include <linked_list.h>
+#include <ft_stdio/ft_printf.h>
+#include <ft_libft.h>
+#include <ft_memory.h>
+#include <ft_llist.h>
 
 static void		composite_string_push(t_composite_string **composite, char *str, t_token_type type)
 {
@@ -319,17 +319,17 @@ static void		print_token(t_token *token)
 	}
 }
 
-t_linked_list	*lex(char *str)
+t_llist			*lex(char *str)
 {
 	t_lex_state			state;
-	t_linked_list		*lst;
+	t_llist				*lst;
 	t_composite_string	*current_string;
 	char				c;
 
 	ft_bzero(&state, sizeof(t_lex_state));
 	state.str = str;
 	current_string = NULL;
-	lst = linked_list_new(&del_elem);
+	lst = ft_llist_new(&del_elem);
 	while ((c = lex_next_char(&state)) != '\0') {
 		if (c == '\'')
 		{
@@ -348,63 +348,63 @@ t_linked_list	*lex(char *str)
 		{
 			if (current_string != NULL)
 			{
-				linked_list_push_back(lst, create_composite_token(current_string));
+				ft_llist_push_back(lst, create_composite_token(current_string));
 				current_string = NULL;
 			}
 			if (c == '|') {
 				if (peek_current_char(&state) == '|') {
 					skip_next_char(&state);
-					linked_list_push_back(lst, create_token(OR));
+					ft_llist_push_back(lst, create_token(OR));
 				} else {
-					linked_list_push_back(lst, create_token(PIPE));
+					ft_llist_push_back(lst, create_token(PIPE));
 				}
 			}
 			else if (c == '<') {
 				if (peek_current_char(&state) == '<') {
 					skip_next_char(&state);
-					linked_list_push_back(lst, create_token(REDIR_LL));
+					ft_llist_push_back(lst, create_token(REDIR_LL));
 				} else {
-					linked_list_push_back(lst, create_token(REDIR_L));
+					ft_llist_push_back(lst, create_token(REDIR_L));
 				}
 			}
 			else if (c == '>') {
 				if (peek_current_char(&state) == '>') {
 					skip_next_char(&state);
-					linked_list_push_back(lst, create_token(REDIR_RR));
+					ft_llist_push_back(lst, create_token(REDIR_RR));
 				} else {
-					linked_list_push_back(lst, create_token(REDIR_R));
+					ft_llist_push_back(lst, create_token(REDIR_R));
 				}
 			}
 			else if (c == '&')
 			{
 				if (peek_current_char(&state) == '&') {
 					skip_next_char(&state);
-					linked_list_push_back(lst, create_token(AND));
+					ft_llist_push_back(lst, create_token(AND));
 				} else {
-					linked_list_push_back(lst, create_token(AMPERSAND));
+					ft_llist_push_back(lst, create_token(AMPERSAND));
 				}
 			}
 			else if (c == '(')
 			{
-				linked_list_push_back(lst, create_token(BRACKET_OPEN));
+				ft_llist_push_back(lst, create_token(BRACKET_OPEN));
 			}
 			else if (c == ')')
 			{
-				linked_list_push_back(lst, create_token(BRACKET_CLOSE));
+				ft_llist_push_back(lst, create_token(BRACKET_CLOSE));
 			}
 			else if (c == ';')
 			{
-				linked_list_push_back(lst, create_token(SEMICOLUMN));
+				ft_llist_push_back(lst, create_token(SEMICOLUMN));
 			}
 		}
 	}
 	if (current_string != NULL)
 	{
-		linked_list_push_back(lst, create_composite_token(current_string));
+		ft_llist_push_back(lst, create_composite_token(current_string));
 		current_string = NULL;
 	}
 
 	ft_printf("&e&lLexical Analysis result:&r\n");
-	linked_list_iter(lst, (void (*)(void *))&print_token);
+	ft_llist_iter(lst, (void (*)(void *))&print_token);
 	return (lst);
 }

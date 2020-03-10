@@ -10,10 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <ft_string.h>
 #include <ft_env.h>
-#include <libft.h>
-#include <memmgmt.h>
-#include <printf.h>
+#include <ft_libft.h>
+#include <ft_memory.h>
+#include <ft_stdio/ft_printf.h>
 #include <zconf.h>
 #include <stdlib.h>
 #include <sys/stat.h>
@@ -68,7 +69,7 @@ void		env_print_all(t_env *env)
 	{
 		split = ft_nsplit(*list, '=', 2);
 		ft_printf("&b%-20s &r= %s\n", split[0], split[1] == NULL ? "" : split[1]);
-		ft_strarr_free(split);
+		ft_free_array(split);
 		list++;
 	}
 }
@@ -214,12 +215,12 @@ char 		*env_resolve_path_file(t_env *env, char *file)
 	{
 		joined_path = ft_strjoin3(path[i], "/", file);
 		if (test_path(joined_path) != NULL) {
-			ft_strarr_free(path);
+			ft_free_array(path);
 			return (joined_path);
 		}
 		ft_free(joined_path);
 		i++;
 	}
-	ft_strarr_free(path);
+	ft_free_array(path);
 	return (NULL);
 }

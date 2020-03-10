@@ -3,98 +3,35 @@ project(minishell C)
 
 set(CMAKE_C_STANDARD 11)
 
-include_directories(libft/incl)
+include_directories(libft/include)
 include_directories(project_files/incl)
 
 add_library(libft
-        libft/incl/libft.h
-        libft/incl/linked_list.h
-        libft/incl/memmgmt.h
-        libft/incl/printf.h
-        libft/incl/printf_utils.h
-        libft/src/collections/linked_list/linked_list_clear.c
-        libft/src/collections/linked_list/linked_list_free.c
-        libft/src/collections/linked_list/linked_list_iter.c
-        libft/src/collections/linked_list/linked_list_new.c
-        libft/src/collections/linked_list/linked_list_push.c
-        libft/src/collections/linked_list/linked_list_push_back.c
-        libft/src/collections/linked_list/linked_list_size.c
-        libft/src/printf/buf/fd/buf_fd_chars_printed.c
-        libft/src/printf/buf/fd/buf_fd_create.c
-        libft/src/printf/buf/fd/buf_fd_flush.c
-        libft/src/printf/buf/fd/buf_fd_putchar.c
-        libft/src/printf/buf/fd/buf_fd_putchars.c
-        libft/src/printf/buf/fd/buf_fd_putstr.c
-        libft/src/printf/buf/fd/buf_fd_putstri.c
-        libft/src/printf/buf/fd/buf_fd_reset.c
-        libft/src/printf/buf/str/buf_str_chars_printed.c
-        libft/src/printf/buf/str/buf_str_create.c
-        libft/src/printf/buf/str/buf_str_flush.c
-        libft/src/printf/buf/str/buf_str_putchar.c
-        libft/src/printf/buf/str/buf_str_putchars.c
-        libft/src/printf/buf/str/buf_str_putstr.c
-        libft/src/printf/buf/str/buf_str_putstri.c
-        libft/src/printf/buf/str/buf_str_reset.c
-        libft/src/printf/buf/buf_chars_printed.c
-        libft/src/printf/buf/buf_flush.c
-        libft/src/printf/buf/buf_putchar.c
-        libft/src/printf/buf/buf_putchars.c
-        libft/src/printf/buf/buf_putstr.c
-        libft/src/printf/buf/buf_putstri.c
-        libft/src/printf/buf/buf_reset.c
-        libft/src/printf/spec/spec_base.c
-        libft/src/printf/spec/spec_char.c
-        libft/src/printf/spec/spec_charsprinted.c
-        libft/src/printf/spec/spec_get.c
-        libft/src/printf/spec/spec_ptr.c
-        libft/src/printf/spec/spec_signed_int.c
-        libft/src/printf/spec/spec_string.c
-        libft/src/printf/spec/spec_unsigned_int.c
-        libft/src/printf/utils/fmt_read.c
-        libft/src/printf/utils/ft_inner_printf.c
-        libft/src/printf/utils/ft_lltoa.c
-        libft/src/printf/utils/ft_pf_atoi.c
-        libft/src/printf/utils/ft_ulltoa.c
-        libft/src/printf/utils/ft_ulltoa_base.c
-        libft/src/printf/ft_eprintf.c
-        libft/src/printf/ft_fprintf.c
-        libft/src/printf/ft_printf.c
-        libft/src/printf/ft_vfprintf.c
-        libft/src/printf/ft_vprintf.c
-        libft/src/ft_abs.c
-        libft/src/ft_atoi.c
-        libft/src/ft_bzero.c
-        libft/src/ft_calloc.c
-        libft/src/ft_checked_calloc.c
-        libft/src/ft_checked_malloc.c
-        libft/src/ft_dabs.c
-        libft/src/ft_exit.c
-        libft/src/ft_free.c
-        libft/src/ft_isdigit.c
-        libft/src/ft_isspace.c
-        libft/src/ft_malloc.c
-        libft/src/ft_max.c
-        libft/src/ft_memset.c
-        libft/src/ft_min.c
-        libft/src/ft_nsplit.c
-        libft/src/ft_nullcheck.c
-        libft/src/ft_split.c
-        libft/src/ft_strarr_append.c
-        libft/src/ft_strarr_free.c
-        libft/src/ft_strarr_size.c
-        libft/src/ft_strchr.c
-        libft/src/ft_strcmp.c
-        libft/src/ft_strdup.c
-        libft/src/ft_strempty.c
-        libft/src/ft_strends_with.c
-        libft/src/ft_strip_chars.c
-        libft/src/ft_stris_empty.c
-        libft/src/ft_strjoin.c
-        libft/src/ft_strtrim.c
-        libft/src/ft_substr.c
-        libft/src/printf/ft_snprintf.c)
+        libft/include/ft_stdio/ft_printf.h
+        libft/include/ft_stdio/ft_printf_utils.h
+        libft/include/ft_ctype.h
+        libft/include/ft_libft.h
+        libft/include/ft_memory.h
+        libft/include/ft_stdlib.h
+        libft/include/ft_string.h
+        libft/include/ft_unistd.h
+        libft/include/ft_math.h
+        libft/include/ft_llist.h
+        libft/src/ft_stdio
+        libft/src/ft_ctype
+        libft/src/ft_memory
+        libft/src/ft_string
+        libft/src/ft_unistd
+        libft/src/ft_stdlib
+        libft/src/ft_libft
+        libft/src/ft_llist
+        libft/src/ft_math
+        )
 
 add_executable(minishell
         project_files/src/main.c
         project_files/src/lex/lex.c
-        project_files/incl/ft_lex.h project_files/incl/ft_env.h project_files/src/env/env.c project_files/incl/ft_parser.h)
+        project_files/incl/ft_lex.h
+        project_files/incl/ft_env.h
+        project_files/src/env/env.c
+        project_files/incl/ft_parser.h)

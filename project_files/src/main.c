@@ -10,9 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <get_next_line.h>
-#include <printf.h>
-#include <memmgmt.h>
+#include <ft_llist.h>
+#include <ft_libft.h>
+#include <ft_stdio/ft_printf.h>
+#include <ft_memory.h>
 #include <ft_lex.h>
 #include <ft_env.h>
 #include <unistd.h>
@@ -20,11 +21,11 @@
 
 // literally just for env variable parsing testing
 // remove this once they work
-void	debug_tokens(t_linked_list *lst, t_env *env)
+void	debug_tokens(t_llist *lst, t_env *env)
 {
-	t_linked_list_node	*node;
-	t_token				*token;
-	char 				*fuck_its_the_leaky_boii;
+	t_llist_node	*node;
+	t_token			*token;
+	char 			*fuck_its_the_leaky_boii;
 
 	node = lst->head;
 	while (node != NULL)
@@ -42,11 +43,11 @@ void	debug_tokens(t_linked_list *lst, t_env *env)
 
 int		main(int argc, char **argv, char **envp)
 {
-	t_env			*env;
-	char			*line;
-	int 			gnl_ret;
-	t_linked_list	*lex_tokens;
-	char 			*working_dir;
+	t_env	*env;
+	char	*line;
+	int 	gnl_ret;
+	t_llist	*lex_tokens;
+	char 	*working_dir;
 
 	env = env_from(envp);
 
@@ -71,7 +72,7 @@ int		main(int argc, char **argv, char **envp)
 			ft_free(path);
 		}
 
-		linked_list_free(&lex_tokens);
+		ft_llist_free(&lex_tokens);
 		ft_free(line);
 		free(working_dir);
 	}
