@@ -15,7 +15,7 @@
 section .text
 	global FN_LABEL(ft_memcpy)
 
-FN_LABEL(ft_mempcy):
+FN_LABEL(ft_memcpy):
 	xor		ecx, ecx				;clear rcx register
 	xor		eax, eax				;clear rax register
 	cmp		rdi, rsi				;cmp dst string to src string

@@ -31,6 +31,6 @@ FN_LABEL(ft_strcmp):
 
 .return:
 	movzx	rax, byte [rdi]
-	movzx	rsi, byte [rsi]
-	sub		rax, rsi
+	movzx	rdi, byte [rsi]
+	sub		rax, rdi
 	ret

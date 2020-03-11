@@ -102,11 +102,8 @@ re:
 	@$(MAKE) all
 
 #Test rules
-test: $(NAME)
+$(TEST): $(NAME)
 	@echo "$(PREFIX)$(GREEN)Bundling tests...$(END)"
 	@$(CC) $(CFLAGS) -o $(TEST) -I$(INC_DIR) $(SRC_TESTS) $(NAME)
-
-test_clean:
-	@echo "$(PREFIX)$(RED)Removing tests... $(END)$(TEST)"
-	@$(RM) -f *.o
-	@$(RM) -f $(TEST)
+	@./test
+	@$(RM) test
