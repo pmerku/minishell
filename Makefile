@@ -14,8 +14,8 @@
 NAME			= minishell
 
 # Compiler
-COMPILE_FLAGS	= -Wall -Werror -Wextra
-DEBUG_FLAG		= -O3
+CFLAGS			= -Wall -Werror -Wextra
+DFLAGS			= -O3
 
 # Files
 SRC_DIR			= project_files/src
@@ -25,7 +25,7 @@ SRC				= main.c
 HEADERS			=
 
 LIBFT			= libft/libft.a
-INC_LIBFT		= libft/incl
+INC_LIBFT		= libft/include
 
 # Sub-modules
 include	project_files/src/env/env.mk
@@ -33,7 +33,7 @@ include	project_files/src/lex/lex.mk
 
 # Fix sources and headers
 OBJ				= $(patsubst %.c,%.o,$(SRC))
-OBJ				:= $(patsubst %.s,%.o,$(OBJ))
+OBJ				:= $(patsubst %.asm,%.o,$(OBJ))
 HEADERS			:= $(addprefix $(INC_DIR)/,$(HEADERS))
 
 # Colours
@@ -45,19 +45,14 @@ PREFIX			= $(DARK_GREEN)$(NAME) $(END)\xc2\xbb
 
 all: $(NAME)
 
-$(NAME): $(addprefix $(OUT_DIR)/,$(OBJ)) $(LIBFT)
+$(NAME): $(LIBFT) $(addprefix $(OUT_DIR)/,$(OBJ))
 	@echo "$(PREFIX)$(GREEN)Bundling objects...$(END)"
-	@$(CC) $(COMPILE_FLAGS) $(DEBUG_FLAG) -o $(NAME) $(addprefix $(OUT_DIR)/,$(OBJ)) $(LIBFT)
+	@$(CC) $(CFLAGS) $(DFLAGS) -I$(INC_DIR) -I$(INC_LIBFT) -o $@ $^
 
 $(OUT_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
 	@echo "$(PREFIX)$(GREEN)Compiling file $(END)$< $(GREEN)to $(END)$@"
 	@mkdir -p $(dir $@)
-	@$(CC) $(COMPILE_FLAGS) $(DEBUG_FLAG) -I./$(INC_DIR) -I./$(INC_LIBFT) -c -o $@ $<
-
-$(OUT_DIR)/%.o: $(SRC_DIR)/%.s $(HEADERS)
-	@echo "$(PREFIX)$(GREEN)Compiling file $(END)$< $(GREEN)to $(END)$@"
-	@mkdir -p $(dir $@)
-	@nasm -f macho64 -o $@ $<
+	@$(CC) $(CFLAGS) $(DFLAGS) -I$(INC_DIR) -I$(INC_LIBFT) -o $@ -c $<
 
 $(LIBFT):
 	@echo "$(PREFIX)$(GREEN)Bundling libft...$(END)"

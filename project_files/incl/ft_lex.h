@@ -14,7 +14,7 @@
 # define FT_LEX_H
 
 # include <stddef.h>
-# include <linked_list.h>
+# include <ft_llist.h>
 
 /*
 ** Represents the type of a token
@@ -75,6 +75,6 @@ typedef struct			s_lex_state {
 	size_t				offset;
 }						t_lex_state;
 
-t_linked_list			*lex(char *str);
+t_llist					*lex(char *str);
 
 #endif
