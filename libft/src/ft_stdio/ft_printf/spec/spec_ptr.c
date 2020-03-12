@@ -27,7 +27,7 @@ static unsigned long long	read_into_buf(t_ft_printf *pf, char *buf,
 {
 	unsigned long long	i;
 
-	ft_memset(buf, 130, '\0');
+	ft_memset(buf, '\0', 130);
 	i = spec_unsigned_int_read_val(pf);
 	ft_ulltoa_base(buf, "0123456789abcdef", i);
 	if (fmt->precision_set == 1 && fmt->precision == 0 && i == 0)

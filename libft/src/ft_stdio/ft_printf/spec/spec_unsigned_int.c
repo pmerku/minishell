@@ -39,7 +39,7 @@ static char					read_into_buf(t_ft_printf *pf, t_ft_fmt *fmt,
 	char				sign;
 
 	sign = '\0';
-	ft_memset(buf, 24, '\0');
+	ft_memset(buf,  '\0', 24);
 	i = spec_unsigned_int_read_val(pf, fmt);
 	ft_ulltoa(buf, i);
 	if (fmt->force_nbr_sign == 1 && sign == '\0')
