@@ -182,7 +182,7 @@ static void		read_raw_str(t_composite_string **str, t_lex_state *state)
 				return ;
 		}
 	}
-	if (start != state->offset - 1)
+	if (start != state->offset)
 	{
 		if (c != '\0' && peek_current_char(state) != '\0')
 			state->offset--;
