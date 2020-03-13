@@ -45,7 +45,7 @@ PREFIX			= $(DARK_GREEN)$(NAME) $(END)\xc2\xbb
 
 all: $(NAME)
 
-$(NAME): $(LIBFT) $(addprefix $(OUT_DIR)/,$(OBJ))
+$(NAME): $(addprefix $(OUT_DIR)/,$(OBJ)) $(LIBFT)
 	@echo "$(PREFIX)$(GREEN)Bundling objects...$(END)"
 	@$(CC) $(CFLAGS) $(DFLAGS) -I$(INC_DIR) -I$(INC_LIBFT) -o $@ $^
 
