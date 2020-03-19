@@ -49,10 +49,10 @@ int		main(int argc, char **argv, char **envp)
 	t_llist	*lex_tokens;
 	char 	*working_dir;
 
-	env = env_from(envp);
+	char 	*err = NULL;
 
+	env = env_from(envp);
 	(void)argc;
-	(void)envp;
 	(void)argv;
 	gnl_ret = 1;
 	while (gnl_ret == 1)
@@ -60,7 +60,14 @@ int		main(int argc, char **argv, char **envp)
 		working_dir = getcwd(NULL, 0);
 		ft_printf("\033[46;37m&f \xF0\x9F\x93\x81 %s&r ", working_dir);
 		gnl_ret = get_next_line(0, &line);
-		lex_tokens = lex(line);
+		lex_tokens = lex(line, &err);
+		if (err != NULL)
+		{
+			ft_printf("Error: %s %p\n", err, lex_tokens);
+			err = NULL;
+			continue ;
+		}
+
 		debug_tokens(lex_tokens, env);
 
 		if (lex_tokens->head != NULL && ((t_token *)lex_tokens->head->data)->type == STRING)
