@@ -338,7 +338,7 @@ static char				read_quoted_str(t_lex_state *state)
 		{
 			if (peek_next_char(state) == '\0')
 				break;
-			if (peek_next_char(state) == '"')
+			if (peek_next_char(state) == '"' || peek_next_char(state) == '$')
 			{
 				skip_next_char(state);
 				continue ;
