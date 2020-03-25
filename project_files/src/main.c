@@ -18,26 +18,51 @@
 #include <ft_env.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <ft_parser.h>
 
-// literally just for env variable parsing testing
-// remove this once they work
-void	debug_tokens(t_llist *lst, t_env *env)
+static void visualize_parse(t_parser_command ***commands, t_env *env)
 {
-	t_llist_node	*node;
-	t_token			*token;
-	char 			*fuck_its_the_leaky_boii;
+	t_parser_command	**list;
+	t_parser_command	*command;
+	t_redirection		**redirections;
+	size_t				i;
+	char 				*parsed_string;
 
-	node = lst->head;
-	while (node != NULL)
-	{
-		token = (t_token *)node->data;
-		if (token->type == STRING)
-		{
-			fuck_its_the_leaky_boii = env_parse_string(env, token->str);
-			ft_printf(" &a&l* &rParsed composite string: %s\n", fuck_its_the_leaky_boii);
-			ft_free(fuck_its_the_leaky_boii);
+	ft_printf("&fParse results:&r %p\n", commands);
+	while (*commands != NULL) {
+		ft_printf("&a  * &fCommand execution\n");
+		list = *commands;
+		while (*list != NULL) {
+			ft_printf("&a    * &fSingle command\n");
+			ft_printf("&a      * &fArguments:\n");
+			command = *list;
+			i = 0;
+			while (command->arguments[i] != NULL) {
+				parsed_string = env_parse_string(env, command->arguments[i++]);
+				ft_printf("&e        - &f%s\n&r", parsed_string);
+				ft_free(parsed_string);
+			}
+			i = 0;
+			redirections = command->redirections_in;
+			while (redirections != NULL && redirections[i] != NULL) {
+				if (i == 0)
+					ft_printf("&a      * &fRedirections (In):\n");
+				parsed_string = env_parse_string(env, redirections[i++]->file);
+				ft_printf("&e        - &f%s\n&r", parsed_string);
+				ft_free(parsed_string);
+			}
+			redirections = command->redirections_out;
+			while (redirections != NULL && redirections[i] != NULL) {
+				if (i == 0)
+					ft_printf("&a      * &fRedirections (Out):\n");
+				parsed_string =  env_parse_string(env, redirections[i]->file);
+				ft_printf("&e        - &f%s (&eType: &f%s)\n&r", parsed_string, redirections[i]->type == APPEND ? "APPEND" : "TRUNCATE");
+				ft_free(parsed_string);
+				i++;
+			}
+			list++;
 		}
-		node = node->next;
+		commands++;
 	}
 }
 
@@ -47,6 +72,7 @@ int		main(int argc, char **argv, char **envp)
 	char	*line;
 	int 	gnl_ret;
 	t_llist	*lex_tokens;
+	t_parser_command ***parse_tokens;
 	char 	*working_dir;
 
 	char 	*err = NULL;
@@ -58,27 +84,30 @@ int		main(int argc, char **argv, char **envp)
 	while (gnl_ret == 1)
 	{
 		working_dir = getcwd(NULL, 0);
-		ft_printf("\033[46;37m&f \xF0\x9F\x93\x81 %s&r ", working_dir);
+		ft_printf("\033[46;37m&f \xF0\x9F\x93\x81 %d %s&r ", 1, working_dir);
 		gnl_ret = get_next_line(0, &line);
 		lex_tokens = lex(line, &err);
 		if (err != NULL)
 		{
-			ft_printf("Error: %s %p\n", err, lex_tokens);
+			ft_printf("&cError lexing:&r %s\n", err);
 			err = NULL;
+			ft_free(line);
+			free(working_dir);
 			continue ;
 		}
-
-		debug_tokens(lex_tokens, env);
-
-		if (lex_tokens->head != NULL && ((t_token *)lex_tokens->head->data)->type == STRING)
+		parse_tokens = parse(lex_tokens, &err);
+		if (err != NULL)
 		{
-			char *parsed = env_parse_string(env, ((t_token *)lex_tokens->head->data)->str);
-			char *path = env_resolve_path_file(env, parsed);
-			ft_printf("Token: %s: %s\n", parsed, path);
-			ft_free(parsed);
-			ft_free(path);
+			ft_printf("&cError parsing:&r %s\n", err);
+			err = NULL;
+			ft_llist_free(&lex_tokens);
+			ft_free(line);
+			free(working_dir);
+			continue ;
 		}
+		visualize_parse(parse_tokens, env);
 
+		free_parse_results(parse_tokens);
 		ft_llist_free(&lex_tokens);
 		ft_free(line);
 		free(working_dir);

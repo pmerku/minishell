@@ -15,7 +15,7 @@ NAME			= minishell
 
 # Compiler
 CFLAGS			= -Wall -Werror -Wextra
-DFLAGS			= -O3
+DFLAGS			= -g
 
 # Files
 SRC_DIR			= project_files/src
@@ -30,6 +30,7 @@ INC_LIBFT		= libft/include
 # Sub-modules
 include	project_files/src/env/env.mk
 include	project_files/src/lex/lex.mk
+include	project_files/src/parser/parser.mk
 
 # Fix sources and headers
 OBJ				= $(patsubst %.c,%.o,$(SRC))
@@ -44,6 +45,9 @@ END				= \033[0;0m
 PREFIX			= $(DARK_GREEN)$(NAME) $(END)\xc2\xbb
 
 all: $(NAME)
+
+deps:
+	@echo "$(SRC)"
 
 $(NAME): $(addprefix $(OUT_DIR)/,$(OBJ)) $(LIBFT)
 	@echo "$(PREFIX)$(GREEN)Bundling objects...$(END)"

@@ -26,7 +26,6 @@
 ** ENV_STRING		A string representing the key of an environmental variable
 ** SEMICOLUMN		;
 ** REDIR_L			<
-** REDIR_LL			<<
  * REDIR_R			>
  * REDIR_RR			>>
  * AMPERSAND		&
@@ -77,5 +76,6 @@ typedef struct			s_lex_state {
 }						t_lex_state;
 
 t_llist					*lex(char *str, char **err);
+void					del_comp_string(t_composite_string *str);
 
 #endif
