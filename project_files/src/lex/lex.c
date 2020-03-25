@@ -296,11 +296,16 @@ static char				read_env_var(t_lex_state *state)
 	start = state->offset;
 	while (lex_next_to_char(state, &c) != '\0')
 	{
-		if ((is_bracket && c == '}')
-			|| !is_valid_env_var_char(c, state->offset == start + 1))
+		if (is_bracket && c == '}')
 			break ;
+		if (!is_valid_env_var_char(c, state->offset == start + 1))
+		{
+			if (state->offset != start + 1)
+				state->offset--;
+			break;
+		}
 	}
-	if (!push_substr(state, start, state->offset, ENV_STRING))
+	if (!push_substr(state, start, state->offset - is_bracket, ENV_STRING))
 		return (0);
 	state->offset += is_bracket;
 	return (1);
