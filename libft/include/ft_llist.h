@@ -29,8 +29,8 @@ typedef struct			s_llist
 }						t_llist;
 
 t_llist					*ft_llist_new(void (*del_fn)(void *));
-void					ft_llist_push_front(t_llist *lst, void *data);
-void					ft_llist_push_back(t_llist *lst, void *data);
+char					ft_llist_push_front(t_llist *lst, void *data);
+char					ft_llist_push_back(t_llist *lst, void *data);
 int						ft_llist_size(t_llist *lst);
 
 /*

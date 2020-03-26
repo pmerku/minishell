@@ -15,6 +15,7 @@
 #include <ft_string.h>
 #include <ft_unistd.h>
 #include <ft_libft.h>
+#include <unistd.h>
 
 static int	clean(int fd, char *store[fd], int x)
 {
@@ -32,7 +33,7 @@ static int	ft_read_line(int fd, char *store[fd])
 	char	buf[BUFFER_SIZE + 1];
 	int		res;
 
-	res = ft_read(fd, buf, BUFFER_SIZE);
+	res = read(fd, buf, BUFFER_SIZE);
 	if (res < 0)
 		return (-1);
 	buf[res] = '\0';
