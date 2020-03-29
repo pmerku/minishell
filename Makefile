@@ -16,7 +16,7 @@ NAME			= minishell
 # Compiler
 CFLAGS			= -Wall -Werror -Wextra
 DFLAGS			= -g
-
+CC 				= clang
 # Files
 SRC_DIR			= project_files/src
 OUT_DIR			= project_files/out
@@ -31,6 +31,7 @@ INC_LIBFT		= libft/include
 include	project_files/src/env/env.mk
 include	project_files/src/lex/lex.mk
 include	project_files/src/parser/parser.mk
+include project_files/src/exec/exec.mk
 
 # Fix sources and headers
 OBJ				= $(patsubst %.c,%.o,$(SRC))
