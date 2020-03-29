@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <ft_exec.h>
 #include <ft_llist.h>
 #include <ft_libft.h>
 #include <ft_stdio/ft_printf.h>
@@ -125,6 +126,8 @@ int		main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		visualize_parse(parse_tokens, env);
+
+		ft_printf("%d\n", execute(parse_tokens, env));
 
 		free_parse_results(parse_tokens);
 		ft_llist_free(&lex_tokens);

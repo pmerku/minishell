@@ -17,6 +17,7 @@
 
 int 	exec_exit(char **args)
 {
+	(void)args;
 	return (0);
 }
 
@@ -49,4 +50,5 @@ int 	exec_echo(char **args)
 		else
 			ft_printf("%s\n", args[1]);
 	}
+	return (1);
 }
