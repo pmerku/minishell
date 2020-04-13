@@ -127,7 +127,8 @@ int		main(int argc, char **argv, char **envp)
 		}
 		visualize_parse(parse_tokens, env);
 
-		ft_printf("%d\n", execute(parse_tokens, env));
+		ft_printf("EXECUTE RETURN: [%d]\n", execute(parse_tokens, env));
+
 
 		free_parse_results(parse_tokens);
 		ft_llist_free(&lex_tokens);

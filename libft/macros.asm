@@ -10,7 +10,7 @@
 ;                                                                              ;
 ; **************************************************************************** ;
 
-%ifndef MACROS_S
+%ifndef MACROS_ASM
 	%define SSE42_EQUAL_EACH 1000b
 
 	%ifidn __OUTPUT_FORMAT__, elf64

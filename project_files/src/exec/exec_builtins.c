@@ -46,9 +46,13 @@ int 	exec_echo(char **args)
 	else
 	{
 		if (ft_strcmp(args[1], "-n") == 0)
-			return (1);
+			ft_printf("ECHO BUILTIN ==> [%s]", args[2]);
 		else
-			ft_printf("%s\n", args[1]);
+			ft_printf("ECHO BUILTIN ==> [%s]\n", args[1]);
 	}
+	ft_printf("\n");
 	return (1);
 }
+
+// echo -n hello > out ; echo test | cat -e < out > in
+// echo -n > out ; echo test | cat -e < out > in

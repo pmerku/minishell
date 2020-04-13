@@ -44,12 +44,83 @@ static int		(*builtin_func[8]) (char **) = {
 		&exec_exit
 };
 
-static int		exec_num_builtins()
+//static int		exec_num_builtins()
+//{
+//	return (sizeof(builtin_str) / sizeof(char *));
+//}
+
+static int 		exec_num_simple_commands(t_parser_command **list)
 {
-	return (sizeof(builtin_str) / sizeof(char *));
+	int 	i;
+
+	i = 0;
+	while (list[i] != NULL) {
+		i++;
+	}
+	return (i);
 }
 
-static int		exec_launch(char **command, char *infile, char *outfile, int background)
+static int 		exec_num_commands(t_parser_command ***commands)
+{
+	int 	i;
+
+	i = 0;
+	while (commands[i] != NULL) {
+		i++;
+	}
+	return (i);
+}
+
+
+
+static t_simple_command 	*exec_launch(t_parser_command **list, t_env *env)
+{
+	t_parser_command	*command;
+	t_redirection		**redirections;
+	t_simple_command	*simple_command;
+	int 				i;
+
+	command = *list;
+	i = 0;
+	while (command->arguments[i] != NULL) {
+		i++;
+	}
+	simple_command = ft_checked_malloc(sizeof(t_simple_command));
+	if (!simple_command) {
+		return (NULL);
+	}
+	simple_command->args = (char **)ft_checked_calloc(i, sizeof(char *));
+	if (!simple_command->args) {
+		return (NULL);
+	}
+	i = 0;
+	while (command->arguments[i] != NULL) {
+		simple_command->args[i] = env_parse_string(env, command->arguments[i]);
+		ft_printf("COMMAND ARGS ==> [%s]\n", simple_command->args[i]);
+		i++; //TODO expand path (/bin/<command>)
+	}
+	i = 0;
+	redirections = command->redirections_in;
+	while (redirections != NULL && redirections[i] != NULL) {
+		i++;
+	}
+	if (redirections != NULL && redirections[i - 1] != NULL) {
+		simple_command->infile = env_parse_string(env, redirections[i - 1]->file);
+		ft_printf("INFILE ==> [%s]\n", simple_command->infile);
+	}
+	i = 0;
+	redirections = command->redirections_out;
+	while (redirections != NULL && redirections[i] != NULL) {
+		i++;
+	}
+	if (redirections != NULL && redirections[i - 1] != NULL) {
+		simple_command->outfile = env_parse_string(env, redirections[i - 1]->file);
+		ft_printf("OUTFILE ==> [%s]\n", simple_command->outfile);
+	}
+	return (simple_command);
+}
+
+static int		exec_command(t_parser_command **list, t_env *env)
 {
 	int		tmpin;
 	int 	tmpout;
@@ -63,19 +134,26 @@ static int		exec_launch(char **command, char *infile, char *outfile, int backgro
 	tmpin = dup(0);
 	tmpout = dup(1);
 
-	if (infile != NULL) {
-		fdin = open(infile, O_RDONLY);
+	t_simple_command	*simple_command = NULL;
+
+	simple_command = exec_launch(list, env);
+	if (!simple_command) {
+		return (0);
+	}
+	if (simple_command->infile != NULL) {
+		fdin = open(simple_command->infile, O_RDONLY);
 	}
 	else {
 		fdin = dup(tmpin);
 	}
 	i = 0;
-	while (i < exec_num_builtins()) {
+	ft_printf("NUM OF PIPES: [%d]\n", exec_num_simple_commands(list) - 1);
+	while (i < exec_num_simple_commands(list)) {
 		dup2(fdin, 0);
 		close(fdin);
-		if (i == exec_num_builtins() - 1) {
-			if (outfile != NULL) {
-				fdout = open(outfile, O_WRONLY);
+		if (i == exec_num_simple_commands(list) - 1) {
+			if (simple_command->outfile != NULL) {
+				fdout = open(simple_command->outfile, O_WRONLY);
 			}
 			else {
 				fdout = dup(tmpout);
@@ -89,12 +167,12 @@ static int		exec_launch(char **command, char *infile, char *outfile, int backgro
 		}
 		dup2(fdout, 1);
 		close(fdout);
-		if (ft_strcmp(command[0], builtin_str[0]) == 0) {
-			builtin_func[0](command);
+		if (ft_strcmp(simple_command->args[0], builtin_str[0]) == 0) {
+			builtin_func[0](simple_command->args); //TODO
 		}
 		pid = fork();
 		if (pid == 0) {
-			execve(command[0], command, NULL);
+			execve(simple_command->args[0], simple_command->args, NULL);
 			strerror(EINTR);
 			exit(EXIT_FAILURE);
 		}
@@ -110,44 +188,33 @@ static int		exec_launch(char **command, char *infile, char *outfile, int backgro
 	close(tmpout);
 
 	int status = 1;
-	pid_t	wpid = pid;
+	int 	background = 0; //TODO
 	if (!background) {
-		while (!WIFEXITED(status) && !WIFSIGNALED(status) && wpid)
-			wpid = waitpid(pid, &status, WUNTRACED);
+		waitpid(pid, &status, WUNTRACED);
 	}
 	return (1);
 }
 
 int				execute(t_parser_command ***commands, t_env *env)
 {
-	t_parser_command	**list;
-	t_parser_command	*command;
-//	t_redirection		**redirections;
-	size_t				i;
-	char 				**command_args;
-	char 				*parsed_string;
+	int 				i;
+	int 				ret;
 
-	command_args = (char **)ft_calloc(sizeof(char *), 2);
-	list = *commands;
-	command = *list;
 	i = 0;
-	while (command->arguments[i] != NULL) {
-		parsed_string = env_parse_string(env, command->arguments[i]);
-		command_args[i] = ft_strdup(parsed_string);
-		ft_nullcheck(command_args[i]);
-		ft_free(parsed_string);
+	ret = 1;
+	ft_printf("\nNUM OF COMMANDS: [%d]\n", exec_num_commands(commands));
+	while (i < exec_num_commands(commands) && ret == 1) {
+		ft_printf("COMMAND ==> [%d]\n", i);
+		ret = exec_command(commands[i], env);
 		i++;
 	}
-	return (exec_launch(command_args, NULL, NULL, 0));
-//	transform ***commands into **char
-//	how to parse this fing no idea????
-
-//	if (command->arguments->str == NULL)
+	return (ret);
+//	if (commands->arguments->str == NULL)
 //	{
 //		return (1);
 //	}
 //	i = 0;
-//	while (i < exec_num_buiiltins())
+//	while (i < exec_num_builtins())
 //	{
 //		if (ft_strcmp(command->arguments->str[i], builtin_str[i] == 0))
 //		{

@@ -17,6 +17,14 @@
 #include <ft_parser.h>
 #include <ft_lex.h>
 
+typedef struct	s_simple_command
+{
+	char		**args;
+	char 		*infile;
+	char 		*outfile;
+	int 		background;
+}				t_simple_command;
+
 int		execute(t_parser_command ***commands, t_env *env);
 
 int		exec_cd(char **args);

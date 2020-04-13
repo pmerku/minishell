@@ -1,0 +1,7 @@
+TODO
+	- loop trough the list of pipes (now it only executes the first command in the list)
+	- find last outfile and last infile
+	- expand commands with path (add /bin/<command>)
+	- finish builtins
+	- executed command works only once (/bin/ls works, but if you input it again it will
+										not work anymore)
