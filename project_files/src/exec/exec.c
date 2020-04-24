@@ -149,6 +149,11 @@ static int		exec_command(t_parser_command **list, t_env *env)
 	i = 0;
 	ft_printf("NUM OF PIPES: [%d]\n", exec_num_simple_commands(list) - 1);
 	while (i < exec_num_simple_commands(list)) {
+		ft_printf("PIPE INDEX: [%d]\n", i);
+		if (simple_command == NULL) {
+			list++;
+			simple_command = exec_launch(list, env);
+		}
 		dup2(fdin, 0);
 		close(fdin);
 		if (i == exec_num_simple_commands(list) - 1) {
@@ -173,12 +178,15 @@ static int		exec_command(t_parser_command **list, t_env *env)
 		pid = fork();
 		if (pid == 0) {
 			execve(simple_command->args[0], simple_command->args, NULL);
-			strerror(EINTR);
+			ft_printf("Something went wrong! (execve)\n");
 			exit(EXIT_FAILURE);
 		}
 		else if (pid < 0) {
+			ft_printf("Something went wrong! (fork)\n");
 			exit(EXIT_FAILURE);
 		}
+		ft_free(simple_command);
+		simple_command = NULL;
 		i++;
 	}
 
@@ -187,8 +195,8 @@ static int		exec_command(t_parser_command **list, t_env *env)
 	close(tmpin);
 	close(tmpout);
 
-	int status = 1;
-	int 	background = 0; //TODO
+	int		status = 1;
+	int		background = 0; //TODO
 	if (!background) {
 		waitpid(pid, &status, WUNTRACED);
 	}
@@ -209,18 +217,4 @@ int				execute(t_parser_command ***commands, t_env *env)
 		i++;
 	}
 	return (ret);
-//	if (commands->arguments->str == NULL)
-//	{
-//		return (1);
-//	}
-//	i = 0;
-//	while (i < exec_num_builtins())
-//	{
-//		if (ft_strcmp(command->arguments->str[i], builtin_str[i] == 0))
-//		{
-//			return (*builtin_func(command->arguments->str[i])(command->arguments->str));
-//		}
-//		i++;
-//	}
-//	return (exec_launch(command));
 }

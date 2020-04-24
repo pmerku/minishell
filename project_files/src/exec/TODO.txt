@@ -5,3 +5,4 @@ TODO
 	- finish builtins
 	- executed command works only once (/bin/ls works, but if you input it again it will
 										not work anymore)
+		^-- Probably because I don't clear out the command char**
