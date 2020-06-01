@@ -48,7 +48,7 @@ static void visualize_parse(t_parser_command ***commands, t_env *env)
 			i = 0;
 			while (command->arguments[i] != NULL) {
 				parsed_string = env_parse_string(env, command->arguments[i++]);
-				ft_printf("&e        - &f%s\n&r", parsed_string);
+				ft_printf("&e        - '&f%s&e'\n&r", parsed_string);
 				ft_free(parsed_string);
 			}
 			i = 0;

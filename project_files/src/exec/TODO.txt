@@ -1,8 +1,5 @@
 TODO
-	- loop trough the list of pipes (now it only executes the first command in the list)
+	- loop trough the list of pipes (now it only executes the first command in the list) (Done I guess? ~Dvoort)
 	- find last outfile and last infile
 	- expand commands with path (add /bin/<command>)
 	- finish builtins
-	- executed command works only once (/bin/ls works, but if you input it again it will
-										not work anymore)
-		^-- Probably because I don't clear out the command char**
