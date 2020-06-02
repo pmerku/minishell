@@ -75,7 +75,6 @@ static int 		exec_num_commands(t_parser_command ***commands)
 
 static t_simple_command 	*exec_launch(t_parser_command **list, t_env *env)
 {
-	ft_printf("working on %p\n", list);
 	t_parser_command	*command;
 	t_redirection		**redirections;
 	t_simple_command	*simple_command;
@@ -97,7 +96,7 @@ static t_simple_command 	*exec_launch(t_parser_command **list, t_env *env)
 	i = 0;
 	while (command->arguments[i] != NULL) {
 		simple_command->args[i] = env_parse_string(env, command->arguments[i]);
-		ft_printf("COMMAND ARGS ==> [%s]\n", simple_command->args[i]);
+		//yeet ft_printf("COMMAND ARGS ==> [%s]\n", simple_command->args[i]);
 		i++; //TODO expand path (/bin/<command>)
 	}
 	i = 0;
@@ -107,7 +106,7 @@ static t_simple_command 	*exec_launch(t_parser_command **list, t_env *env)
 	}
 	if (redirections != NULL && redirections[i - 1] != NULL) {
 		simple_command->infile = env_parse_string(env, redirections[i - 1]->file);
-		ft_printf("INFILE ==> [%s]\n", simple_command->infile);
+		//yeet ft_printf("INFILE ==> [%s]\n", simple_command->infile);
 	}
 	i = 0;
 	redirections = command->redirections_out;
@@ -116,7 +115,8 @@ static t_simple_command 	*exec_launch(t_parser_command **list, t_env *env)
 	}
 	if (redirections != NULL && redirections[i - 1] != NULL) {
 		simple_command->outfile = env_parse_string(env, redirections[i - 1]->file);
-		ft_printf("OUTFILE ==> [%s]\n", simple_command->outfile);
+		simple_command->redirection_type = redirections[i-1]->type;
+		//yeet ft_printf("OUTFILE ==> [%s] REDIR %d\n", simple_command->outfile, simple_command->redirection_type);
 	}
 	return (simple_command);
 }
@@ -147,8 +147,8 @@ static int		exec_command(t_parser_command **list, t_env *env)
 		fdin = open(simple_command->infile, O_RDONLY);
 		if (fdin == -1) {
 			ft_printf("&cError opening file &f%s&c: &f%s&r\n", simple_command->infile, strerror(errno));
-			return (1);
 			// TODO Clean up properly
+			return (1);
 		}
 	}
 	else {
@@ -156,9 +156,9 @@ static int		exec_command(t_parser_command **list, t_env *env)
 	}
 	i = 0;
 	list_size = exec_num_simple_commands(list);
-	ft_printf("NUM OF PIPES: [%d]\n", list_size - 1);
+	//yeet ft_printf("NUM OF PIPES: [%d]\n", list_size - 1);
 	while (i < list_size) {
-		ft_printf("PIPE INDEX: [%d]\n", i);
+		//yeet ft_printf("PIPE INDEX: [%d]\n", i);
 		if (simple_command == NULL) {
 			list++;
 			simple_command = exec_launch(list, env);
@@ -167,7 +167,12 @@ static int		exec_command(t_parser_command **list, t_env *env)
 		close(fdin);
 		if (i == list_size - 1) {
 			if (simple_command->outfile != NULL) {
-				fdout = open(simple_command->outfile, O_WRONLY);
+				fdout = open(simple_command->outfile, O_WRONLY | O_CREAT | (simple_command->redirection_type == APPEND ? O_APPEND : O_TRUNC), 0664);
+				if (fdout == -1) {
+					ft_printf("&cError opening file &f%s&c: &f%s&r\n", simple_command->outfile, strerror(errno));
+					// TODO Close shit properly
+					return (1);
+				}
 			}
 			else {
 				fdout = dup(tmpout);
@@ -188,22 +193,15 @@ static int		exec_command(t_parser_command **list, t_env *env)
 		if (pid == 0) {
 			char *path = env_resolve_path_file(env, simple_command->args[0]);
 			if (path == NULL) {
-				ft_printf("Command not found: %s\n", simple_command->args[0]);
+				ft_printf("&cCommand not found: &f%s&r\n", simple_command->args[0]);
 				exit(EXIT_FAILURE);
 			}
-			ft_printf("Executing command: %s\n", path);
-			ft_printf("args: %p\n", simple_command->args);
-			int j = 0;
-			while (simple_command->args[j] != NULL) {
-				ft_printf(" arg: '%s'\n", simple_command->args[j]);
-				j++;
-			}
 			execve(path, simple_command->args, env->vars);
-			ft_printf("Something went wrong! (execve) %s\n", strerror(errno));
+			//yeet ft_printf("Something went wrong! (execve) %s\n", strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 		else if (pid < 0) {
-			ft_printf("Something went wrong! (fork)\n");
+			//yeet ft_printf("Something went wrong! (fork)\n");
 			exit(EXIT_FAILURE);
 		}
 		ft_free(simple_command);
@@ -231,9 +229,9 @@ int				execute(t_parser_command ***commands, t_env *env)
 
 	i = 0;
 	ret = 1;
-	ft_printf("\nNUM OF COMMANDS: [%d]\n", exec_num_commands(commands));
+	//yeet ft_printf("\nNUM OF COMMANDS: [%d]\n", exec_num_commands(commands));
 	while (i < exec_num_commands(commands) && ret == 1) {
-		ft_printf("  COMMAND ==> [%d]\n", i);
+		//yeet ft_printf("  COMMAND ==> [%d]\n", i);
 		ret = exec_command(commands[i], env);
 		i++;
 	}
