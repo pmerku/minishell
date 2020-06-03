@@ -43,21 +43,78 @@ int		builtin_cd(char **args, t_env *env)
 
 int 	builtin_echo(char **args, t_env *env)
 {
-	(void)env;
+	(void)	env;
 	int		print_newline;
-	size_t 	i;
+	size_t	i;
 
 	print_newline = args[1] == NULL ? 1 : ft_strcmp(args[1], "-n") != 0;
-	i = print_newline ? 1 : 2;
+	i = 2 - print_newline;
 	while (args[i] != NULL)
 	{
 		if (ft_printf("%s%s", args[i], args[i + 1] == NULL ? "" : " ") == 1)
 			return (1);
 		i++;
 	}
-	if (print_newline)
-		if (ft_printf("\n") == -1)
+	return ((print_newline && ft_printf("\n") == -1) ? 1 : 0);
+}
+
+int		builtin_pwd(char **args, t_env *env)
+{
+	char *pwd;
+
+	(void)args;
+	(void)env;
+	pwd = getcwd(NULL, 0);
+	if (pwd == NULL)
+	{
+		ft_fprintf(2, "&cFailed to get current working directory.\n&r");
+		return (1);
+	}
+	if (ft_printf("%s\n", pwd) == -1)
+		return (1);
+	free(pwd);
+	return (0);
+}
+
+int		builtin_export(char **args, t_env *env)
+{
+	size_t	i;
+
+	if (args[1] == NULL)
+	{
+		ft_printf("&cThis is not a feature we *have* to support...\n&r");
+		return (0);
+	}
+	i = 0;
+	while (args[1][i] != '\0' && args[1][i] != '=')
+		i++;
+	if (args[1][i] == '\0')
+		return (0);
+	args[1][i] = '\0';
+	env_set(env, args[1], args[1] + i + 1);
+	return (0);
+}
+
+int		builtin_unset(char **args, t_env *env)
+{
+	if (args[1] == NULL)
+		return (0);
+	env_remove(env, args[1]);
+	return (0);
+}
+
+int		builtin_env(char **args, t_env *env)
+{
+	size_t i;
+
+	(void)args;
+	i = 0;
+	while (env->vars[i] != NULL)
+	{
+		if (ft_printf("%s\n", env->vars[i]) == -1)
 			return (1);
+		i++;
+	}
 	return (0);
 }
 

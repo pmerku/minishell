@@ -1,5 +1,2 @@
 TODO
-	- loop trough the list of pipes (now it only executes the first command in the list) (Done I guess? ~Dvoort)
 	- find last outfile and last infile
-	- expand commands with path (add /bin/<command>)
-	- finish builtins
