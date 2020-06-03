@@ -18,7 +18,7 @@
 #include <ft_lex.h>
 #include <sys/types.h>
 
-typedef struct	s_simple_command
+typedef struct			s_simple_command
 {
 	char		**args;
 	char 		*infile;

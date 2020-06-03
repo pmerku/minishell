@@ -44,19 +44,21 @@ int		builtin_cd(char **args, t_env *env)
 int 	builtin_echo(char **args, t_env *env)
 {
 	(void)env;
-	if (args[1] == NULL)
+	int		print_newline;
+	size_t 	i;
+
+	print_newline = args[1] == NULL ? 1 : ft_strcmp(args[1], "-n") != 0;
+	i = print_newline ? 1 : 2;
+	while (args[i] != NULL)
 	{
-		ft_printf("\n");
+		if (ft_printf("%s%s", args[i], args[i + 1] == NULL ? "" : " ") == 1)
+			return (1);
+		i++;
 	}
-	else
-	{
-		if (ft_strcmp(args[1], "-n") == 0)
-			ft_printf("ECHO BUILTIN ==> [%s]", args[2]);
-		else
-			ft_printf("ECHO BUILTIN ==> [%s]\n", args[1]);
-	}
-	ft_printf("\n");
-	return (1);
+	if (print_newline)
+		if (ft_printf("\n") == -1)
+			return (1);
+	return (0);
 }
 
 // echo -n hello > out ; echo test | cat -e < out > in
