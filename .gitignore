@@ -87,5 +87,6 @@ dkms.conf
 libft/out
 project_files/out
 gen
-/cmake-build-debug/
+cmake-build-debug
+cmake-build-wsl
 minishell

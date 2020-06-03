@@ -14,15 +14,19 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <ft_string.h>
+#include <ft_env.h>
+#include <stdlib.h>
 
-int 	exec_exit(char **args)
+int 	builtin_exit(char **args, t_env *env)
 {
 	(void)args;
-	return (0);
+	(void)env;
+	exit(0);
 }
 
-int		exec_cd(char **args)
+int		builtin_cd(char **args, t_env *env)
 {
+	(void)env;
 	if (args[1] == NULL)
 	{
 		ft_fprintf(2, "Exec: expected argument to \"cd\"\n");
@@ -37,8 +41,9 @@ int		exec_cd(char **args)
 	return (1);
 }
 
-int 	exec_echo(char **args)
+int 	builtin_echo(char **args, t_env *env)
 {
+	(void)env;
 	if (args[1] == NULL)
 	{
 		ft_printf("\n");

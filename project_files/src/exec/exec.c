@@ -23,31 +23,17 @@
 #include <sys/wait.h>
 #include <errno.h>
 #include <ft_memory.h>
+#include <builtins.h>
 
-static char		*builtin_str[] = {
-		"echo",
-		"cd",
-		"pwd",
-		"export",
-		"unset",
-		"env",
-		"exit"
+static t_builtin_list	g_builtin_list[] = {
+//	{"echo", builtin_echo}, <== Binary exists
+	{"cd", builtin_cd},
+//	{"pwd", builtin_pwd}, <== Binary exists
+//	{"export", builtin_export},
+//	{"unset", builtin_unset},
+//	{"env", builtin_env},
+	{"exit", builtin_exit},
 };
-
-static int		(*builtin_func[8]) (char **) = {
-		&exec_echo,
-		&exec_cd,
-		//&exec_pwd,
-		//&exec_export,
-		//&exec_unset,
-		//&exec_env,
-		&exec_exit
-};
-
-//static int		exec_num_builtins()
-//{
-//	return (sizeof(builtin_str) / sizeof(char *));
-//}
 
 static int 		exec_num_simple_commands(t_parser_command **list)
 {
@@ -70,8 +56,6 @@ static int 		exec_num_commands(t_parser_command ***commands)
 	}
 	return (i);
 }
-
-
 
 static t_simple_command 	*exec_launch(t_parser_command **list, t_env *env)
 {
@@ -98,7 +82,7 @@ static t_simple_command 	*exec_launch(t_parser_command **list, t_env *env)
 	while (command->arguments[i] != NULL) {
 		simple_command->args[i] = env_parse_string(env, command->arguments[i]);
 		ft_printf("COMMAND ARGS ==> [%s]\n", simple_command->args[i]);
-		i++; //TODO expand path (/bin/<command>)
+		i++;
 	}
 	i = 0;
 	redirections = command->redirections_in;
@@ -123,36 +107,28 @@ static t_simple_command 	*exec_launch(t_parser_command **list, t_env *env)
 
 static int		exec_command(t_parser_command **list, t_env *env)
 {
-	int		tmpin;
-	int 	tmpout;
-
-	int 	fdin;
+	t_executor			exec;
+	t_simple_command	*simple_command;
 	int		i;
-
-	pid_t	pid;
-	int 	fdout;
-
 	int		list_size;
 
-	tmpin = dup(0);
-	tmpout = dup(1);
-
-	t_simple_command	*simple_command = NULL;
+	exec.tmp_in = dup(0);
+	exec.tmp_out = dup(1);
 
 	simple_command = exec_launch(list, env);
 	if (!simple_command) {
 		return (0);
 	}
 	if (simple_command->infile != NULL) {
-		fdin = open(simple_command->infile, O_RDONLY);
-		if (fdin == -1) {
+		exec.fd_in = open(simple_command->infile, O_RDONLY);
+		if (exec.fd_in == -1) {
 			ft_printf("&cError opening file &f%s&c: &f%s&r\n", simple_command->infile, strerror(errno));
 			return (1);
 			// TODO Clean up properly
 		}
 	}
 	else {
-		fdin = dup(tmpin);
+		exec.fd_in = dup(exec.tmp_in);
 	}
 	i = 0;
 	list_size = exec_num_simple_commands(list);
@@ -163,37 +139,46 @@ static int		exec_command(t_parser_command **list, t_env *env)
 			list++;
 			simple_command = exec_launch(list, env);
 		}
-		dup2(fdin, 0);
-		close(fdin);
+		dup2(exec.fd_in, 0);
+		close(exec.fd_in);
 		if (i == list_size - 1) {
 			if (simple_command->outfile != NULL) {
-				fdout = open(simple_command->outfile, O_WRONLY);
+				exec.fd_out = open(simple_command->outfile, O_WRONLY);
 			}
 			else {
-				fdout = dup(tmpout);
+				exec.fd_out = dup(exec.tmp_out);
 			}
 		}
 		else {
-			int fdpipe[2];
-			pipe(fdpipe);
-			fdout = fdpipe[1];
-			fdin = fdpipe[0];
+			pipe(exec.fd_pipe);
+			exec.fd_out = exec.fd_pipe[1];
+			exec.fd_in = exec.fd_pipe[0];
 		}
-		dup2(fdout, 1);
-		close(fdout);
-		if (ft_strcmp(simple_command->args[0], builtin_str[0]) == 0) {
-			builtin_func[0](simple_command->args); //TODO
+		dup2(exec.fd_out, 1);
+		close(exec.fd_out);
+		size_t j = 0;
+		while (j < sizeof(g_builtin_list) / sizeof(g_builtin_list[0])) {
+			if (ft_strcmp(simple_command->args[0], g_builtin_list[j].name) == 0) {
+				g_builtin_list[j].func(simple_command->args, env);
+				break ;
+//				return ((struct s_program){
+//						.type = BUILTIN,
+//						.builtin_func = g_builtin_map[i].func,
+//				});
+			}
+			j++;
 		}
-		pid = fork();
-		if (pid == 0) {
+		exec.pid = fork();
+		if (exec.pid == 0) {
 			char *path = env_resolve_path_file(env, simple_command->args[0]);
 			if (path == NULL) {
 				ft_printf("Command not found: %s\n", simple_command->args[0]);
-				exit(EXIT_FAILURE);
+//				exit(EXIT_FAILURE);
+				return (0);
 			}
 			ft_printf("Executing command: %s\n", path);
 			ft_printf("args: %p\n", simple_command->args);
-			int j = 0;
+			j = 0;
 			while (simple_command->args[j] != NULL) {
 				ft_printf(" arg: '%s'\n", simple_command->args[j]);
 				j++;
@@ -202,7 +187,7 @@ static int		exec_command(t_parser_command **list, t_env *env)
 			ft_printf("Something went wrong! (execve) %s\n", strerror(errno));
 			exit(EXIT_FAILURE);
 		}
-		else if (pid < 0) {
+		else if (exec.pid < 0) {
 			ft_printf("Something went wrong! (fork)\n");
 			exit(EXIT_FAILURE);
 		}
@@ -211,16 +196,13 @@ static int		exec_command(t_parser_command **list, t_env *env)
 		i++;
 	}
 
-	dup2(tmpin, 0);
-	dup2(tmpout, 1);
-	close(tmpin);
-	close(tmpout);
+	dup2(exec.tmp_in, 0);
+	dup2(exec.tmp_out, 1);
+	close(exec.tmp_in);
+	close(exec.tmp_out);
 
-	int		status = 1;
-	int		background = 0; //TODO
-	if (!background) {
-		waitpid(pid, &status, WUNTRACED);
-	}
+	exec.status = 1;
+	waitpid(exec.pid, &exec.status, WUNTRACED);
 	return (1);
 }
 

@@ -16,19 +16,25 @@
 #include <ft_env.h>
 #include <ft_parser.h>
 #include <ft_lex.h>
+#include <sys/types.h>
 
 typedef struct	s_simple_command
 {
 	char		**args;
 	char 		*infile;
 	char 		*outfile;
-	int 		background;
 }				t_simple_command;
 
-int		execute(t_parser_command ***commands, t_env *env);
+typedef struct	s_executor {
+	int 	tmp_in;
+	int 	tmp_out;
+	int 	fd_in;
+	int 	fd_out;
+	pid_t	pid;
+	int 	fd_pipe[2];
+	int 	status;
+}				t_executor;
 
-int		exec_cd(char **args);
-int 	exec_exit(char **args);
-int 	exec_echo(char **args);
+int		execute(t_parser_command ***commands, t_env *env);
 
 #endif
