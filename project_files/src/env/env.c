@@ -198,7 +198,7 @@ char 		*env_resolve_path_file(t_env *env, char *file)
 	char		*joined_path;
 	size_t 		i;
 
-	if (test_path(file) != NULL)
+	if (file[0] == '.' && test_path(file) != NULL)
 		return (ft_strdup(file));
 	if (file[0] == '.')
 	{

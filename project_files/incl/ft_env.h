@@ -17,6 +17,7 @@
 
 typedef struct		s_env {
 	char			**vars;
+	int 			last_status;
 }					t_env;
 
 t_env				*env_from(char **envp);

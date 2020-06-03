@@ -31,6 +31,8 @@ static int	is_all_space(char *str)
 
 static void visualize_parse(t_parser_command ***commands, t_env *env)
 {
+	if(1)return;
+
 	t_parser_command	**list;
 	t_parser_command	*command;
 	t_redirection		**redirections;
@@ -127,7 +129,8 @@ int		main(int argc, char **argv, char **envp)
 		}
 		visualize_parse(parse_tokens, env);
 
-		ft_printf("EXECUTE RETURN: [%d]\n", execute(parse_tokens, env));
+		execute(parse_tokens, env);
+//		ft_printf("EXECUTE RETURN: [%d]\n", execute(parse_tokens, env));
 
 
 		free_parse_results(parse_tokens);
