@@ -20,7 +20,7 @@
 
 typedef struct	s_simple_command
 {
-	char				**args;
+//	char				**args;
 	char 				*infile;
 	char 				*outfile;
 	t_redirection_type	type;
