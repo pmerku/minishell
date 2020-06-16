@@ -18,13 +18,10 @@
 #include <ft_lex.h>
 #include <sys/types.h>
 
-typedef struct	s_simple_command
-{
-//	char				**args;
-	char 				*infile;
-	char 				*outfile;
-	t_redirection_type	type;
-}				t_simple_command;
+# define STANDARD_IN	0
+# define STANDARD_OUT	1
+# define PIPE_IN		0
+# define PIPE_OUT		1
 
 typedef struct	s_executor {
 	int 	tmp_in;

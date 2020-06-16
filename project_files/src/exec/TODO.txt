@@ -1,2 +1,0 @@
-TODO
-	- find last outfile and last infile

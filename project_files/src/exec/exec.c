@@ -35,6 +35,25 @@ static t_builtin_list	g_builtin_list[] = {
 		{"exit", builtin_exit},
 };
 
+int						exit_helper(char **args, t_executor *exec)
+{
+	if (args)
+		ft_free_array(args);
+	if (exec->fd_pipe[PIPE_IN])
+		close(exec->fd_pipe[PIPE_IN]);
+	if (exec->fd_pipe[PIPE_OUT])
+		close(exec->fd_pipe[PIPE_OUT]);
+	if (exec->fd_in)
+		close(exec->fd_in);
+	if (exec->fd_out)
+		close(exec->fd_out);
+	dup2(exec->tmp_in, STANDARD_IN);
+	dup2(exec->tmp_out, STANDARD_OUT);
+	close(exec->tmp_in);
+	close(exec->tmp_out);
+	return (1);
+}
+
 static int 				exec_num_commands(t_parser_command ***commands)
 {
 	int 	i;
@@ -75,7 +94,6 @@ static int 				get_input(t_parser_command *command, t_executor *exec, t_env *env
 	t_redirection	*redir;
 	char 			*file;
 
-	(void)prev_fd;
 	i = 0;
 	if (command->redirections_in == NULL)
 	{
@@ -94,7 +112,6 @@ static int 				get_input(t_parser_command *command, t_executor *exec, t_env *env
 		exec->fd_in = open(file, O_RDONLY);
 		if (exec->fd_in == -1) {
 			ft_printf("&cError opening file &f%s&c: &f%s&r\n", file, strerror(errno));
-			// TODO Probably close `exec->fd_in` ?
 			ft_free(file);
 			return (1);
 		}
@@ -114,9 +131,12 @@ static int 				get_output(t_parser_command *command, t_executor *exec, t_env *en
 	if (command->redirections_out == NULL)
 	{
 		if (pipe(exec->fd_pipe) == -1)
+		{
+			ft_printf("&cFailed to create pipes\n&r");
 			return(1);
-		exec->fd_out = exec->fd_pipe[1];
-		exec->fd_in = exec->fd_pipe[0];
+		}
+		exec->fd_in = exec->fd_pipe[PIPE_IN];
+		exec->fd_out = exec->fd_pipe[PIPE_OUT];
 		if (last_command)
 		{
 			close(exec->fd_out);
@@ -137,7 +157,6 @@ static int 				get_output(t_parser_command *command, t_executor *exec, t_env *en
 		if (exec->fd_out == -1)
 		{
 			ft_printf("&cError opening file &f%s&c: &f%s&r\n", file, strerror(errno));
-			// TODO Probably close `exec->fd_out` ?
 			ft_free(file);
 			return (1);
 		}
@@ -147,51 +166,37 @@ static int 				get_output(t_parser_command *command, t_executor *exec, t_env *en
 	return (0);
 }
 
-static int				exec_command2(t_parser_command **list, t_env *env)
+static int				exec_command(t_parser_command **list, t_env *env)
 {
 	t_executor			exec;
 	t_parser_command 	*command;
 	char 				**args;
 	size_t				i;
-	int 				err;
 
 	i = 0;
 	ft_bzero(&exec, sizeof(exec));
 	if (list == NULL || list[0] == NULL)
 		return (0);
 
-	exec.tmp_in = dup(0);
-	exec.tmp_out = dup(1);
+	exec.tmp_in = dup(STANDARD_IN);
+	exec.tmp_out = dup(STANDARD_OUT);
 	while (list[i] != NULL)
 	{
 		command = list[i];
 		args = parse_args(command, env);
-		dup2(exec.fd_in, 0);
+		dup2(exec.fd_in, STANDARD_IN);
 		close(exec.fd_in);
 		if (args == NULL)
 		{
 			ft_printf("&cFailed to parse args with env vars\n&r");
-			// TODO Clean up any opened pipes / unfreed memory
-			return (1);
+			return (exit_helper(args, &exec));
 		}
-		err = get_input(command, &exec, env, i == 0 ? exec.tmp_in : exec.fd_out);
-		if (err != 0)
-		{
-			// TODO Clean up any opened pipes / unfreed memory
-			ft_printf("ERROR INPUT\n");
-			return (err);
-		}
-		err = get_output(command, &exec, env, list[i + 1] == NULL);
-		if (err != 0)
-		{
-			// TODO Clean up any opened pipes / unfreed memory
-			ft_printf("ERROR OUTPUT\n");
-			return (err);
-		}
-		dup2(exec.fd_out, 1);
+		if (get_input(command, &exec, env, i == 0 ? exec.tmp_in : exec.fd_out) != 0)
+			return (exit_helper(args, &exec));
+		if (get_output(command, &exec, env, list[i + 1] == NULL) != 0)
+			return (exit_helper(args, &exec));
+		dup2(exec.fd_out, STANDARD_OUT);
 		close(exec.fd_out);
-//		dup2(exec.fd_in, 0);
-//		close(exec.fd_in);
 		size_t j = 0;
 		int builtin = 0;
 		while (j < sizeof(g_builtin_list) / sizeof(g_builtin_list[0])) {
@@ -220,17 +225,14 @@ static int				exec_command2(t_parser_command **list, t_env *env)
 			else if (exec.pid < 0)
 			{
 				ft_printf("&cFork error\n&r");
-				// TODO Clean up any opened pipes / unfreed memory
-				return (1);
+				return (exit_helper(args, &exec));
 			}
 		}
+		ft_free_array(args);
+		args = NULL;
 		i++;
 	}
-
-	dup2(exec.tmp_in, 0);
-	dup2(exec.tmp_out, 1);
-	close(exec.tmp_in);
-	close(exec.tmp_out);
+	exit_helper(args, &exec);
 
 	exec.status = 0;
 	waitpid(exec.pid, &exec.status, WUNTRACED);
@@ -243,11 +245,9 @@ int						execute(t_parser_command ***commands, t_env *env)
 	int 				ret;
 
 	i = 0;
-	ret = 1;
-	//yeet	ft_printf("\nNUM OF COMMANDS: [%d]\n", exec_num_commands(commands));
+	ret = 0;
 	while (i < exec_num_commands(commands)) {
-		//yeet	ft_printf("  COMMAND ==> [%d]\n", i);
-		ret = exec_command2(commands[i], env);
+		ret = exec_command(commands[i], env);
 		i++;
 	}
 	return (ret);

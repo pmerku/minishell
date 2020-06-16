@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <ft_parser.h>
 #include <ft_ctype.h>
+#include <signal.h>
 
 static int	is_all_space(char *str)
 {
@@ -29,52 +30,15 @@ static int	is_all_space(char *str)
 	return (*str == '\0');
 }
 
-static void visualize_parse(t_parser_command ***commands, t_env *env)
+static void signal_handler(int signal)
 {
-	if(1)return;
+	char *working_dir;
 
-	t_parser_command	**list;
-	t_parser_command	*command;
-	t_redirection		**redirections;
-	size_t				i;
-	char 				*parsed_string;
-
-	ft_printf("&fParse results:&r %p\n", commands);
-	while (*commands != NULL) {
-		ft_printf("&a  * &fCommand execution\n");
-		list = *commands;
-		while (*list != NULL) {
-			ft_printf("&a    * &fSingle command\n");
-			ft_printf("&a      * &fArguments:\n");
-			command = *list;
-			i = 0;
-			while (command->arguments[i] != NULL) {
-				parsed_string = env_parse_string(env, command->arguments[i++]);
-				ft_printf("&e        - '&f%s&e'\n&r", parsed_string);
-				ft_free(parsed_string);
-			}
-			i = 0;
-			redirections = command->redirections_in;
-			while (redirections != NULL && redirections[i] != NULL) {
-				if (i == 0)
-					ft_printf("&a      * &fRedirections (In):\n");
-				parsed_string = env_parse_string(env, redirections[i++]->file);
-				ft_printf("&e        - &f%s\n&r", parsed_string);
-				ft_free(parsed_string);
-			}
-			redirections = command->redirections_out;
-			while (redirections != NULL && redirections[i] != NULL) {
-				if (i == 0)
-					ft_printf("&a      * &fRedirections (Out):\n");
-				parsed_string =  env_parse_string(env, redirections[i]->file);
-				ft_printf("&e        - &f%s (&eType: &f%s)\n&r", parsed_string, redirections[i]->type == APPEND ? "APPEND" : "TRUNCATE");
-				ft_free(parsed_string);
-				i++;
-			}
-			list++;
-		}
-		commands++;
-	}
+	(void)signal;
+	ft_printf("\n");
+	working_dir = getcwd(NULL, 0);
+	ft_printf("\033[46;37m&f \xF0\x9F\x93\x81 %d %s&r ", 1, working_dir);
+	free(working_dir);
 }
 
 int		main(int argc, char **argv, char **envp)
@@ -87,6 +51,9 @@ int		main(int argc, char **argv, char **envp)
 	char 	*working_dir;
 
 	char 	*err = NULL;
+
+	signal(SIGINT, signal_handler);
+	signal(SIGQUIT, signal_handler);
 
 	env = env_from(envp);
 	(void)argc;
@@ -127,16 +94,15 @@ int		main(int argc, char **argv, char **envp)
 			free(working_dir);
 			continue ;
 		}
-		visualize_parse(parse_tokens, env);
 
 		execute(parse_tokens, env);
-//		ft_printf("EXECUTE RETURN: [%d]\n", execute(parse_tokens, env));
-
 
 		free_parse_results(parse_tokens);
 		ft_llist_free(&lex_tokens);
 		ft_free(line);
 		free(working_dir);
 	}
+	ft_free_array(env->vars);
+	free(env);
 	return (0);
 }
