@@ -166,6 +166,20 @@ static int 				get_output(t_parser_command *command, t_executor *exec, t_env *en
 	return (0);
 }
 
+static void _signal_handler(int signo)
+{
+    if (signo == SIGINT)
+    {
+        ft_printf("\n");
+        signal(SIGINT, _signal_handler);
+    }
+    else if (signo == SIGQUIT)
+    {
+        ft_printf("\n");
+        signal(SIGQUIT, _signal_handler);
+    }
+}
+
 static int				exec_command(t_parser_command **list, t_env *env)
 {
 	t_executor			exec;
@@ -210,6 +224,8 @@ static int				exec_command(t_parser_command **list, t_env *env)
 		if (builtin == 0)
 		{
 			exec.pid = fork();
+            signal(SIGINT, _signal_handler);
+            signal(SIGQUIT, _signal_handler);
 			if (exec.pid == 0)
 			{
 				char *path = env_resolve_path_file(env, args[0]);

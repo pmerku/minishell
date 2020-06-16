@@ -30,15 +30,18 @@ static int	is_all_space(char *str)
 	return (*str == '\0');
 }
 
-static void signal_handler(int signal)
+static void signal_handler(int signo)
 {
-	char *working_dir;
+    char *working_dir;
 
-	(void)signal;
-	ft_printf("\n");
-	working_dir = getcwd(NULL, 0);
-	ft_printf("\033[46;37m&f \xF0\x9F\x93\x81 %d %s&r ", 1, working_dir);
-	free(working_dir);
+    if (signo == SIGINT)
+    {
+        ft_printf("\n");
+        working_dir = getcwd(NULL, 0);
+        ft_printf("\033[46;37m&f \xF0\x9F\x93\x81 %d %s&r ", 1, working_dir);
+        free(working_dir);
+        signal(SIGINT, signal_handler);
+    }
 }
 
 int		main(int argc, char **argv, char **envp)
@@ -52,15 +55,14 @@ int		main(int argc, char **argv, char **envp)
 
 	char 	*err = NULL;
 
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, signal_handler);
-
 	env = env_from(envp);
 	(void)argc;
 	(void)argv;
 	gnl_ret = 1;
 	while (gnl_ret == 1)
 	{
+        signal(SIGINT, signal_handler);
+        signal(SIGQUIT, SIG_IGN);
 		working_dir = getcwd(NULL, 0);
 		ft_printf("\033[46;37m&f \xF0\x9F\x93\x81 %d %s&r ", 1, working_dir);
 		gnl_ret = get_next_line(0, &line);
