@@ -166,7 +166,7 @@ static int 				get_output(t_parser_command *command, t_executor *exec, t_env *en
 	return (0);
 }
 
-static void _signal_handler(int signo)
+static void				_signal_handler(int signo)
 {
     if (signo == SIGINT)
     {
@@ -232,7 +232,7 @@ static int				exec_command(t_parser_command **list, t_env *env)
 				if (path == NULL)
 				{
 					ft_printf("&cCommand not found: &f%s\n", args[0]);
-					exit(EXIT_FAILURE);
+					exit(COMMAND_NOT_FOUND);
 				}
 				execve(path, args, env->vars);
 				ft_printf("&cExecve error: &r%s\n", strerror(errno));
@@ -249,10 +249,15 @@ static int				exec_command(t_parser_command **list, t_env *env)
 		i++;
 	}
 	exit_helper(args, &exec);
-
-	exec.status = 0;
 	waitpid(exec.pid, &exec.status, WUNTRACED);
-	return (WEXITSTATUS(exec.status));
+	if (WIFEXITED(exec.status))
+		env->last_status = WEXITSTATUS(exec.status);
+	else if (WIFSIGNALED(exec.status))
+	{
+		env->last_status = WTERMSIG(exec.status);
+		env->last_status += SIGNAL_TERMINATED;
+	}
+	return (EXIT_SUCCESS);
 }
 
 int						execute(t_parser_command ***commands, t_env *env)
