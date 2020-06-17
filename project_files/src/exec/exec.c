@@ -175,7 +175,7 @@ static void				_signal_handler(int signo)
     }
     else if (signo == SIGQUIT)
     {
-        ft_printf("\n");
+        ft_printf("Quit\n");
         signal(SIGQUIT, _signal_handler);
     }
 }

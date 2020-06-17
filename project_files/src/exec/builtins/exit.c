@@ -35,6 +35,7 @@ int 	builtin_exit(char **args, t_env *env)
 {
 	int		status;
 
+	ft_printf("exit\n");
 	status = env->last_status;
 	if (args[1] != NULL)
 	{
