@@ -10,12 +10,12 @@
 ;                                                                              ;
 ; **************************************************************************** ;
 
-%ifndef MACROS_S
+%ifndef MACROS_ASM
 	%define SSE42_EQUAL_EACH 1000b
 
 	%ifidn __OUTPUT_FORMAT__, elf64
-		%define SYS_READ 3
-		%define SYS_WRITE 4
+		%define SYS_READ 0
+		%define SYS_WRITE 1
 		%define LABEL_PREFIX(prefix)
 	%elifidn __OUTPUT_FORMAT__, macho64
 		%define SYS_READ 0x2000003

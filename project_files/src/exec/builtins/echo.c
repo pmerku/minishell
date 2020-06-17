@@ -10,27 +10,25 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_ENV_H
-# define FT_ENV_H
+#include <ft_stdio/ft_printf.h>
+#include <ft_string.h>
+#include <ft_env.h>
 
-# include <ft_lex.h>
+int 	builtin_echo(char **args, t_env *env)
+{
+	(void)	env;
+	int		print_newline;
+	size_t	i;
+	char 	*c;
 
-typedef struct		s_env {
-	char			**vars;
-	int 			last_status;
-}					t_env;
-
-t_env				*env_from(char **envp);
-void				env_set(t_env *env, char *key, char *value);
-void				env_remove(t_env *env, char *key);
-
-/*
-** DO NOT FREE THE ENV VAR RETURNED FROM THIS METHOD
-*/
-char 				*env_get(t_env *env, char *key);
-
-char				*env_parse_string(t_env *env, t_composite_string *string);
-void				env_print_all(t_env *env);
-char 				*env_resolve_path_file(t_env *env, char *binary);
-
-#endif
+	print_newline = args[1] == NULL ? 1 : ft_strcmp(args[1], "-n") != 0;
+	i = 2 - print_newline;
+	while (args[i] != NULL)
+	{
+		c = args[i + 1] == NULL ? "" : " ";
+		if (ft_printf("%s%s", args[i], c) == -1)
+			return (1);
+		i++;
+	}
+	return ((print_newline && ft_printf("\n") == -1) ? 1 : 0);
+}

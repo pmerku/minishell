@@ -17,8 +17,7 @@
 
 char        *ft_substr(const char *s, unsigned int start, size_t len)
 {
-    char            *block;
-    unsigned int    i;
+    char	*str;
 
     if (len == 0 || start > ft_strlen(s))
         return (ft_strempty());
@@ -26,15 +25,10 @@ char        *ft_substr(const char *s, unsigned int start, size_t len)
         return (NULL);
     if (len > ft_strlen(s) - start)
         len = ft_strlen(s) - start;
-    block = ft_malloc((len + 1) * sizeof(char));
-    if (block == NULL)
+    str = ft_malloc((len + 1) * sizeof(char));
+    if (str == NULL)
         return (NULL);
-    i = 0;
-    while (i < len)
-    {
-        block[i] = s[start + i];
-        i++;
-    }
-    block[i] = '\0';
-    return (block);
+    ft_memcpy(str, s + start, len);
+    str[len] = '\0';
+    return (str);
 }

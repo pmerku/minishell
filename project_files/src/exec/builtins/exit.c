@@ -10,27 +10,46 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_ENV_H
-# define FT_ENV_H
+#include <ft_env.h>
+#include <stdlib.h>
+#include <ft_stdlib.h>
+#include <ft_string.h>
+#include <ft_stdio/ft_printf.h>
 
-# include <ft_lex.h>
+static int	int_len(int n)
+{
+	int len;
 
-typedef struct		s_env {
-	char			**vars;
-	int 			last_status;
-}					t_env;
+	if (n == 0)
+		return (1);
+	len = 0;
+	while (n != 0)
+	{
+		len++;
+		n /= 10;
+	}
+	return (len);
+}
 
-t_env				*env_from(char **envp);
-void				env_set(t_env *env, char *key, char *value);
-void				env_remove(t_env *env, char *key);
+int 	builtin_exit(char **args, t_env *env)
+{
+	int		status;
 
-/*
-** DO NOT FREE THE ENV VAR RETURNED FROM THIS METHOD
-*/
-char 				*env_get(t_env *env, char *key);
-
-char				*env_parse_string(t_env *env, t_composite_string *string);
-void				env_print_all(t_env *env);
-char 				*env_resolve_path_file(t_env *env, char *binary);
-
-#endif
+	ft_printf("exit\n");
+	status = env->last_status;
+	if (args[1] != NULL)
+	{
+		status = ft_atoi(args[1]);
+		if (ft_strlen(args[1]) != (size_t)int_len(status))
+		{
+			if (ft_printf("&cError: &rInvalid exit code provided\n") == -1)
+				exit(1);
+			exit(128);
+		}
+		if (status < 0 || status > 255)
+		{
+			exit(255);
+		}
+	}
+	exit(status);
+}
