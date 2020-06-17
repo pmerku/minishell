@@ -359,5 +359,11 @@ t_parser_command 		***parse(t_llist *tokens, char **err)
 			*err = "An unknown exception occured parsing... Why...";
 		return (NULL);
 	}
+	if (state.current_token->type == PIPE)
+	{
+		free_parse_results(state.commands);
+		*err = "Command expected after '|', got NULL";
+		return (NULL);
+	}
 	return (state.commands);
 }
