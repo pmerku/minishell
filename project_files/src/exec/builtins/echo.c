@@ -19,12 +19,14 @@ int 	builtin_echo(char **args, t_env *env)
 	(void)	env;
 	int		print_newline;
 	size_t	i;
+	char 	*c;
 
 	print_newline = args[1] == NULL ? 1 : ft_strcmp(args[1], "-n") != 0;
 	i = 2 - print_newline;
 	while (args[i] != NULL)
 	{
-		if (ft_printf("%s%s", args[i], args[i + 1] == NULL ? "" : " ") == 1)
+		c = args[i + 1] == NULL ? "" : " ";
+		if (ft_printf("%s%s", args[i], c) == -1)
 			return (1);
 		i++;
 	}
