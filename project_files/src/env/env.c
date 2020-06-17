@@ -149,12 +149,14 @@ static char	*composite_to_string(t_env *env, t_composite_string *string)
 
 	if (string->type == STRING)
 	{
-		return (string->str);
+		return (ft_strdup(string->str));
 	}
 	else
 	{
+		if (ft_strcmp(string->str, "?") == 0)
+			return (ft_itoa(env->last_status));
 		env_value = env_get(env, string->str);
-		return (env_value == NULL ? "" : env_value);
+		return (ft_strdup(env_value == NULL ? "" : env_value));
 	}
 }
 
@@ -168,7 +170,7 @@ char		*env_parse_string(t_env *env, t_composite_string *string)
 	joined = NULL;
 	while (string != NULL)
 	{
-		to_join = ft_nullcheck(ft_strdup(composite_to_string(env, string)));
+		to_join = ft_nullcheck(composite_to_string(env, string));
 		if (joined == NULL)
 			joined = to_join;
 		else
