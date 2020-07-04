@@ -31,7 +31,7 @@ static int	int_len(int n)
 	return (len);
 }
 
-int 	builtin_exit(char **args, t_env *env)
+int			builtin_exit(char **args, t_env *env)
 {
 	int		status;
 

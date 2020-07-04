@@ -13,57 +13,7 @@
 #include <ft_llist.h>
 #include <ft_memory.h>
 #include <ft_lex.h>
-#include <ft_stdio/ft_printf.h>
 #include <ft_libft.h>
-
-/*
- * ree
- */
-//static char 	*token_to_str(t_token_type type)
-//{
-//	if (type == PIPE)
-//		return ("PIPE");
-//	else if (type == BRACKET_OPEN)
-//		return ("BRACKET_OPEN");
-//	else if (type == BRACKET_CLOSE)
-//		return ("BRACKET_CLOSE");
-//	else if (type == STRING)
-//		return ("STRING");
-//	else if (type == ENV_STRING)
-//		return ("ENV_STRING");
-//	else if (type == SEMICOLUMN)
-//		return ("SEMICOLUMN");
-//	else if (type == REDIR_L)
-//		return ("REDIR_L");
-//	else if (type == REDIR_R)
-//		return ("REDIR_R");
-//	else if (type == REDIR_RR)
-//		return ("REDIR_RR");
-//	else if (type == AMPERSAND)
-//		return ("AMPERSAND");
-//	else if (type == OR)
-//		return ("OR");
-//	return ("NULL");
-//}
-
-//static void		print_token(t_token *token)
-//{
-//	t_composite_string  *str;
-//
-//	ft_printf("&a&l * &rToken type &a%s&r\n", token_to_str(token->type));
-//	if (token->type == STRING)
-//	{
-//		str = token->str;
-//		while (str != NULL)
-//		{
-//			ft_printf("    String type &a%s&r: &a%s&r\n",token_to_str(str->type), str->str);
-//			str = str->next;
-//		}
-//	}
-//}
-/*
- * end ree
- */
 
 static char				composite_string_push(t_composite_string **composite,
 		char *str, t_token_type type)
@@ -239,7 +189,8 @@ static char				*escape_chars(char str_type, char *str)
 	{
 		if (str[cur] == '\\')
 		{
-			if (str_type == '"' && (str[cur + 1] == '$' || str[cur + 1] == '`' || str[cur + 1] == '"'))
+			if (str_type == '"' && (str[cur + 1] == '$'
+				|| str[cur + 1] == '`' || str[cur + 1] == '"'))
 				cur++;
 			else if (str_type == '\0')
 				cur++;
@@ -496,6 +447,5 @@ t_llist					*lex(char *str, char **err)
 		ft_llist_free(&state.tokens);
 		return (NULL);
 	}
-//	ft_llist_iter(state.tokens, (void (*)(void *))&print_token);
 	return (state.tokens);
 }

@@ -28,20 +28,20 @@ typedef enum			e_redirection_type {
 }						t_redirection_type;
 
 typedef struct			s_redirection {
-	t_composite_string 	*file;
+	t_composite_string	*file;
 	t_redirection_type	type;
 }						t_redirection;
 
 typedef struct			s_parser_command {
 	t_composite_string	**arguments;
-	t_redirection	 	**redirections_in;
-	t_redirection	 	**redirections_out;
+	t_redirection		**redirections_in;
+	t_redirection		**redirections_out;
 }						t_parser_command;
 
 typedef struct			s_parser_state {
 	t_parser_ree		state;
 	t_token				*previous_token;
-	t_token 			*current_token;
+	t_token				*current_token;
 	t_parser_command	*current_command;
 	t_parser_command	***commands;
 }						t_parser_state;
@@ -59,7 +59,7 @@ typedef struct			s_parser_state {
 ** `echo hello` should be piped into `cat -e`, and `yes` should be evaluated
 ** separately.
 */
-t_parser_command 		***parse(t_llist *tokens, char **err);
+t_parser_command		***parse(t_llist *tokens, char **err);
 void					free_parse_results(t_parser_command ***commands);
 
 #endif

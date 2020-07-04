@@ -1,6 +1,6 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*   Project: minishell                                   ::::::::            */
+/*   Project: custom_libc                                 ::::::::            */
 /*   Members: dvoort, prmerku                           :+:    :+:            */
 /*   Copyright: 2020                                   +:+                    */
 /*                                                    +#+                     */
@@ -10,26 +10,25 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_ENV_H
-# define FT_ENV_H
+#include <stddef.h>
+#include <ft_string.h>
+#include <ft_memory.h>
 
-# include <ft_lex.h>
+char 		*ft_strjoin3(char *a, char *b, char *c)
+{
+	size_t	len1;
+	size_t	len2;
+	size_t	len3;
+	char	*str;
 
-typedef struct	s_env {
-	char		**vars;
-	int			last_status;
-}				t_env;
-
-t_env			*env_from(char **envp);
-void			env_set(t_env *env, char *key, char *value);
-void			env_remove(t_env *env, char *key);
-
-/*
-** DO NOT FREE THE ENV VAR RETURNED FROM THIS METHOD
-*/
-char			*env_get(t_env *env, char *key);
-
-char			*env_parse_string(t_env *env, t_composite_string *string);
-char			*env_resolve_path_file(t_env *env, char *binary);
-
-#endif
+	if (!a || !b || !c)
+		return (NULL);
+	len1 = ft_strlen(a);
+	len2 = ft_strlen(b);
+	len3 = ft_strlen(c);
+	str = ft_checked_malloc(sizeof(char) * (len1 + len2 + len3 + 1));
+	ft_memcpy(str, a, len1 + 1);
+	ft_memcpy(str + len1, b, len2 + 1);
+	ft_memcpy(str + len1 + len2, c, len3 + 1);
+	return (str);
+}

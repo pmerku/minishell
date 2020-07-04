@@ -26,10 +26,10 @@
 ** ENV_STRING		A string representing the key of an environmental variable
 ** SEMICOLUMN		;
 ** REDIR_L			<
- * REDIR_R			>
- * REDIR_RR			>>
- * AMPERSAND		&
- * OR				||
+** REDIR_R			>
+** REDIR_RR			>>
+** AMPERSAND		&
+** OR				||
 */
 typedef enum			e_token_type {
 	PIPE,
@@ -56,8 +56,8 @@ typedef enum			e_token_type {
 ** Each "sub" string has to be evaluated individually.
 */
 typedef struct			t_composite_string {
-	t_token_type 				type;
-	char 						*str;
+	t_token_type				type;
+	char						*str;
 	struct t_composite_string	*next;
 }						t_composite_string;
 
@@ -68,7 +68,7 @@ typedef struct			s_token {
 
 typedef struct			s_lex_state {
 	char				*str;
-	char 				**err;
+	char				**err;
 	size_t				offset;
 	t_composite_string	*current_string;
 	t_token				*current_token; 						// TODO Unused

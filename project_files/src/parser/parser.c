@@ -16,33 +16,6 @@
 #include <ft_string.h>
 #include <ft_stdio/ft_printf.h>
 
-//static char 	*token_to_str(t_token_type type)
-//{
-//	if (type == PIPE)
-//		return ("PIPE");
-//	else if (type == BRACKET_OPEN)
-//		return ("BRACKET_OPEN");
-//	else if (type == BRACKET_CLOSE)
-//		return ("BRACKET_CLOSE");
-//	else if (type == STRING)
-//		return ("STRING");
-//	else if (type == ENV_STRING)
-//		return ("ENV_STRING");
-//	else if (type == SEMICOLUMN)
-//		return ("SEMICOLUMN");
-//	else if (type == REDIR_L)
-//		return ("REDIR_L");
-//	else if (type == REDIR_R)
-//		return ("REDIR_R");
-//	else if (type == REDIR_RR)
-//		return ("REDIR_RR");
-//	else if (type == AMPERSAND)
-//		return ("AMPERSAND");
-//	else if (type == OR)
-//		return ("OR");
-//	return ("NULL");
-//}
-
 static int				set_error(char **err, char *msg)
 {
 	*err = msg;
@@ -73,7 +46,8 @@ static size_t			count_command_redirections(t_redirection **arr)
 	return (i);
 }
 
-static int 				add_argument(t_parser_state *state, t_composite_string *str)
+static int 				add_argument(t_parser_state *state,
+		t_composite_string *str)
 {
 	size_t				size;
 	t_composite_string	**new;
@@ -94,7 +68,8 @@ static int 				add_argument(t_parser_state *state, t_composite_string *str)
 	return (1);
 }
 
-static int				append_redirection(t_parser_state *state, t_composite_string *str, t_redirection_type type)
+static int				append_redirection(t_parser_state *state,
+		t_composite_string *str, t_redirection_type type)
 {
 	t_redirection		*redirection;
 	t_redirection		***arr;
@@ -123,7 +98,8 @@ static int				append_redirection(t_parser_state *state, t_composite_string *str,
 	return (1);
 }
 
-static int				add_redirection(t_parser_state *state, t_composite_string *str)
+static int				add_redirection(t_parser_state *state,
+		t_composite_string *str)
 {
 	t_redirection_type type;
 

@@ -19,28 +19,6 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
-/*
-** TODO Refactor to its own file?
-*/
-static char 		*ft_strjoin3(char *a, char *b, char *c)
-{
-	size_t	len1;
-	size_t	len2;
-	size_t	len3;
-	char	*str;
-
-	if (!a || !b || !c)
-		return (NULL);
-	len1 = ft_strlen(a);
-	len2 = ft_strlen(b);
-	len3 = ft_strlen(c);
-	str = ft_checked_malloc(sizeof(char) * (len1 + len2 + len3 + 1));
-	ft_memcpy(str, a, len1 + 1);
-	ft_memcpy(str + len1, b, len2 + 1);
-	ft_memcpy(str + len1 + len2, c, len3 + 1);
-	return (str);
-}
-
 t_env		*env_from(char **envp)
 {
 	t_env	*env;
@@ -56,22 +34,6 @@ t_env		*env_from(char **envp)
 	}
 	envp[i] = NULL;
 	return (env);
-}
-
-void		env_print_all(t_env *env)
-{
-	char **split;
-	char **list;
-
-	list = env->vars;
-	ft_printf("&b&l&n%-20s &f= &b&l%-50s&r\n", "Key", "Value");
-	while (*list != NULL)
-	{
-		split = ft_nsplit(*list, '=', 2);
-		ft_printf("&b%-20s &r= %s\n", split[0], split[1] == NULL ? "" : split[1]);
-		ft_free_array(split);
-		list++;
-	}
 }
 
 static char	*match_key(char *pair, char *key)
