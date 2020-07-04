@@ -47,8 +47,7 @@ int			exec_fork(t_executor *exec, char **args, t_env *env)
 	signal(SIGQUIT, _signal_handler);
 	if (exec->pid == 0)
 	{
-//		close(exec->fd_pipe[PIPE_IN]);
-//		dup2(exec->fd_in, STANDARD_IN);
+		//this fixes `cat | echo` but breaks input fd for commands with redirections `>` before a pipe
 		close(exec->fd_in);
 		char *path = env_resolve_path_file(env, args[0]);
 		if (path == NULL)

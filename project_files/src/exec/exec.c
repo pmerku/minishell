@@ -90,7 +90,7 @@ static int				exec_command(t_parser_command **list, t_env *env)
 		i++;
 	}
 	exit_helper(exec.args, &exec);
-	waitpid(-1, &exec.status, WUNTRACED);
+	waitpid(exec.pid, &exec.status, WUNTRACED);
 	if (WIFEXITED(exec.status))
 		env->last_status = WEXITSTATUS(exec.status);
 	else if (WIFSIGNALED(exec.status))

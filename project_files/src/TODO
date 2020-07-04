@@ -2,7 +2,7 @@ Norme:
 - []	Libft
 - []	incl
 	- [] ft_lex.h (TODO)
-	- [] ft_lex.h line 58 prefix
+	- [x] ft_lex.h line 58 prefix
 - []	env
 - []	exec
 - [x]	builtins

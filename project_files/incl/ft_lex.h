@@ -55,7 +55,7 @@ typedef enum			e_token_type {
 **
 ** Each "sub" string has to be evaluated individually.
 */
-typedef struct			t_composite_string {
+typedef struct			s_composite_string {
 	t_token_type				type;
 	char						*str;
 	struct t_composite_string	*next;
@@ -71,7 +71,6 @@ typedef struct			s_lex_state {
 	char				**err;
 	size_t				offset;
 	t_composite_string	*current_string;
-	t_token				*current_token; 						// TODO Unused
 	t_llist				*tokens;
 }						t_lex_state;
 

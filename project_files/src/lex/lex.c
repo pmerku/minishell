@@ -36,9 +36,9 @@ static char				composite_string_push(t_composite_string **composite,
 		last = *composite;
 		while (last->next != NULL)
 		{
-			last = last->next;
+			last = (t_composite_string *)last->next;
 		}
-		last->next = new_composite;
+		last->next = (struct t_composite_string *)new_composite;
 	}
 	return (1);
 }
@@ -94,7 +94,7 @@ void					del_comp_string(t_composite_string *str)
 	next = str;
 	while (next != NULL)
 	{
-		tmp = next->next;
+		tmp = (t_composite_string *)next->next;
 		ft_free(next->str);
 		ft_free(next);
 		next = tmp;

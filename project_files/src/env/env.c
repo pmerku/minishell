@@ -142,7 +142,7 @@ char		*env_parse_string(t_env *env, t_composite_string *string)
 			ft_free(to_join);
 			ft_free(tmp);
 		}
-		string = string->next;
+		string = (t_composite_string *)string->next;
 	}
 	return (joined);
 }
