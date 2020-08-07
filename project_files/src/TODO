@@ -1,15 +1,16 @@
 Norme:
 - []	Libft
-- []	incl
-	- [] ft_lex.h (TODO)
+- [x]	incl
+	- [x] ft_lex.h (TODO)
 	- [x] ft_lex.h line 58 prefix
-- []	env
+- [x]	env
+	- [x] env_path.c
 - []	exec
 - [x]	builtins
 - []	lex
-- []	parser
+- [x]	parser
 - []	main
 
 Other:
 - []	change all the headers
-- []	fix piping in exec
+- []	fix piping in exec (remake is more appropiate)

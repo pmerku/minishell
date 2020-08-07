@@ -14,7 +14,7 @@
 #include <ft_string.h>
 #include <ft_memory.h>
 
-char 		*ft_strjoin3(char *a, char *b, char *c)
+char	*ft_strjoin3(char *a, char *b, char *c)
 {
 	size_t	len1;
 	size_t	len2;

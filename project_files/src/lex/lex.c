@@ -303,8 +303,7 @@ static char				read_quoted_str(t_lex_state *state)
 	if (c != '"')
 		return (lex_err(state, "Unterminated quoted string"));
 	if (start != state->offset - 1)
-		return (push_escaped_substr(state, start, state->offset - 1,
-				'"'));
+		return (push_escaped_substr(state, start, state->offset - 1, '"'));
 	return (1);
 }
 

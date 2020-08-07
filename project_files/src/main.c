@@ -46,15 +46,15 @@ static void signal_handler(int signo)
 
 int		main(int argc, char **argv, char **envp)
 {
-	t_env	*env;
-	char	*line;
-	int 	gnl_ret;
-	t_llist	*lex_tokens;
-	t_parser_command ***parse_tokens;
-	char 	*working_dir;
+	t_env				*env;
+	char				*line;
+	int					gnl_ret;
+	t_llist				*lex_tokens;
+	t_parser_command	***parse_tokens;
+	char				*working_dir;
+	char				*err;
 
-	char 	*err = NULL;
-
+	err = NULL;
 	env = env_from(envp);
 	(void)argc;
 	(void)argv;
@@ -96,9 +96,7 @@ int		main(int argc, char **argv, char **envp)
 			free(working_dir);
 			continue ;
 		}
-
 		execute(parse_tokens, env);
-
 		free_parse_results(parse_tokens);
 		ft_llist_free(&lex_tokens);
 		ft_free(line);
