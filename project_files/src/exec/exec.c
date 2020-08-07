@@ -221,6 +221,7 @@ static int exec_command_multiple(t_parser_command **list, t_env *env)
 				if (ft_strcmp(args[0], g_builtin_list[j].name) == 0)
 				{
 					g_builtin_list[j].func(args, env);
+					env->last_status = 0;
 					builtin = 1;
 					break ;
 				}
