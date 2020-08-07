@@ -16,10 +16,11 @@
 
 void	buf_fd_flush(void *raw)
 {
-	t_buf_fd *buf;
+	t_buf_fd	*buf;
+	ssize_t		result;
 
 	buf = raw;
-	ssize_t result = write(buf->fd, buf->buf, buf->offset);
+	result = write(buf->fd, buf->buf, buf->offset);
 	if (result == -1)
 	{
 		exit(1);
