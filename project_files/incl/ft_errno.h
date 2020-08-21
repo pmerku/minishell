@@ -10,26 +10,29 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_ENV_H
-# define FT_ENV_H
+#ifndef FT_ERRNO_H
+# define FT_ERRNO_H
 
-# include <ft_lex.h>
+# define DEFAULT			0
+# define PIPE_ERROR			1
+# define CLOSE_ERROR		2
+# define DUP_ERROR			3
+# define DUP2_ERROR			4
+# define MALLOC_ERROR		5
+# define SIGNAL_ERROR		6
+# define COMMAND_NOT_FOUND	127
+# define SIGNAL_TERMINATED	128
 
-typedef struct		s_env {
-	char			**vars;
-	int 			last_status;
-}					t_env;
+typedef struct		s_error_list
+{
+	int		index;
+	char 	*error_str;
+}					t_error_list;
 
-t_env			*env_from(char **envp);
-void			env_set(t_env *env, char *key, char *value);
-void			env_remove(t_env *env, char *key);
+extern int	g_errno;
 
-/*
-** DO NOT FREE THE ENV VAR RETURNED FROM THIS METHOD
-*/
-char			*env_get(t_env *env, char *key);
-
-char			*env_parse_string(t_env *env, t_composite_string *string);
-char			*env_resolve_path_file(t_env *env, char *binary);
+void	set_errno(int errno_value);
+int		get_errno(void);
+char	*ft_strerror(int errno_value);
 
 #endif

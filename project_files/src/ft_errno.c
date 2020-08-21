@@ -10,26 +10,40 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_ENV_H
-# define FT_ENV_H
+#include <ft_errno.h>
+#include <stddef.h>
 
-# include <ft_lex.h>
+int		g_errno = DEFAULT;
 
-typedef struct		s_env {
-	char			**vars;
-	int 			last_status;
-}					t_env;
+void	set_errno(int errno_value)
+{
+	g_errno = errno_value;
+}
 
-t_env			*env_from(char **envp);
-void			env_set(t_env *env, char *key, char *value);
-void			env_remove(t_env *env, char *key);
+int 	get_errno(void)
+{
+	return (g_errno);
+}
 
-/*
-** DO NOT FREE THE ENV VAR RETURNED FROM THIS METHOD
-*/
-char			*env_get(t_env *env, char *key);
+static t_error_list	g_error_list[] = {
+	{PIPE_ERROR, "Can't create pipe"},
+	{CLOSE_ERROR, "Can't close file or file doesn't exist"},
+	{DUP_ERROR, "Can't create new file descriptor"},
+	{DUP2_ERROR, "Can't create new file descriptor"},
+	{MALLOC_ERROR, "Can't allocate memory"},
+	{SIGNAL_ERROR, "Can't catch user signal"}
+};
 
-char			*env_parse_string(t_env *env, t_composite_string *string);
-char			*env_resolve_path_file(t_env *env, char *binary);
-
-#endif
+char	*ft_strerror(int errno_value)
+{
+	size_t j = 0;
+	while (j < sizeof(g_error_list) / sizeof(g_error_list[0]))
+	{
+		if (errno_value == g_error_list[j].index)
+		{
+			return(g_error_list[j].error_str);
+		}
+		j++;
+	}
+	return ("Unknown error");
+}
