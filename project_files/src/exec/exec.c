@@ -24,28 +24,45 @@
 #include <errno.h>
 #include <ft_memory.h>
 #include <builtins.h>
+#include <ft_errno.h>
+#include <utils.h>
+#include <sys/stat.h>
 
 static t_builtin_list g_builtin_list[] = {
-		{"echo",   builtin_echo},
-		{"cd",     builtin_cd},
-		{"pwd",    builtin_pwd},
-		{"export", builtin_export},
-		{"unset",  builtin_unset},
-		{"env",    builtin_env},
-		{"exit",   builtin_exit},
+	{"echo",   builtin_echo},
+	{"cd",     builtin_cd},
+	{"pwd",    builtin_pwd},
+	{"export", builtin_export},
+	{"unset",  builtin_unset},
+	{"env",    builtin_env},
+	{"exit",   builtin_exit}
 };
-
-static void ft_close(int fd)
-{
-	close(fd);
-}
 
 int exit_helper(char **args, t_executor *exec)
 {
 	if (args)
-		ft_free_array(args);
+		args = ft_free_array(args);
 	(void) exec;
-	return (1);
+	return (EXIT_FAILURE);
+}
+
+int	error_exit_helper(char **args, t_executor *exec)
+{
+	struct stat buf;
+	if (fstat(exec->pipe_prev[PIPE_IN], &buf) == 0)
+		ft_close(exec->pipe_prev[PIPE_IN]);
+	if (fstat(exec->pipe_prev[PIPE_OUT], &buf) == 0)
+		ft_close(exec->pipe_prev[PIPE_OUT]);
+	if (fstat(exec->pipe_next[PIPE_IN], &buf) == 0)
+		ft_close(exec->pipe_next[PIPE_IN]);
+	if (fstat(exec->pipe_next[PIPE_OUT], &buf) == 0)
+		ft_close(exec->pipe_next[PIPE_OUT]);
+	if (fstat(exec->fd_in, &buf) == 0)
+		ft_close(exec->fd_in);
+	if (fstat(exec->fd_out, &buf) == 0)
+		ft_close(exec->fd_in);
+	(void)args;
+	return (EXIT_FAILURE);
 }
 
 static int exec_num_commands(t_parser_command ***commands)
@@ -138,7 +155,7 @@ static int get_out_fd(t_parser_command *command, t_env *env)
 		if (fd == -1)
 		{
 			ft_printf("&cError opening file &f%s&c: &f%s&r\n", file,
-					  strerror(errno));
+					strerror(errno));
 			ft_free(file);
 			return (-3);
 		}
@@ -153,13 +170,92 @@ static void _signal_handler(int signo)
 	if (signo == SIGINT)
 	{
 		ft_printf("\n");
-		signal(SIGINT, _signal_handler);
+		if (signal(SIGINT, _signal_handler) == SIG_ERR)
+		{
+			set_errno(SIGNAL_ERROR);
+			ft_printf("&cSignal handler error: &f%s&r\n",
+					ft_strerror(get_errno()));
+			exit(EXIT_FAILURE);
+		}
 	}
 	else if (signo == SIGQUIT)
 	{
 		ft_printf("Quit\n");
-		signal(SIGQUIT, _signal_handler);
+		if (signal(SIGQUIT, _signal_handler) == SIG_ERR)
+		{
+			set_errno(SIGNAL_ERROR);
+			ft_printf("&cSignal handler error: &f%s&r\n",
+					  ft_strerror(get_errno()));
+			exit(EXIT_FAILURE);
+		}
 	}
+}
+
+static void	_signal_init(void)
+{
+	if (signal(SIGINT, _signal_handler) == SIG_ERR)
+	{
+		set_errno(SIGNAL_ERROR);
+		ft_printf("&cSignal handler error: &f%s&r\n",
+				  ft_strerror(get_errno()));
+		exit(EXIT_FAILURE);
+	}
+	if (signal(SIGQUIT, _signal_handler) == SIG_ERR)
+	{
+		set_errno(SIGNAL_ERROR);
+		ft_printf("&cSignal handler error: &f%s&r\n",
+				  ft_strerror(get_errno()));
+		exit(EXIT_FAILURE);
+	}
+}
+
+static int	builtin_search(char **args, t_executor *exec, t_env *env, t_parser_command **list, int i)
+{
+	size_t j = 0;
+	while (j < sizeof(g_builtin_list) / sizeof(g_builtin_list[0]))
+	{
+		if (ft_strcmp(args[0], g_builtin_list[j].name) == 0)
+		{
+			exec->built_in = 1;
+			exec->fd_tmp = dup(STANDARD_OUT);
+			if (exec->fd_tmp == -1)
+			{
+				set_errno(DUP_ERROR);
+				ft_printf("&cDup error: &f%s\n&r", ft_strerror(get_errno()));
+				return (error_exit_helper(args, exec));
+			}
+			if (exec->fd_out >= 0)
+			{
+				if (dup2(exec->fd_out, STANDARD_OUT) == -1)
+				{
+					set_errno(DUP2_ERROR);
+					ft_printf("&cDup2 error: &f%s\n&r", ft_strerror(get_errno()));
+					return (error_exit_helper(args, exec));
+				}
+				ft_close(exec->fd_out);
+				if (list[i + 1] != NULL)
+				{
+					ft_close(exec->pipe_next[PIPE_IN]);
+					ft_close(exec->pipe_next[PIPE_OUT]);
+				}
+				if (get_errno() == CLOSE_ERROR)
+					return (error_exit_helper(args, exec));
+			}
+			g_builtin_list[j].func(args, env);
+			if (dup2(exec->fd_tmp, STANDARD_OUT) == -1)
+			{
+				set_errno(DUP2_ERROR);
+				ft_printf("&cDup2 error: &f%s\n&r", ft_strerror(get_errno()));
+				return (error_exit_helper(args, exec));
+			}
+			ft_close(exec->fd_tmp);
+			if (get_errno() == CLOSE_ERROR)
+				return (error_exit_helper(args, exec));
+			break;
+		}
+		j++;
+	}
+	return (EXIT_SUCCESS);
 }
 
 /*
@@ -180,12 +276,12 @@ static int exec_command_multiple(t_parser_command **list, t_env *env)
 	i = 0;
 	ft_bzero(&exec, sizeof(exec));
 	if (list == NULL || list[0] == NULL)
-		return (0);
+		return (EXIT_SUCCESS);
 
-	exec.pipe_prev[0] = -1;
-	exec.pipe_prev[1] = -1;
-	exec.pipe_next[0] = -1;
-	exec.pipe_next[1] = -1;
+	exec.pipe_prev[PIPE_IN] = -1;
+	exec.pipe_prev[PIPE_OUT] = -1;
+	exec.pipe_next[PIPE_IN] = -1;
+	exec.pipe_next[PIPE_OUT] = -1;
 
 	while (list[i] != NULL)
 	{
@@ -194,77 +290,83 @@ static int exec_command_multiple(t_parser_command **list, t_env *env)
 
 		if (list[1] != NULL && list[i + 1] != NULL && pipe(exec.pipe_next) != 0)
 		{
-			ft_printf("&cpipe error\n&r");
-			// TODO Handle pipe error
+			set_errno(PIPE_ERROR);
+			ft_printf("&cPipe error: &f%s\n&r", ft_strerror(get_errno()));
+			error_exit_helper(args, &exec);
 			break;
 		}
 
-		int in_fd = get_in_fd(command, env);
-		if (in_fd == -2 || in_fd == -3)
+		exec.fd_in = get_in_fd(command, env);
+		if (exec.fd_in == -2 || exec.fd_in == -3)
 		{
-			// TODO Handle error
+			error_exit_helper(args, &exec);
 			break;
 		}
-		int out_fd = get_out_fd(command, env);
-		if (out_fd == -2 || out_fd == -3)
+		exec.fd_out = get_out_fd(command, env);
+		if (exec.fd_out == -2 || exec.fd_out == -3)
 		{
-			close(in_fd);
-			// TODO Handle error
+			close(exec.fd_in);
+			error_exit_helper(args, &exec);
 			break;
 		}
 
-		int builtin = 0;
+		exec.built_in = 0;
 		if (list[1] == NULL) {
-			size_t j = 0;
-			while (j < sizeof(g_builtin_list) / sizeof(g_builtin_list[0]))
-			{
-				if (ft_strcmp(args[0], g_builtin_list[j].name) == 0)
-				{
-					g_builtin_list[j].func(args, env);
-					builtin = 1;
-					break ;
-				}
-				j++;
-			}
+			if (builtin_search(args, &exec, env, list, i) != 0)
+				break;
 		}
-		if (builtin == 0) {
+		if (exec.built_in == 0) {
+			_signal_init();
 			exec.pid = fork();
 			if (exec.pid == 0)
 			{
-				signal(SIGINT, _signal_handler);
-				signal(SIGQUIT, _signal_handler);
-
-				if (out_fd >= 0)
+				if (exec.fd_out >= 0)
 				{
-					dup2(out_fd, STANDARD_OUT);
-					close(out_fd);
+					if (dup2(exec.fd_out, STANDARD_OUT) == -1) {
+						exit(error_exit_helper(args, &exec));
+					}
+					ft_close(exec.fd_out);
 					if (list[i + 1] != NULL)
 					{
-						close(exec.pipe_next[PIPE_IN]);
-						close(exec.pipe_next[PIPE_OUT]);
+						ft_close(exec.pipe_next[PIPE_IN]);
+						ft_close(exec.pipe_next[PIPE_OUT]);
 					}
+					if (get_errno() == CLOSE_ERROR)
+						exit(error_exit_helper(args, &exec));
 				}
 				else if (list[i + 1] != NULL)
 				{
-					dup2(exec.pipe_next[PIPE_OUT], STANDARD_OUT);
-					close(exec.pipe_next[PIPE_IN]);
-					close(exec.pipe_next[PIPE_OUT]);
+					if (dup2(exec.pipe_next[PIPE_OUT], STANDARD_OUT) == -1) {
+						exit(error_exit_helper(args, &exec));
+					}
+					ft_close(exec.pipe_next[PIPE_IN]);
+					ft_close(exec.pipe_next[PIPE_OUT]);
+					if (get_errno() == CLOSE_ERROR)
+						exit(error_exit_helper(args, &exec));
 				}
-				if (in_fd >= 0)
+				if (exec.fd_in >= 0)
 				{
-					dup2(in_fd, STANDARD_IN);
-					close(in_fd);
+					if (dup2(exec.fd_in, STANDARD_IN) == -1) {
+						exit(error_exit_helper(args, &exec));
+					}
+					ft_close(exec.fd_in);
 					if (i != 0)
 					{
-						close(exec.pipe_prev[PIPE_IN]);
-						close(exec.pipe_prev[PIPE_OUT]);
+						ft_close(exec.pipe_prev[PIPE_IN]);
+						ft_close(exec.pipe_prev[PIPE_OUT]);
 					}
+					if (get_errno() == CLOSE_ERROR)
+						exit(error_exit_helper(args, &exec));
 				}
 				else if (i != 0)
 				{
-					dup2(exec.pipe_prev[PIPE_IN], STANDARD_IN);
-					close(exec.pipe_prev[PIPE_IN]);
-					close(exec.pipe_prev[PIPE_OUT]);
+					if (dup2(exec.pipe_prev[PIPE_IN], STANDARD_IN) == -1) {
+						exit(error_exit_helper(args, &exec));
+					}
+					ft_close(exec.pipe_prev[PIPE_IN]);
+					ft_close(exec.pipe_prev[PIPE_OUT]);
+					if (get_errno() == CLOSE_ERROR)
+						exit(error_exit_helper(args, &exec));
 				}
 				size_t j = 0;
 				while (j < sizeof(g_builtin_list) / sizeof(g_builtin_list[0]))
@@ -292,28 +394,35 @@ static int exec_command_multiple(t_parser_command **list, t_env *env)
 				return (exit_helper(args, &exec));
 			}
 		}
-
 		if (i > 0)
 		{
-			if (exec.pipe_prev[0] == -1 || exec.pipe_prev[1] == -1)
+			if (exec.pipe_prev[PIPE_IN] == -1 || exec.pipe_prev[PIPE_OUT] == -1)
 			{
 				ft_printf("what no\n");
 			}
-
-			ft_close(exec.pipe_prev[0]);
-			ft_close(exec.pipe_prev[1]);
+			ft_close(exec.pipe_prev[PIPE_IN]);
+			ft_close(exec.pipe_prev[PIPE_OUT]);
+			if (get_errno() == CLOSE_ERROR)
+			{
+				error_exit_helper(args, &exec);
+				break;
+			}
 		}
 
-		exec.pipe_prev[0] = exec.pipe_next[0];
-		exec.pipe_prev[1] = exec.pipe_next[1];
+		exec.pipe_prev[PIPE_IN] = exec.pipe_next[PIPE_IN];
+		exec.pipe_prev[PIPE_OUT] = exec.pipe_next[PIPE_OUT];
 
-		if (in_fd >= 0)
-			close(in_fd);
-		if (out_fd >= 0)
-			close(out_fd);
+		if (fstat(exec.fd_in, &exec.buf) >= 0)
+			ft_close(exec.fd_in);
+		if (fstat(exec.fd_out, &exec.buf) >= 0)
+			ft_close(exec.fd_out);
+		if (get_errno() == CLOSE_ERROR)
+		{
+			error_exit_helper(args, &exec);
+			break;
+		}
 
-		ft_free_array(args);
-		args = NULL;
+		args = ft_free_array(args);
 		i++;
 	}
 
@@ -321,10 +430,9 @@ static int exec_command_multiple(t_parser_command **list, t_env *env)
 //			  exec.pipe_prev[1], exec.pipe_next[0], exec.pipe_next[1]);
 
 	exit_helper(args, &exec);
-	int last_pid;
-	while ((last_pid = waitpid(0, &exec.status, WUNTRACED)) > 0)
+	while ((exec.last_pid = waitpid(0, &exec.status, WUNTRACED)) > 0)
 	{
-		if (last_pid == exec.pid)
+		if (exec.last_pid == exec.pid)
 		{
 			if (WIFEXITED(exec.status))
 				env->last_status = WEXITSTATUS(exec.status);

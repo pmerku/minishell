@@ -21,7 +21,7 @@ CC 				= clang
 SRC_DIR			= project_files/src
 OUT_DIR			= project_files/out
 INC_DIR			= project_files/incl
-SRC				= main.c
+SRC				= main.c ft_errno.c
 HEADERS			=
 
 LIBFT			= libft/libft.a
