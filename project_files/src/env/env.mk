@@ -12,7 +12,7 @@
 
 ENV_DIR		= env
 
-ENV_SOURCES = env.c
+ENV_SOURCES = env.c env_string.c env_path.c
 ENV_SOURCES := $(addprefix $(ENV_DIR)/,$(ENV_SOURCES))
 
 SRC			+= $(ENV_SOURCES)

@@ -12,34 +12,8 @@
 
 #include <ft_string.h>
 #include <ft_env.h>
-#include <ft_libft.h>
 #include <ft_memory.h>
 #include <ft_stdio/ft_printf.h>
-#include <zconf.h>
-#include <stdlib.h>
-#include <sys/stat.h>
-
-/*
-** TODO Refactor to its own file?
-*/
-static char 		*ft_strjoin3(char *a, char *b, char *c)
-{
-	size_t	len1;
-	size_t	len2;
-	size_t	len3;
-	char	*str;
-
-	if (!a || !b || !c)
-		return (NULL);
-	len1 = ft_strlen(a);
-	len2 = ft_strlen(b);
-	len3 = ft_strlen(c);
-	str = ft_checked_malloc(sizeof(char) * (len1 + len2 + len3 + 1));
-	ft_memcpy(str, a, len1 + 1);
-	ft_memcpy(str + len1, b, len2 + 1);
-	ft_memcpy(str + len1 + len2, c, len3 + 1);
-	return (str);
-}
 
 t_env		*env_from(char **envp)
 {
@@ -56,22 +30,6 @@ t_env		*env_from(char **envp)
 	}
 	envp[i] = NULL;
 	return (env);
-}
-
-void		env_print_all(t_env *env)
-{
-	char **split;
-	char **list;
-
-	list = env->vars;
-	ft_printf("&b&l&n%-20s &f= &b&l%-50s&r\n", "Key", "Value");
-	while (*list != NULL)
-	{
-		split = ft_nsplit(*list, '=', 2);
-		ft_printf("&b%-20s &r= %s\n", split[0], split[1] == NULL ? "" : split[1]);
-		ft_free_array(split);
-		list++;
-	}
 }
 
 static char	*match_key(char *pair, char *key)
@@ -141,88 +99,4 @@ char 		*env_get(t_env *env, char *key)
 		vars++;
 	}
 	return ("");
-}
-
-static char	*composite_to_string(t_env *env, t_composite_string *string)
-{
-	char *env_value;
-
-	if (string->type == STRING)
-	{
-		return (ft_strdup(string->str));
-	}
-	else
-	{
-		if (ft_strcmp(string->str, "?") == 0)
-			return (ft_itoa(env->last_status));
-		env_value = env_get(env, string->str);
-		return (ft_strdup(env_value == NULL ? "" : env_value));
-	}
-}
-
-char		*env_parse_string(t_env *env, t_composite_string *string)
-{
-	char	*joined;
-	char 	*tmp;
-	char 	*to_join;
-
-	env_get(env, "SHELL");
-	joined = NULL;
-	while (string != NULL)
-	{
-		to_join = ft_nullcheck(composite_to_string(env, string));
-		if (joined == NULL)
-			joined = to_join;
-		else
-		{
-			tmp = joined;
-			joined = ft_strjoin(joined, to_join);
-			ft_free(to_join);
-			ft_free(tmp);
-		}
-		string = string->next;
-	}
-	return (joined);
-}
-
-static char *test_path(char *path)
-{
-	struct stat	stat_buffer;
-	if (stat(path, &stat_buffer) == 0 && S_ISREG(stat_buffer.st_mode))
-		return (path);
-	return (NULL);
-}
-
-char 		*env_resolve_path_file(t_env *env, char *file)
-{
-	char		**path;
-	char 		*working_dir;
-	char		*joined_path;
-	size_t 		i;
-
-	if ((file[0] == '.' || file[0] == '/') && test_path(file) != NULL)
-		return (ft_strdup(file));
-	if (file[0] == '.')
-	{
-		working_dir = getcwd(NULL, 0);
-		joined_path = ft_strjoin3(working_dir, "/", file);
-		free(working_dir);
-		if (test_path(joined_path) != NULL)
-			return (joined_path);
-		ft_free(joined_path);
-	}
-	i = 0;
-	path = ft_split(env_get(env, "PATH"), ':');
-	while (path[i])
-	{
-		joined_path = ft_strjoin3(path[i], "/", file);
-		if (test_path(joined_path) != NULL) {
-			ft_free_array(path);
-			return (joined_path);
-		}
-		ft_free(joined_path);
-		i++;
-	}
-	ft_free_array(path);
-	return (NULL);
 }
