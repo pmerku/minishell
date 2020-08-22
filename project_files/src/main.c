@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   minishell                                          :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: anonymous <anonymous@student.codam.nl>       +#+                     */
+/*   Project: minishell                                   ::::::::            */
+/*   Members: dvoort, prmerku                           :+:    :+:            */
+/*   Copyright: 2020                                   +:+                    */
+/*                                                    +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/06/18 14:23:35 by anonymous     #+#    #+#                 */
-/*   Updated: 2020/06/18 14:23:35 by anonymous     ########   odam.nl         */
+/*                                                  #+#    #+#                */
+/*   while (!(succeed = try()));                   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <ft_parser.h>
 #include <ft_ctype.h>
 #include <signal.h>
+#include <ft_errno.h>
 
 static int	is_all_space(char *str)
 {
@@ -40,8 +41,32 @@ static void signal_handler(int signo)
         working_dir = getcwd(NULL, 0);
         ft_printf("\033[46;37m&f \xF0\x9F\x93\x81 %d %s&r ", 1, working_dir);
         free(working_dir);
-        signal(SIGINT, signal_handler);
+		if (signal(SIGINT, signal_handler) == SIG_ERR)
+		{
+			set_errno(SIGNAL_ERROR);
+			ft_printf("&cSignal handler error: &f%s&r\n",
+					  ft_strerror(get_errno()));
+			exit(EXIT_FAILURE);
+		}
     }
+}
+
+static void	signal_init(void)
+{
+	if (signal(SIGINT, signal_handler) == SIG_ERR)
+	{
+		set_errno(SIGNAL_ERROR);
+		ft_printf("&cSignal handler error: &f%s&r\n",
+				  ft_strerror(get_errno()));
+		exit(EXIT_FAILURE);
+	}
+	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
+	{
+		set_errno(SIGNAL_ERROR);
+		ft_printf("&cSignal handler error: &f%s&r\n",
+				  ft_strerror(get_errno()));
+		exit(EXIT_FAILURE);
+	}
 }
 
 int		main(int argc, char **argv, char **envp)
@@ -61,8 +86,7 @@ int		main(int argc, char **argv, char **envp)
 	gnl_ret = 1;
 	while (gnl_ret == 1)
 	{
-        signal(SIGINT, signal_handler);
-        signal(SIGQUIT, SIG_IGN);
+		signal_init();
 		working_dir = getcwd(NULL, 0);
 		ft_printf("\033[46;37m&f \xF0\x9F\x93\x81 %d %s&r ", 1, working_dir);
 		gnl_ret = get_next_line(0, &line);
@@ -96,7 +120,9 @@ int		main(int argc, char **argv, char **envp)
 			free(working_dir);
 			continue ;
 		}
+
 		execute(parse_tokens, env);
+
 		free_parse_results(parse_tokens);
 		ft_llist_free(&lex_tokens);
 		ft_free(line);
