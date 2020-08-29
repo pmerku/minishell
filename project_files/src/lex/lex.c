@@ -13,7 +13,6 @@
 #include <ft_llist.h>
 #include <ft_memory.h>
 #include <ft_lex.h>
-#include <ft_stdio/ft_printf.h>
 #include <ft_libft.h>
 
 /*
@@ -239,7 +238,7 @@ static char				*escape_chars(char str_type, char *str)
 	{
 		if (str[cur] == '\\')
 		{
-			if (str_type == '"' && (str[cur + 1] == '$' || str[cur + 1] == '`' || str[cur + 1] == '"'))
+			if (str_type == '"' && (str[cur + 1] == '$' || str[cur + 1] == '`' || str[cur + 1] == '"' || str[cur + 1] == '\\'))
 				cur++;
 			else if (str_type == '\0')
 				cur++;
@@ -338,7 +337,7 @@ static char				read_quoted_str(t_lex_state *state)
 		{
 			if (peek_next_char(state) == '\0')
 				break;
-			if (peek_next_char(state) == '"' || peek_next_char(state) == '$')
+			if (peek_next_char(state) == '"' || peek_next_char(state) == '$' || peek_next_char(state) == '\\')
 			{
 				skip_next_char(state);
 				continue ;
