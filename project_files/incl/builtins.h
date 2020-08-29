@@ -30,5 +30,6 @@ int				builtin_export(char **args, t_env *env);
 int				builtin_unset(char **args, t_env *env);
 int				builtin_env(char **args, t_env *env);
 int				builtin_exit(char **args, t_env *env);
+int 			builtin_empty(char **args, t_env *env);
 
 #endif

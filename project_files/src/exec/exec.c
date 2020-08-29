@@ -29,6 +29,7 @@
 #include <sys/stat.h>
 
 static t_builtin_list g_builtin_list[] = {
+	{"",	   builtin_empty},
 	{"echo",   builtin_echo},
 	{"cd",     builtin_cd},
 	{"pwd",    builtin_pwd},

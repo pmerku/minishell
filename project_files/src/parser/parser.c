@@ -227,16 +227,44 @@ static int				start_new_execution(t_parser_state *state, char **err)
 	return (1);
 }
 
+static int append_empty_argument(t_parser_state *state)
+{
+	t_composite_string *str;
+
+	str = ft_calloc(1, sizeof(t_composite_string));
+	if (str == NULL)
+		return (0);
+	str->type = STRING;
+	str->str = ft_strdup("");
+	if (str->str == NULL)
+	{
+		ft_free(str);
+		return (0);
+	}
+	return (add_argument(state, str));
+}
+
 static int				handle_token(t_parser_state *state, char **err)
 {
 	if (state->state == PARSING_COMMAND)
 	{
-		if (state->current_token->type != STRING && finished_command(state))
-			state->state = EXPECTING_TOKEN;
-		else if (state->current_token->type != STRING)
-			return (set_error(err, "Unexpected token (string expected)"));
-		else if (!add_argument(state, state->current_token->str))
+		if (state->current_token->type == STRING && !add_argument(state, state->current_token->str))
 			return (set_error(err, "Failed to append argument to cmd"));
+		else if (state->current_token->type != STRING && finished_command(state))
+			state->state = EXPECTING_TOKEN;
+		else if (state->current_token->type != STRING && !finished_command(state))
+		{
+			if (!append_empty_argument(state))
+				return (set_error(err, "Failed to append empty arg to cmd"));
+			state->state = EXPECTING_TOKEN;
+		}
+
+//		if (state->current_token->type != STRING && finished_command(state))
+//			state->state = EXPECTING_TOKEN;
+//		else if (state->current_token->type != STRING)
+//			return (set_error(err, "Unexpected token (string expected)"));
+//		else if (!add_argument(state, state->current_token->str))
+//			return (set_error(err, "Failed to append argument to cmd"));
 	}
 	if (state->state == PARSING_FILENAME)
 	{
