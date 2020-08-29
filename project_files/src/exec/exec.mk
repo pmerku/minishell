@@ -12,7 +12,7 @@
 
 EXEC_DIR		= exec
 
-EXEC_SOURCES 	= exec.c
+EXEC_SOURCES 	= exec.c utils.c
 EXEC_SOURCES	+= builtins/cd.c builtins/echo.c builtins/env.c \
 	builtins/env.c builtins/exit.c builtins/pwd.c
 EXEC_SOURCES 	:= $(addprefix $(EXEC_DIR)/,$(EXEC_SOURCES))
