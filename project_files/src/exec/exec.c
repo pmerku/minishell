@@ -29,6 +29,7 @@
 #include <sys/stat.h>
 
 static t_builtin_list g_builtin_list[] = {
+	{"",	   builtin_empty},
 	{"echo",   builtin_echo},
 	{"cd",     builtin_cd},
 	{"pwd",    builtin_pwd},
@@ -57,10 +58,10 @@ int	error_exit_helper(char **args, t_executor *exec)
 		ft_close(exec->pipe_next[PIPE_IN]);
 	if (fstat(exec->pipe_next[PIPE_OUT], &buf) == 0)
 		ft_close(exec->pipe_next[PIPE_OUT]);
-	if (fstat(exec->fd_in, &buf) == 0)
+	if (exec->fd_in > 2 && fstat(exec->fd_in, &buf) == 0)
 		ft_close(exec->fd_in);
-	if (fstat(exec->fd_out, &buf) == 0)
-		ft_close(exec->fd_in);
+	if (exec->fd_out > 2 && fstat(exec->fd_out, &buf) == 0)
+		ft_close(exec->fd_out);
 	(void)args;
 	return (EXIT_FAILURE);
 }
@@ -217,8 +218,9 @@ static int	builtin_search(char **args, t_executor *exec, t_env *env, t_parser_co
 		if (ft_strcmp(args[0], g_builtin_list[j].name) == 0)
 		{
 			exec->built_in = 1;
-			exec->fd_tmp = dup(STANDARD_OUT);
-			if (exec->fd_tmp == -1)
+			exec->fd_tmp_out = dup(STANDARD_OUT);
+			exec->fd_tmp_in = dup(STANDARD_OUT);
+			if (exec->fd_tmp_out == -1 || exec->fd_tmp_in == -1)
 			{
 				set_errno(DUP_ERROR);
 				ft_printf("&cDup error: &f%s\n&r", ft_strerror(get_errno()));
@@ -241,14 +243,25 @@ static int	builtin_search(char **args, t_executor *exec, t_env *env, t_parser_co
 				if (get_errno() == CLOSE_ERROR)
 					return (error_exit_helper(args, exec));
 			}
+			else if (list[i + 1] != NULL)
+			{
+				if (dup2(exec->pipe_next[PIPE_OUT], STANDARD_OUT) == -1) {
+					exit(error_exit_helper(args, exec));
+				}
+				ft_close(exec->pipe_next[PIPE_IN]);
+				ft_close(exec->pipe_next[PIPE_OUT]);
+				if (get_errno() == CLOSE_ERROR)
+					exit(error_exit_helper(args, exec));
+			}
 			g_builtin_list[j].func(args, env);
-			if (dup2(exec->fd_tmp, STANDARD_OUT) == -1)
+			if (dup2(exec->fd_tmp_out, STANDARD_OUT) == -1 || dup2(exec->fd_tmp_in, STANDARD_IN) == -1)
 			{
 				set_errno(DUP2_ERROR);
 				ft_printf("&cDup2 error: &f%s\n&r", ft_strerror(get_errno()));
 				return (error_exit_helper(args, exec));
 			}
-			ft_close(exec->fd_tmp);
+			ft_close(exec->fd_tmp_out);
+			ft_close(exec->fd_tmp_in);
 			if (get_errno() == CLOSE_ERROR)
 				return (error_exit_helper(args, exec));
 			break;
@@ -305,7 +318,7 @@ static int exec_command_multiple(t_parser_command **list, t_env *env)
 		exec.fd_out = get_out_fd(command, env);
 		if (exec.fd_out == -2 || exec.fd_out == -3)
 		{
-			close(exec.fd_in);
+			ft_close(exec.fd_in);
 			error_exit_helper(args, &exec);
 			break;
 		}
@@ -412,9 +425,9 @@ static int exec_command_multiple(t_parser_command **list, t_env *env)
 		exec.pipe_prev[PIPE_IN] = exec.pipe_next[PIPE_IN];
 		exec.pipe_prev[PIPE_OUT] = exec.pipe_next[PIPE_OUT];
 
-		if (fstat(exec.fd_in, &exec.buf) >= 0)
+		if (exec.fd_in > 2 && fstat(exec.fd_in, &exec.buf) == 0)
 			ft_close(exec.fd_in);
-		if (fstat(exec.fd_out, &exec.buf) >= 0)
+		if (exec.fd_out > 2 && fstat(exec.fd_out, &exec.buf) == 0)
 			ft_close(exec.fd_out);
 		if (get_errno() == CLOSE_ERROR)
 		{
@@ -428,7 +441,6 @@ static int exec_command_multiple(t_parser_command **list, t_env *env)
 
 //	ft_printf("&aFDs: &e%d&a, &e%d&a, &e%d&a, &e%d&a\n&r", exec.pipe_prev[0],
 //			  exec.pipe_prev[1], exec.pipe_next[0], exec.pipe_next[1]);
-
 	exit_helper(args, &exec);
 	while ((exec.last_pid = waitpid(0, &exec.status, WUNTRACED)) > 0)
 	{
