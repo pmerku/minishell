@@ -12,7 +12,8 @@
 
 PARSER_DIR		= parser
 
-PARSER_SOURCES = parser.c
+PARSER_SOURCES = parser.c parser_utils.c count_commands.c \
+	parser_redirections.c parser_command.c handle_token.c
 PARSER_SOURCES := $(addprefix $(PARSER_DIR)/,$(PARSER_SOURCES))
 
 SRC	+= $(PARSER_SOURCES)

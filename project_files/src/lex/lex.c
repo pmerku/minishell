@@ -15,55 +15,6 @@
 #include <ft_lex.h>
 #include <ft_libft.h>
 
-/*
- * ree
- */
-//static char 	*token_to_str(t_token_type type)
-//{
-//	if (type == PIPE)
-//		return ("PIPE");
-//	else if (type == BRACKET_OPEN)
-//		return ("BRACKET_OPEN");
-//	else if (type == BRACKET_CLOSE)
-//		return ("BRACKET_CLOSE");
-//	else if (type == STRING)
-//		return ("STRING");
-//	else if (type == ENV_STRING)
-//		return ("ENV_STRING");
-//	else if (type == SEMICOLUMN)
-//		return ("SEMICOLUMN");
-//	else if (type == REDIR_L)
-//		return ("REDIR_L");
-//	else if (type == REDIR_R)
-//		return ("REDIR_R");
-//	else if (type == REDIR_RR)
-//		return ("REDIR_RR");
-//	else if (type == AMPERSAND)
-//		return ("AMPERSAND");
-//	else if (type == OR)
-//		return ("OR");
-//	return ("NULL");
-//}
-
-//static void		print_token(t_token *token)
-//{
-//	t_composite_string  *str;
-//
-//	ft_printf("&a&l * &rToken type &a%s&r\n", token_to_str(token->type));
-//	if (token->type == STRING)
-//	{
-//		str = token->str;
-//		while (str != NULL)
-//		{
-//			ft_printf("    String type &a%s&r: &a%s&r\n",token_to_str(str->type), str->str);
-//			str = str->next;
-//		}
-//	}
-//}
-/*
- * end ree
- */
-
 static char				composite_string_push(t_composite_string **composite,
 		char *str, t_token_type type)
 {
@@ -85,9 +36,9 @@ static char				composite_string_push(t_composite_string **composite,
 		last = *composite;
 		while (last->next != NULL)
 		{
-			last = last->next;
+			last = (t_composite_string *)last->next;
 		}
-		last->next = new_composite;
+		last->next = (struct t_composite_string *)new_composite;
 	}
 	return (1);
 }
@@ -143,7 +94,7 @@ void					del_comp_string(t_composite_string *str)
 	next = str;
 	while (next != NULL)
 	{
-		tmp = next->next;
+		tmp = (t_composite_string *)next->next;
 		ft_free(next->str);
 		ft_free(next);
 		next = tmp;
@@ -351,8 +302,7 @@ static char				read_quoted_str(t_lex_state *state)
 	if (c != '"')
 		return (lex_err(state, "Unterminated quoted string"));
 	if (start != state->offset - 1)
-		return (push_escaped_substr(state, start, state->offset - 1,
-				'"'));
+		return (push_escaped_substr(state, start, state->offset - 1, '"'));
 	return (1);
 }
 
@@ -495,6 +445,5 @@ t_llist					*lex(char *str, char **err)
 		ft_llist_free(&state.tokens);
 		return (NULL);
 	}
-//	ft_llist_iter(state.tokens, (void (*)(void *))&print_token);
 	return (state.tokens);
 }

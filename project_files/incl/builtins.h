@@ -17,11 +17,10 @@
 
 typedef int		t_builtin_func(char **args, t_env *env);
 
-typedef struct		s_builtin_list
-{
+typedef struct	s_builtin_list {
 	char			*name;
 	t_builtin_func	*func;
-}					t_builtin_list;
+}				t_builtin_list;
 
 int				builtin_echo(char **args, t_env *env);
 int				builtin_cd(char **args, t_env *env);
