@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*   Project: custom_libc                                 ::::::::            */
-/*   Members: dvoort, prmerku                           :+:    :+:            */
-/*   Copyright: 2020                                   +:+                    */
-/*                                                    +#+                     */
+/*                                                        ::::::::            */
+/*   minishell                                          :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: anonymous <anonymous@student.codam.nl>       +#+                     */
 /*                                                   +#+                      */
-/*                                                  #+#    #+#                */
-/*   while (!(succeed = try()));                   ########   odam.nl         */
+/*   Created: 2020/08/26 00:00:00 by anonymous     #+#    #+#                 */
+/*   Updated: 2020/08/26 00:00:00 by anonymous     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,4 +22,3 @@ void		*ft_checked_calloc(size_t count, size_t size)
 		ft_eprintf(1, "Error\nFailed checked calloc call\n");
 	return (data);
 }
-

@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*   Project: custom_libc                                 ::::::::            */
-/*   Members: dvoort, prmerku                           :+:    :+:            */
-/*   Copyright: 2020                                   +:+                    */
-/*                                                    +#+                     */
+/*                                                        ::::::::            */
+/*   minishell                                          :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: anonymous <anonymous@student.codam.nl>       +#+                     */
 /*                                                   +#+                      */
-/*                                                  #+#    #+#                */
-/*   while (!(succeed = try()));                   ########   odam.nl         */
+/*   Created: 2020/08/26 00:00:00 by anonymous     #+#    #+#                 */
+/*   Updated: 2020/08/26 00:00:00 by anonymous     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-int 	ft_isupper(int c)
+int	ft_isupper(int c)
 {
 	return (c >= 'A' && c <= 'Z');
 }

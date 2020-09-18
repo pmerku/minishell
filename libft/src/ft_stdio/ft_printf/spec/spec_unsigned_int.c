@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*   Project: custom_libc                                 ::::::::            */
-/*   Members: dvoort, prmerku                           :+:    :+:            */
-/*   Copyright: 2020                                   +:+                    */
-/*                                                    +#+                     */
+/*                                                        ::::::::            */
+/*   minishell                                          :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: anonymous <anonymous@student.codam.nl>       +#+                     */
 /*                                                   +#+                      */
-/*                                                  #+#    #+#                */
-/*   while (!(succeed = try()));                   ########   odam.nl         */
+/*   Created: 2020/08/26 00:00:00 by anonymous     #+#    #+#                 */
+/*   Updated: 2020/08/26 00:00:00 by anonymous     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static char					read_into_buf(t_ft_printf *pf, t_ft_fmt *fmt,
 	char				sign;
 
 	sign = '\0';
-	ft_memset(buf,  '\0', 24);
+	ft_memset(buf, '\0', 24);
 	i = spec_unsigned_int_read_val(pf, fmt);
 	ft_ulltoa(buf, i);
 	if (fmt->force_nbr_sign == 1 && sign == '\0')
