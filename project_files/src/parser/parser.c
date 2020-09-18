@@ -227,21 +227,21 @@ static int				start_new_execution(t_parser_state *state, char **err)
 	return (1);
 }
 
+static t_composite_string *g_str = NULL;
+
 static int append_empty_argument(t_parser_state *state)
 {
-	t_composite_string *str;
-
-	str = ft_calloc(1, sizeof(t_composite_string));
-	if (str == NULL)
+	g_str = ft_calloc(1, sizeof(t_composite_string));
+	if (g_str == NULL)
 		return (0);
-	str->type = STRING;
-	str->str = ft_strdup("");
-	if (str->str == NULL)
+	g_str->type = STRING;
+	g_str->str = ft_strdup("");
+	if (g_str->str == NULL)
 	{
-		ft_free(str);
+		ft_free(g_str);
 		return (0);
 	}
-	return (add_argument(state, str));
+	return (add_argument(state, g_str));
 }
 
 static int				handle_token(t_parser_state *state, char **err)
@@ -370,6 +370,11 @@ void					free_parse_results(t_parser_command ***commands)
 		i++;
 	}
 	ft_free(commands);
+	if (g_str != NULL) {
+		if (g_str->str != NULL)
+			g_str->str = ft_free(g_str->str);
+		g_str = ft_free(g_str);
+	}
 }
 
 t_parser_command 		***parse(t_llist *tokens, char **err)

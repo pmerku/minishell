@@ -52,7 +52,7 @@ int			get_next_line(int fd, char **line)
 {
 	char		*tmp;
 	char		*ptr;
-	static char	*store[10400];
+	static char	*store[2];
 	int			res;
 
 	if (BUFFER_SIZE <= 0 || !line)

@@ -31,7 +31,8 @@ typedef struct	s_executor {
 	int			built_in:1;
 	int 		fd_in;
 	int 		fd_out;
-	int 		fd_tmp;
+	int 		fd_tmp_in;
+	int 		fd_tmp_out;
 	pid_t		pid;
 	int 		pipe_prev[2];
 	int 		pipe_next[2];
