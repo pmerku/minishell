@@ -46,6 +46,8 @@ typedef struct			s_parser_state {
 	t_parser_command	***commands;
 }						t_parser_state;
 
+extern t_composite_string *g_str;
+
 /*
 ** Returns a list with parser commands in a two-dimensional array. Each array
 ** has to be evaluated separately, but each command in its array should be piped

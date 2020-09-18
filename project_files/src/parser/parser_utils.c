@@ -81,4 +81,9 @@ void					free_parse_results(t_parser_command ***commands)
 		i++;
 	}
 	ft_free(commands);
+	if (g_str != NULL) {
+		if (g_str->str != NULL)
+			g_str->str = ft_free(g_str->str);
+		g_str = ft_free(g_str);
+	}
 }
