@@ -70,7 +70,7 @@ static int				flat_iter(t_parser_state *state, t_llist *tokens,
 	return (1);
 }
 
-t_parser_command 		***parse(t_llist *tokens, char **err)
+t_parser_command		***parse(t_llist *tokens, char **err)
 {
 	t_parser_state state;
 

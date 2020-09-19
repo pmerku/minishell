@@ -17,7 +17,8 @@
 /*
 ** Checks if the parser has parsed at least one argument in the current command.
 */
-int 				finished_command(t_parser_state *state)
+
+int				finished_command(t_parser_state *state)
 {
 	if (state->current_command == NULL)
 		return (0);
@@ -31,7 +32,7 @@ int				start_new_command(t_parser_state *state, char **err)
 	t_parser_command	*new_command;
 	t_parser_command	**new_array;
 	size_t				size;
-	size_t 				command_count;
+	size_t				command_count;
 
 	new_command = ft_calloc(1, sizeof(t_parser_command));
 	if (new_command == NULL)

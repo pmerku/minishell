@@ -15,7 +15,7 @@
 #include <ft_string.h>
 #include <ft_stdio/ft_printf.h>
 
-int 				add_argument(t_parser_state *state, t_composite_string *str)
+int			add_argument(t_parser_state *state, t_composite_string *str)
 {
 	size_t				size;
 	t_composite_string	**new;
@@ -36,14 +36,14 @@ int 				add_argument(t_parser_state *state, t_composite_string *str)
 	return (1);
 }
 
-static int			append_redirection(t_parser_state *state,
-		t_composite_string *str, t_redirection_type type)
+static int	append_redirection(t_parser_state *state, t_composite_string *str,
+			t_redirection_type type)
 {
 	t_redirection		*redirection;
 	t_redirection		***arr;
 	t_redirection		**new;
 	t_parser_command	*command;
-	size_t 				size;
+	size_t				size;
 
 	redirection = ft_malloc(sizeof(t_redirection));
 	if (redirection == NULL)
@@ -66,7 +66,7 @@ static int			append_redirection(t_parser_state *state,
 	return (1);
 }
 
-int				add_redirection(t_parser_state *state, t_composite_string *str)
+int			add_redirection(t_parser_state *state, t_composite_string *str)
 {
 	t_redirection_type type;
 
@@ -81,7 +81,7 @@ int				add_redirection(t_parser_state *state, t_composite_string *str)
 	return (append_redirection(state, str, type));
 }
 
-int				is_redir_token(t_token_type type)
+int			is_redir_token(t_token_type type)
 {
 	return (type == REDIR_R || type == REDIR_RR || type == REDIR_L);
 }

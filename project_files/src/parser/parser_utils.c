@@ -31,10 +31,6 @@ static int				free_parse_command_redir(t_parser_command **commands,
 	return (j);
 }
 
-/*
-** NOTE: We do NOT free ANY kind of t_composite_string, as these are cleared
-** when clearing the lexer result!
-*/
 static void				free_parse_command_list(t_parser_command **commands)
 {
 	size_t i;
@@ -49,7 +45,7 @@ static void				free_parse_command_list(t_parser_command **commands)
 		if (commands[i]->redirections_in != NULL)
 			ft_free(commands[i]->redirections_in);
 		while (commands[i]->redirections_out != NULL
-			   && commands[i]->redirections_out[j] != NULL)
+			&& commands[i]->redirections_out[j] != NULL)
 		{
 			ft_free(commands[i]->redirections_out[j]);
 			j++;
@@ -68,6 +64,7 @@ static void				free_parse_command_list(t_parser_command **commands)
 ** NOTE: We do NOT free ANY kind of t_composite_string, as these are cleared
 ** when clearing the lexer result!
 */
+
 void					free_parse_results(t_parser_command ***commands)
 {
 	size_t i;
@@ -81,7 +78,8 @@ void					free_parse_results(t_parser_command ***commands)
 		i++;
 	}
 	ft_free(commands);
-	if (g_str != NULL) {
+	if (g_str != NULL)
+	{
 		if (g_str->str != NULL)
 			g_str->str = ft_free(g_str->str);
 		g_str = ft_free(g_str);
