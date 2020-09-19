@@ -10,37 +10,53 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/types.h>
+#include <ft_stdio/ft_printf.h>
 #include <stdlib.h>
-#include <ft_exec.h>
-#include <fcntl.h>
-#include <ft_memory.h>
+#include <ft_errno.h>
 #include <utils.h>
+#include <unistd.h>
 
-int		error_exit_helper(char **args, t_executor *exec)
+void	ft_close(int fd)
 {
-	struct stat	buf;
-
-	if (fstat(exec->pipe_prev[PIPE_IN], &buf) == 0)
-		ft_close(exec->pipe_prev[PIPE_IN]);
-	if (fstat(exec->pipe_prev[PIPE_OUT], &buf) == 0)
-		ft_close(exec->pipe_prev[PIPE_OUT]);
-	if (fstat(exec->pipe_next[PIPE_IN], &buf) == 0)
-		ft_close(exec->pipe_next[PIPE_IN]);
-	if (fstat(exec->pipe_next[PIPE_OUT], &buf) == 0)
-		ft_close(exec->pipe_next[PIPE_OUT]);
-	if (exec->fd_in > 2 && fstat(exec->fd_in, &buf) == 0)
-		ft_close(exec->fd_in);
-	if (exec->fd_out > 2 && fstat(exec->fd_out, &buf) == 0)
-		ft_close(exec->fd_out);
-	(void)args;
-	return (EXIT_FAILURE);
+	if (close(fd) == -1)
+	{
+		set_errno(CLOSE_ERROR);
+		ft_printf("&cError closing file: &f%s&r\n", ft_strerror(get_errno()));
+	}
 }
 
-int		exit_helper(char **args, t_executor *exec)
+int		ft_dup2(int fd1, int fd2)
 {
-	if (args)
-		args = ft_free_array(args);
-	(void)exec;
-	return (EXIT_FAILURE);
+	if (dup2(fd1, fd2) == -1)
+	{
+		set_errno(DUP2_ERROR);
+		ft_printf("&cError: &f%s\n&r", ft_strerror(get_errno()));
+		return (-1);
+	}
+	return (EXIT_SUCCESS);
+}
+
+int		ft_pipe(int *pipe_dest)
+{
+	if (pipe(pipe_dest) == -1)
+	{
+		set_errno(PIPE_ERROR);
+		ft_printf("&cPipe error: &f%s\n&r", ft_strerror(get_errno()));
+		return (-1);
+	}
+	return (EXIT_SUCCESS);
+}
+
+int		ft_dup(int fd)
+{
+	int	tmp;
+
+	tmp = dup(fd);
+	if (tmp == -1)
+	{
+		set_errno(DUP_ERROR);
+		ft_printf("&cError: &f%s\n&r", ft_strerror(get_errno()));
+		return (-1);
+	}
+	return (tmp);
 }

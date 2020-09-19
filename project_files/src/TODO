@@ -5,12 +5,16 @@ Norme:
 	- [x] ft_lex.h line 58 prefix
 - [x]	env
 	- [x] env_path.c
-- []	exec
-- [x]	builtins
-- []	lex
+- [x]	exec
+	- [x] builtins
+	- [] builtin_search (too many lines)
+	- [] exec.c (too many lines)
+- [x]	lex
+	- [] lex_read.c (too many lines)
 - [x]	parser
+	- [] handle_token.c (too many lines)
 - []	main
+- [x]	errno
 
 Other:
 - [x]	change all the headers
-- [x]	fix piping in exec (remake is more appropiate)
