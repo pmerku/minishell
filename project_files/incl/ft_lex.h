@@ -77,4 +77,35 @@ typedef struct			s_lex_state {
 t_llist					*lex(char *str, char **err);
 void					del_comp_string(t_composite_string *str);
 
+char					composite_string_push(t_composite_string **composite,
+						char *str, t_token_type type);
+char					lex_next_char(t_lex_state *state);
+char					lex_err(t_lex_state *state, char *err);
+char					peek_next_char(t_lex_state *state);
+void					skip_next_char(t_lex_state *state);
+int						is_non_identifier_char(char c);
+void					del_elem(void *ptr);
+char					lex_next_to_char(t_lex_state *state, char *c);
+char					create_composite_token(t_lex_state *state,
+						t_composite_string *str);
+char					create_token(t_lex_state *state, t_token_type type);
+char					setup_state(char **err, char *str, t_lex_state *state);
+int						is_string_char(char c);
+char					is_valid_env_var_char(char c, int is_first_char);
+char					*escape_chars(char str_type, char *str);
+char					push_substr(t_lex_state *state, size_t start,
+						size_t end, t_token_type str_type);
+char					push_escaped_substr(t_lex_state *state, size_t start,
+						size_t end, char type);
+char					read_env_var(t_lex_state *state);
+char					export_prev_str(t_lex_state *state, char str_type,
+						size_t *start);
+char					read_quoted_str(t_lex_state *state);
+char					read_raw_str(t_lex_state *state);
+char					read_literal_str(t_lex_state *state);
+char					finish_str_token(t_lex_state *state);
+char					lex_str(t_lex_state *state, char type);
+char					lex_other(t_lex_state *state, char c);
+char					lex_loop(t_lex_state *state);
+
 #endif
