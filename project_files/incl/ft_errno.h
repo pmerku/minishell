@@ -23,16 +23,16 @@
 # define COMMAND_NOT_FOUND	127
 # define SIGNAL_TERMINATED	128
 
-typedef struct		s_error_list
+typedef struct	s_error_list
 {
 	int		index;
-	char 	*error_str;
-}					t_error_list;
+	char	*error_str;
+}				t_error_list;
 
-extern int	g_errno;
+extern int		g_errno;
 
-void	set_errno(int errno_value);
-int		get_errno(void);
-char	*ft_strerror(int errno_value);
+void			set_errno(int errno_value);
+int				get_errno(void);
+char			*ft_strerror(int errno_value);
 
 #endif

@@ -68,11 +68,11 @@ size_t					count_command_args(t_parser_command *cmd);
 size_t					count_command_redirections(t_redirection **arr);
 int						count_commands(t_parser_state *state);
 int						start_new_command(t_parser_state *state, char **err);
-int 					finished_command(t_parser_state *state);
+int						finished_command(t_parser_state *state);
 int						add_redirection(t_parser_state *state,
 						t_composite_string *str);
 int						is_redir_token(t_token_type type);
-int 					add_argument(t_parser_state *state,
+int						add_argument(t_parser_state *state,
 						t_composite_string *str);
 int						handle_token(t_parser_state *state, char **err);
 int						start_new_execution(t_parser_state *state, char **err);

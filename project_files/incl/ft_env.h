@@ -15,10 +15,10 @@
 
 # include <ft_lex.h>
 
-typedef struct		s_env {
-	char			**vars;
-	int 			last_status;
-}					t_env;
+typedef struct	s_env {
+	char	**vars;
+	int		last_status;
+}				t_env;
 
 t_env			*env_from(char **envp);
 void			env_set(t_env *env, char *key, char *value);
