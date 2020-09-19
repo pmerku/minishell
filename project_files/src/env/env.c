@@ -68,7 +68,7 @@ void		env_set(t_env *env, char *key, char *value)
 void		env_remove(t_env *env, char *key)
 {
 	size_t	i;
-	char 	removed;
+	char	removed;
 
 	i = 0;
 	removed = 0;
@@ -85,7 +85,7 @@ void		env_remove(t_env *env, char *key)
 	}
 }
 
-char 		*env_get(t_env *env, char *key)
+char		*env_get(t_env *env, char *key)
 {
 	char	**vars;
 	char	*match;

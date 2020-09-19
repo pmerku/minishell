@@ -18,9 +18,10 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
-static char *test_path(char *path)
+static char	*test_path(char *path)
 {
 	struct stat	stat_buffer;
+
 	if (stat(path, &stat_buffer) == 0 && S_ISREG(stat_buffer.st_mode))
 		return (path);
 	return (NULL);
@@ -36,7 +37,8 @@ static char	*path_join(char *joined_path, t_env *env, char *file)
 	while (path[i])
 	{
 		joined_path = ft_strjoin3(path[i], "/", file);
-		if (test_path(joined_path) != NULL) {
+		if (test_path(joined_path) != NULL)
+		{
 			ft_free_array(path);
 			return (joined_path);
 		}
@@ -47,9 +49,9 @@ static char	*path_join(char *joined_path, t_env *env, char *file)
 	return (NULL);
 }
 
-char 		*env_resolve_path_file(t_env *env, char *file)
+char		*env_resolve_path_file(t_env *env, char *file)
 {
-	char 		*working_dir;
+	char		*working_dir;
 	char		*joined_path;
 
 	joined_path = NULL;

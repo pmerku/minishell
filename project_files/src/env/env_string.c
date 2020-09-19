@@ -35,8 +35,8 @@ static char	*composite_to_string(t_env *env, t_composite_string *string)
 char		*env_parse_string(t_env *env, t_composite_string *string)
 {
 	char	*joined;
-	char 	*tmp;
-	char 	*to_join;
+	char	*tmp;
+	char	*to_join;
 
 	env_get(env, "SHELL");
 	joined = NULL;
