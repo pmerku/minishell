@@ -20,7 +20,7 @@ void	set_errno(int errno_value)
 	g_errno = errno_value;
 }
 
-int 	get_errno(void)
+int		get_errno(void)
 {
 	return (g_errno);
 }
@@ -36,12 +36,14 @@ static t_error_list	g_error_list[] = {
 
 char	*ft_strerror(int errno_value)
 {
-	size_t j = 0;
+	size_t j;
+
+	j = 0;
 	while (j < sizeof(g_error_list) / sizeof(g_error_list[0]))
 	{
 		if (errno_value == g_error_list[j].index)
 		{
-			return(g_error_list[j].error_str);
+			return (g_error_list[j].error_str);
 		}
 		j++;
 	}
