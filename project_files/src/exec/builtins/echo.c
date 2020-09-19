@@ -18,7 +18,7 @@ int		builtin_echo(char **args, t_env *env)
 {
 	int		print_newline;
 	size_t	i;
-	char 	*c;
+	char	*c;
 
 	(void)env;
 	print_newline = args[1] == NULL ? 1 : ft_strcmp(args[1], "-n") != 0;
