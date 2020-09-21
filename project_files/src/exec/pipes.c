@@ -30,10 +30,12 @@
 
 void	init_pipes(t_executor *exec)
 {
+	ft_bzero(exec, sizeof(*exec));
 	exec->pipe_prev[PIPE_IN] = -1;
 	exec->pipe_prev[PIPE_OUT] = -1;
 	exec->pipe_next[PIPE_IN] = -1;
 	exec->pipe_next[PIPE_OUT] = -1;
+	exec->i = 0;
 }
 
 int		make_pipes(t_executor *exec, t_parser_command **list,

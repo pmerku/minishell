@@ -88,26 +88,32 @@ void		exit_codes(t_executor *exec, t_env *env)
 	}
 }
 
+static int	loop_wrap(t_executor *exec, t_parser_command **list,
+			t_parser_command *command, t_env *env)
+{
+	exec->args = parse_args(command, env);
+	exec->built_in = 0;
+	if (make_pipes(exec, list, command, env) == 1)
+		return (1);
+	if (list[1] == NULL)
+		if (builtin_search(exec->args, exec, env, list[exec->i + 1]) != 0)
+			return (1);
+	return (0);
+}
+
 static int	exec_command_multiple(t_parser_command **list, t_env *env)
 {
 	t_executor			exec;
 	t_parser_command	*command;
 
-	exec.i = 0;
-	ft_bzero(&exec, sizeof(exec));
 	if (list == NULL || list[0] == NULL)
 		return (EXIT_SUCCESS);
 	init_pipes(&exec);
 	while (list[exec.i] != NULL)
 	{
 		command = list[exec.i];
-		exec.args = parse_args(command, env);
-		if (make_pipes(&exec, list, command, env) == 1)
+		if (loop_wrap(&exec, list, command, env) == 1)
 			break ;
-		exec.built_in = 0;
-		if (list[1] == NULL)
-			if (builtin_search(exec.args, &exec, env, list[exec.i + 1]) != 0)
-				break ;
 		if (exec.built_in == 0)
 			if (exec_fork(exec.args, &exec, env, list[exec.i + 1]) == 1)
 				return (EXIT_FAILURE);

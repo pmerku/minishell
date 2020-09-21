@@ -52,25 +52,36 @@ char		export_prev_str(t_lex_state *state, char str_type, size_t *start)
 	return (1);
 }
 
+static int peek(t_lex_state *state, char c)
+{
+	if (c == '\\')
+	{
+		if (peek_next_char(state) == '\0')
+			return (1);
+		if (peek_next_char(state) == '"' || peek_next_char(state) == '$'
+			|| peek_next_char(state) == '\\')
+		{
+			skip_next_char(state);
+			return (2);
+		}
+	}
+	return (0);
+}
+
 char		read_quoted_str(t_lex_state *state)
 {
 	size_t	start;
 	char	c;
+	int 	ret;
 
 	start = state->offset;
 	while (lex_next_to_char(state, &c) != '\0')
 	{
-		if (c == '\\')
-		{
-			if (peek_next_char(state) == '\0')
-				break ;
-			if (peek_next_char(state) == '"' || peek_next_char(state) == '$'
-				|| peek_next_char(state) == '\\')
-			{
-				skip_next_char(state);
-				continue ;
-			}
-		}
+		ret = peek(state, c);
+		if (ret == 1)
+			break ;
+		else if (ret == 2)
+			continue ;
 		if (c == '$' && !export_prev_str(state, '"', &start))
 			return (0);
 		if (c == '"')

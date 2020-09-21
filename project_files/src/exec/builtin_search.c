@@ -59,6 +59,15 @@ static int				fd_out_handler(char **args, t_executor *exec,
 	return (EXIT_SUCCESS);
 }
 
+static int				close_wrap(char **args, t_executor *exec)
+{
+	ft_close(exec->fd_tmp_out);
+	ft_close(exec->fd_tmp_in);
+	if (get_errno() == CLOSE_ERROR)
+		return (error_exit_helper(args, exec));
+	return (EXIT_SUCCESS);
+}
+
 int						builtin_search(char **args, t_executor *exec,
 						t_env *env, t_parser_command *list)
 {
@@ -80,10 +89,8 @@ int						builtin_search(char **args, t_executor *exec,
 			if (ft_dup2(exec->fd_tmp_out, STANDARD_OUT) == -1
 				|| ft_dup2(exec->fd_tmp_in, STANDARD_IN) == -1)
 				return (error_exit_helper(args, exec));
-			ft_close(exec->fd_tmp_out);
-			ft_close(exec->fd_tmp_in);
-			if (get_errno() == CLOSE_ERROR)
-				return (error_exit_helper(args, exec));
+			if (close_wrap(args, exec) == EXIT_FAILURE)
+				return (EXIT_FAILURE);
 			break ;
 		}
 		j++;
