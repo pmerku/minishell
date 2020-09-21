@@ -35,7 +35,7 @@ char			read_raw_str(t_lex_state *state)
 	}
 	if (start < state->offset)
 	{
-		if ((c != '\0' && peek_next_char(state) != '\0') || c == ' ')
+		if (c != '\0')
 			state->offset--;
 		return (push_escaped_substr(state, start, state->offset, '\0'));
 	}
