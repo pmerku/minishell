@@ -21,8 +21,12 @@
 #include <stdlib.h>
 #include <ft_parser.h>
 #include <ft_ctype.h>
-#include <signal.h>
-#include <ft_errno.h>
+#include <minishell.h>
+
+static t_shell	g_shell = {
+	.err = NULL,
+	.gnl_ret = 1
+};
 
 static int	is_all_space(char *str)
 {
@@ -31,104 +35,78 @@ static int	is_all_space(char *str)
 	return (*str == '\0');
 }
 
-static void signal_handler(int signo)
+static int	lex_wrapper(t_shell *shell)
 {
-    char *working_dir;
-
-    if (signo == SIGINT)
-    {
-        ft_printf("\n");
-        working_dir = getcwd(NULL, 0);
-        ft_printf("\033[46;37m&f \xF0\x9F\x93\x81 %d %s&r ", 1, working_dir);
-        free(working_dir);
-		if (signal(SIGINT, signal_handler) == SIG_ERR)
-		{
-			set_errno(SIGNAL_ERROR);
-			ft_printf("&cSignal handler error: &f%s&r\n",
-					  ft_strerror(get_errno()));
-			exit(EXIT_FAILURE);
-		}
-    }
+	shell->lex_tokens = lex(shell->line, &shell->err);
+	if (shell->err != NULL)
+	{
+		ft_printf("&cError lexing:&r %s\n", shell->err);
+		shell->err = NULL;
+		ft_free(shell->line);
+		free(shell->dir);
+		return (1);
+	}
+	return (0);
 }
 
-static void	signal_init(void)
+static int	parse_wrapper(t_shell *shell)
 {
-	if (signal(SIGINT, signal_handler) == SIG_ERR)
+	shell->parse_tokens = parse(shell->lex_tokens, &shell->err);
+	if (shell->err != NULL)
 	{
-		set_errno(SIGNAL_ERROR);
-		ft_printf("&cSignal handler error: &f%s&r\n",
-				  ft_strerror(get_errno()));
-		exit(EXIT_FAILURE);
+		ft_printf("&cError parsing:&r %s\n", shell->err);
+		shell->err = NULL;
+		ft_llist_free(&shell->lex_tokens);
+		ft_free(shell->line);
+		free(shell->dir);
+		return (1);
 	}
-	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
-	{
-		set_errno(SIGNAL_ERROR);
-		ft_printf("&cSignal handler error: &f%s&r\n",
-				  ft_strerror(get_errno()));
-		exit(EXIT_FAILURE);
-	}
+	return (0);
 }
 
-int		main(int argc, char **argv, char **envp)
+static int	input_wrapper(t_shell *shell)
 {
-	t_env				*env;
-	char				*line;
-	int					gnl_ret;
-	t_llist				*lex_tokens;
-	t_parser_command	***parse_tokens;
-	char				*working_dir;
-	char				*err;
+	shell->gnl_ret = get_next_line(0, &shell->line);
+	if (shell->gnl_ret < 0)
+	{
+		ft_printf("&cget_next_line error&r\n");
+		free(shell->dir);
+		return (2);
+	}
+	if (is_all_space(shell->line))
+	{
+		ft_free(shell->line);
+		free(shell->dir);
+		return (1);
+	}
+	return (0);
+}
 
-	err = NULL;
-	env = env_from(envp);
+int			main(int argc, char **argv, char **envp)
+{
+	int		ret;
+
+	g_shell.env = env_from(envp);
 	(void)argc;
 	(void)argv;
-	gnl_ret = 1;
-	while (gnl_ret == 1)
+	while (g_shell.gnl_ret == 1)
 	{
 		signal_init();
-		working_dir = getcwd(NULL, 0);
-		ft_printf("\033[46;37m&f \xF0\x9F\x93\x81 %d %s&r ", 1, working_dir);
-		gnl_ret = get_next_line(0, &line);
-		if (gnl_ret < 0)
-		{
-			ft_printf("&cget_next_line error&r\n");
-			free(working_dir);
-		}
-		if (is_all_space(line))
-		{
-			ft_free(line);
-			free(working_dir);
+		g_shell.dir = getcwd(NULL, 0);
+		ft_printf("\033[46;37m&f \xF0\x9F\x93\x81 %d %s&r ", 1, g_shell.dir);
+		ret = input_wrapper(&g_shell);
+		if (ret == 2)
+			break ;
+		else if (ret == 1)
 			continue ;
-		}
-		lex_tokens = lex(line, &err);
-		if (err != NULL)
-		{
-			ft_printf("&cError lexing:&r %s\n", err);
-			err = NULL;
-			ft_free(line);
-			free(working_dir);
+		if (lex_wrapper(&g_shell) == 1)
 			continue ;
-		}
-		parse_tokens = parse(lex_tokens, &err);
-		if (err != NULL)
-		{
-			ft_printf("&cError parsing:&r %s\n", err);
-			err = NULL;
-			ft_llist_free(&lex_tokens);
-			ft_free(line);
-			free(working_dir);
+		if (parse_wrapper(&g_shell) == 1)
 			continue ;
-		}
-
-		execute(parse_tokens, env);
-
-		free_parse_results(parse_tokens);
-		ft_llist_free(&lex_tokens);
-		ft_free(line);
-		free(working_dir);
+		execute(g_shell.parse_tokens, g_shell.env);
+		cleanup(&g_shell);
 	}
-	ft_free_array(env->vars);
-	free(env);
+	ft_free_array(g_shell.env->vars);
+	free(g_shell.env);
 	return (0);
 }

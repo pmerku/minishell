@@ -10,45 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_stdio/ft_printf.h>
-#include <ft_parser.h>
-#include <ft_env.h>
-#include <string.h>
-#include <ft_exec.h>
-#include <ft_string.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <ft_memory.h>
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
-static int	fd_error(char *file)
-{
-	ft_printf("&cError opening &f%s&c: &f%s&r\n", file, strerror(errno));
-	ft_free(file);
-	file = NULL;
-	return (-3);
-}
+typedef struct	s_shell {
+	t_env				*env;
+	char				*line;
+	int					gnl_ret;
+	t_llist				*lex_tokens;
+	t_parser_command	***parse_tokens;
+	char				*dir;
+	char				*err;
+}				t_shell;
 
-int			get_in_fd(t_parser_command *command, t_env *env)
-{
-	size_t			i;
-	t_redirection	*redir;
-	char			*file;
-	int				fd;
+void			cleanup(t_shell *shell);
+void			signal_init(void);
+void			signal_handler(int signo);
 
-	if (command->redirections_in == NULL)
-		return (-1);
-	i = 0;
-	while (command->redirections_in[i] != NULL)
-	{
-		redir = command->redirections_in[i];
-		file = env_parse_string(env, redir->file);
-		if (file == NULL)
-			return (-2);
-		fd = open(file, O_RDONLY);
-		if (fd == -1)
-			return (fd_error(file));
-		ft_free(file);
-		i++;
-	}
-	return (fd);
-}
+#endif

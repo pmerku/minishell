@@ -39,7 +39,7 @@ typedef struct	s_executor {
 	int			last_pid;
 	int			status;
 	struct stat	buf;
-	char 		*path;
+	char		*path;
 	size_t		i;
 	char		**args;
 }				t_executor;
@@ -58,5 +58,6 @@ void			init_pipes(t_executor *exec);
 int				close_pipes(char **args, t_executor *exec);
 int				make_pipes(t_executor *exec, t_parser_command **list,
 				t_parser_command *command, t_env *env);
+void			exit_codes(t_executor *exec, t_env *env);
 
 #endif

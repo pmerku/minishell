@@ -19,10 +19,11 @@
 #include <errno.h>
 #include <ft_memory.h>
 
-static int	fd_error(char **file)
+static int	fd_error(char *file)
 {
 	ft_printf("&cError opening file &f%s&c: &f%s&r\n", file, strerror(errno));
 	ft_free(file);
+	file = NULL;
 	return (-3);
 }
 
@@ -45,7 +46,7 @@ int			get_out_fd(t_parser_command *command, t_env *env)
 		fd = open(file, O_WRONLY | O_CREAT
 			| (redir->type == APPEND ? O_APPEND : O_TRUNC), 0644);
 		if (fd == -1)
-			return (fd_error(&file));
+			return (fd_error(file));
 		ft_free(file);
 		i++;
 	}

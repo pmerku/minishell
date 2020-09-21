@@ -10,23 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_stdio/ft_printf.h>
 #include <ft_parser.h>
 #include <ft_env.h>
 #include <sys/types.h>
-#include <zconf.h>
-#include <string.h>
 #include <stdlib.h>
 #include <ft_exec.h>
 #include <ft_string.h>
-#include <fcntl.h>
-#include <sys/wait.h>
-#include <errno.h>
 #include <ft_memory.h>
-#include <builtins.h>
-#include <ft_errno.h>
 #include <utils.h>
-#include <sys/stat.h>
 
 static int	exec_num_commands(t_parser_command ***commands)
 {
@@ -61,31 +52,6 @@ static char	**parse_args(t_parser_command *command, t_env *env)
 		j++;
 	}
 	return (arr);
-}
-
-/*
-** Note to primoz; builtins are executed in forks if there's more than one
-** command that's being executed (if you do `echo hello | exit 2`, exit will be
-** called in a fork, not on the "main" process, and thus not exit anything).
-**
-** Fun, isn't it?
-*/
-
-void		exit_codes(t_executor *exec, t_env *env)
-{
-	while ((exec->last_pid = waitpid(0, &exec->status, WUNTRACED)) > 0)
-	{
-		if (exec->last_pid == exec->pid)
-		{
-			if (WIFEXITED(exec->status))
-				env->last_status = WEXITSTATUS(exec->status);
-			else if (WIFSIGNALED(exec->status))
-			{
-				env->last_status = WTERMSIG(exec->status);
-				env->last_status += SIGNAL_TERMINATED;
-			}
-		}
-	}
 }
 
 static int	loop_wrap(t_executor *exec, t_parser_command **list,
@@ -136,8 +102,9 @@ int			execute(t_parser_command ***commands, t_env *env)
 	ret = 0;
 	while (i < exec_num_commands(commands))
 	{
-	    if (!(commands[i][0] != NULL && commands[i][1] == NULL && commands[i][0]->arguments == NULL))
-            ret = exec_command_multiple(commands[i], env);
+		if (!(commands[i][0] != NULL && commands[i][1] == NULL
+			&& commands[i][0]->arguments == NULL))
+			ret = exec_command_multiple(commands[i], env);
 		i++;
 	}
 	return (ret);

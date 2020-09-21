@@ -52,7 +52,7 @@ char		export_prev_str(t_lex_state *state, char str_type, size_t *start)
 	return (1);
 }
 
-static int peek(t_lex_state *state, char c)
+static int	peek(t_lex_state *state, char c)
 {
 	if (c == '\\')
 	{
@@ -72,7 +72,7 @@ char		read_quoted_str(t_lex_state *state)
 {
 	size_t	start;
 	char	c;
-	int 	ret;
+	int		ret;
 
 	start = state->offset;
 	while (lex_next_to_char(state, &c) != '\0')

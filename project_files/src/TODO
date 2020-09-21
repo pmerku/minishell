@@ -13,26 +13,45 @@ Norme:
 	- [x] lex_read.c (too many lines) #DONE, check if norme
 - [x]	parser
 	- [x] handle_token.c (too many lines) #DONE, check if norme
-- []	main
+- [x]	main
 - [x]	errno
 
 Other:
 - [x]	change all the headers
-- []	builtins exit code
-- []	check if global composit string in parser is correctly implemented
+- [x]	builtins exit code
+- [x]	check if global composit string in parser is correctly implemented
 
-```
-if (c == '\\')
-	{
-		if (peek_next_char(state) == '\0')
-			break ;
-		if (peek_next_char(state) == '"' || peek_next_char(state) == '$'
-			|| peek_next_char(state) == '\\')
-		{
-			skip_next_char(state);
-			continue ;
-		}
-	}
-```
 
-^-- Segfault when copy pasting this into the shell
+TESTS:
+
+- [] echo
+	- [] echo "yesy"
+	- [] echo test test
+	- [] "echo" test
+	- [] 'echo' "test"
+	- [] echo -n
+- [] cd
+	- [] relative path
+	- [] absolute path
+- [] pwd
+- [] export
+- [] unset
+- [] env
+- [] exit
+	- [] exit 42
+- [] ;
+- [] ''
+- [] ""
+- [] <, >, >>
+- [] |
+- [] $TEST
+- [] $?
+- [] signals
+	- [] ctrl-C
+	- [] ctrl-D
+	- [] ctrl-\
+
+- [] echo hey > yes; cat yes; echo bye < yes | cat -e > lol; cat lol
+
+- [] REDO ALL THE TESTS IN VALGRIND
+- [] CHECK FOR NORM AGAIN

@@ -13,7 +13,7 @@
 EXEC_DIR		= exec
 
 EXEC_SOURCES 	= exec.c utils.c builtin_search.c fork.c ft_utils.c \
-	get_input.c get_output.c pipes.c signals.c
+	get_input.c get_output.c pipes.c signals.c exit_codes.c
 EXEC_SOURCES	+= builtins/cd.c builtins/echo.c builtins/env.c \
 	builtins/env.c builtins/exit.c builtins/pwd.c builtins/empty.c
 EXEC_SOURCES 	:= $(addprefix $(EXEC_DIR)/,$(EXEC_SOURCES))
