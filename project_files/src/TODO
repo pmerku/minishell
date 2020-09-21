@@ -7,14 +7,32 @@ Norme:
 	- [x] env_path.c
 - [x]	exec
 	- [x] builtins
-	- [] builtin_search (too many lines)
-	- [] exec.c (too many lines)
+	- [x] builtin_search (too many lines) #DONE, check if norme
+	- [x] exec.c (too many lines) #DONE, check if norme and compiles + move one function out
 - [x]	lex
-	- [] lex_read.c (too many lines)
+	- [x] lex_read.c (too many lines) #DONE, check if norme
 - [x]	parser
-	- [] handle_token.c (too many lines)
+	- [x] handle_token.c (too many lines) #DONE, check if norme
 - []	main
 - [x]	errno
 
 Other:
 - [x]	change all the headers
+- []	builtins exit code
+- []	check if global composit string in parser is correctly implemented
+
+```
+if (c == '\\')
+	{
+		if (peek_next_char(state) == '\0')
+			break ;
+		if (peek_next_char(state) == '"' || peek_next_char(state) == '$'
+			|| peek_next_char(state) == '\\')
+		{
+			skip_next_char(state);
+			continue ;
+		}
+	}
+```
+
+^-- Segfault when copy pasting this into the shell
