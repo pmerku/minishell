@@ -22,8 +22,9 @@
 
 static int	fd_error(char **file)
 {
-	ft_printf("&cError opening &f%s&c: &f%s&r\n", file, strerror(errno));
-	ft_free(file);
+	ft_printf("&cError opening &f%s&c: &f%s&r\n", *file, strerror(errno));
+	ft_free(*file);
+	*file = NULL;
 	return (-3);
 }
 

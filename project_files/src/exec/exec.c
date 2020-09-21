@@ -136,7 +136,8 @@ int			execute(t_parser_command ***commands, t_env *env)
 	ret = 0;
 	while (i < exec_num_commands(commands))
 	{
-		ret = exec_command_multiple(commands[i], env);
+	    if (!(commands[i][0] != NULL && commands[i][1] == NULL && commands[i][0]->arguments == NULL))
+            ret = exec_command_multiple(commands[i], env);
 		i++;
 	}
 	return (ret);
