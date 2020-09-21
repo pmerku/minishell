@@ -85,7 +85,7 @@ int						builtin_search(char **args, t_executor *exec,
 				return (error_exit_helper(args, exec));
 			if (fd_out_handler(args, exec, list) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
-			g_builtin_list[j].func(args, env);
+			env->last_status = g_builtin_list[j].func(args, env);
 			if (ft_dup2(exec->fd_tmp_out, STANDARD_OUT) == -1
 				|| ft_dup2(exec->fd_tmp_in, STANDARD_IN) == -1)
 				return (error_exit_helper(args, exec));
