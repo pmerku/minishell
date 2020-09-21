@@ -18,17 +18,20 @@ t_composite_string *g_str = NULL;
 
 static int		append_empty_argument(t_parser_state *state)
 {
-	g_str = ft_calloc(1, sizeof(t_composite_string));
-	if (g_str == NULL)
-		return (0);
-	g_str->type = STRING;
-	g_str->str = ft_strdup("");
-	if (g_str->str == NULL)
-	{
-		ft_free(g_str);
-		return (0);
-	}
-	return (add_argument(state, g_str));
+    if (g_str == NULL)
+    {
+        g_str = ft_calloc(1, sizeof(t_composite_string));
+        if (g_str == NULL)
+            return (0);
+        g_str->type = STRING;
+        g_str->str = ft_strdup("");
+        if (g_str->str == NULL)
+        {
+            ft_free(g_str);
+            return (0);
+        }
+    }
+	return (g_str == NULL ? 0 : add_argument(state, g_str));
 }
 
 int				handle_more_token(t_parser_state *state, char **err)
