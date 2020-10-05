@@ -25,33 +25,64 @@ Other:
 TESTS:
 
 - [] echo
+	- [] echo ""
 	- [] echo "yesy"
 	- [] echo test test
 	- [] "echo" test
 	- [] 'echo' "test"
 	- [] echo -n
+	- [] echo "\""
+	- [] echo "\"
+	- [] echo hoi -n
 - [] cd
 	- [] relative path
 	- [] absolute path
+	- [] cd "\$HOME"
 - [] pwd
 - [] export
+	- [] export test=hello
+	- [] export TEST=hello
+	- [] export kip=ei===melk
+	- [] export 1hello_world
+	- [] export LS="ls -la";$LS
 - [] unset
+	- [] unset test
+	- [] unset TEST
+	- [] unset $TEST (??)
+	- [] unset PATH;ls
 - [] env
+	- [] echo $TEST
+	- [] echo "$TEST"
+	- [] echo ${TEST}
+    - [] echo "${TEST}"
+    - [] echo $1234
+    - [] echo $_1234
 - [] exit
 	- [] exit 42
+	- [] exit prints "exit\n"
+	- [] exit 1 2 3
+	- [] exit hello
 - [] ;
 - [] ''
 - [] ""
 - [] <, >, >>
+	- [] < in
+	- [] > out
+	- [] >> out (??)
+	- [] echo > file1 hello >file2 world! > file3 | cat -e
+	- [] ls >> file3 | cat < file3
+	- [] ls >>>>>>>>>> file
 - [] |
-- [] $TEST
+	- [] up to 20 (??)
 - [] $?
 - [] signals
-	- [] ctrl-C
-	- [] ctrl-D
-	- [] ctrl-\
+	- [] ctrl-C SIG_INT		-> print nothing
+	- [] ctrl-D	EOF			-> print "exit\n" (??)
+	- [] ctrl-\ SIG_QUIT 	-> print "Quit\n" (ignore in parent, only for child)
 
 - [] echo hey > yes; cat yes; echo bye < yes | cat -e > lol; cat lol
+- [] chmod 000 on an executable and try to use it with minishell (check exit status)
+- [] try to type something and then sending and EOF
 
 - [] REDO ALL THE TESTS IN VALGRIND
 - [] CHECK FOR NORM AGAIN

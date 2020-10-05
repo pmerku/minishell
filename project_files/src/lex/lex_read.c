@@ -35,7 +35,6 @@ char		read_env_var(t_lex_state *state)
 	}
 	if (!push_substr(state, start, state->offset - is_bracket, ENV_STRING))
 		return (0);
-	state->offset += is_bracket;
 	return (1);
 }
 
