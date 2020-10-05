@@ -45,11 +45,6 @@ TESTS:
 	- [] export kip=ei===melk
 	- [] export 1hello_world
 	- [] export LS="ls -la";$LS
-- [] unset
-	- [] unset test
-	- [] unset TEST
-	- [] unset $TEST (??)
-	- [] unset PATH;ls
 - [] env
 	- [] echo $TEST
 	- [] echo "$TEST"
@@ -57,6 +52,11 @@ TESTS:
     - [] echo "${TEST}"
     - [] echo $1234
     - [] echo $_1234
+- [] unset
+	- [] unset test
+	- [] unset TEST
+	- [] unset $TEST (??)
+	- [] unset PATH;ls
 - [] exit
 	- [] exit 42
 	- [] exit prints "exit\n"
@@ -68,8 +68,8 @@ TESTS:
 - [] <, >, >>
 	- [] < in
 	- [] > out
-	- [] >> out (??)
-	- [] echo > file1 hello >file2 world! > file3 | cat -e
+	- [] >> out
+	- [] echo > file1 hello >file2 world! > file3 | cat -e ??????
 	- [] ls >> file3 | cat < file3
 	- [] ls >>>>>>>>>> file
 - [] |
@@ -82,7 +82,7 @@ TESTS:
 
 - [] echo hey > yes; cat yes; echo bye < yes | cat -e > lol; cat lol
 - [] chmod 000 on an executable and try to use it with minishell (check exit status)
-- [] try to type something and then sending and EOF
+- [] try to type something and then sending and EOF (?????????)
 
 - [] REDO ALL THE TESTS IN VALGRIND
 - [] CHECK FOR NORM AGAIN
