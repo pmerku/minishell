@@ -95,7 +95,7 @@ int			exec_fork(char **args, t_executor *exec, t_env *env,
 		}
 		execve(exec->path, args, env->vars);
 		ft_printf("&cExecve error: &r%s\n", strerror(errno));
-		exit(EXIT_FAILURE);
+		exit(EXECVE_ERROR);
 	}
 	else if (exec->pid < 0)
 	{

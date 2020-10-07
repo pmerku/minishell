@@ -80,7 +80,7 @@ TESTS:
 
 - [x] echo hey > yes; cat yes; echo bye < yes | cat -e > lol; cat lol
 
-- [] chmod 000 on an executable and try to use it with minishell (check exit status)
+- [x] chmod 000 on an executable and try to use it with minishell (check exit status)
 - [x] try to type something and then sending and EOF (?????????)
 - [] memory leak when unterminated quoted string with an env (echo "$TEST )
 

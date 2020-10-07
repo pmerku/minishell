@@ -24,6 +24,7 @@
 # define PIPE_IN		0
 # define PIPE_OUT		1
 
+# define EXECVE_ERROR		126
 # define COMMAND_NOT_FOUND	127
 # define SIGNAL_TERMINATED	128
 
