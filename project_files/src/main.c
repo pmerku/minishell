@@ -66,6 +66,8 @@ static int	parse_wrapper(t_shell *shell)
 
 static int	input_wrapper(t_shell *shell)
 {
+	shell->dir = getcwd(NULL, 0);
+	ft_printf("\033[46;37m&f \xF0\x9F\x93\x81 %d %s&r ", 1, shell->dir);
 	shell->gnl_ret = get_next_line(0, &shell->line);
 	if (shell->gnl_ret < 0)
 	{
@@ -92,8 +94,6 @@ int			main(int argc, char **argv, char **envp)
 	while (g_shell.gnl_ret == 1)
 	{
 		signal_init();
-		g_shell.dir = getcwd(NULL, 0);
-		ft_printf("\033[46;37m&f \xF0\x9F\x93\x81 %d %s&r ", 1, g_shell.dir);
 		ret = input_wrapper(&g_shell);
 		if (ret == 2)
 			break ;
@@ -106,6 +106,7 @@ int			main(int argc, char **argv, char **envp)
 		execute(g_shell.parse_tokens, g_shell.env);
 		cleanup(&g_shell);
 	}
+	ft_printf("exit\n");
 	ft_free_array(g_shell.env->vars);
 	free(g_shell.env);
 	return (0);
