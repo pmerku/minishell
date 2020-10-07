@@ -48,19 +48,21 @@ static int	ft_read_line(int fd, char **store)
 	return (res);
 }
 
+static int	g_res = 1;
+
 int			get_next_line(int fd, char **line)
 {
 	char		*tmp;
 	char		*ptr;
-	static char	*store[2];
-	int			res;
+	static char	*store[1];
 
-	if (BUFFER_SIZE <= 0 || !line)
+	if (BUFFER_SIZE <= 0 || !line || ft_read(fd, NULL, 0) == -1)
 		return (-1);
-	res = 1;
-	while (!ft_strchr(store[fd], '\n') && res > 0)
-		res = ft_read_line(fd, store);
-	if (res < 0)
+	if (store[fd] == NULL)
+		g_res = ft_read_line(fd, store);
+	while (!ft_strchr(store[fd], '\n') && g_res > 0)
+		ft_read_line(fd, store);
+	if (g_res < 0)
 		return (-1);
 	ptr = ft_strchr(store[fd], '\n');
 	if (ptr != NULL)

@@ -21,68 +21,68 @@ Other:
 - [x]	builtins exit code
 - [x]	check if global composit string in parser is correctly implemented
 
-
 TESTS:
 
-- [] echo
-	- [] echo ""
-	- [] echo "yesy"
-	- [] echo test test
-	- [] "echo" test
-	- [] 'echo' "test"
-	- [] echo -n
-	- [] echo "\""
-	- [] echo "\"
-	- [] echo hoi -n
-- [] cd
-	- [] relative path
-	- [] absolute path
-	- [] cd "\$HOME"
-- [] pwd
-- [] export
-	- [] export test=hello
-	- [] export TEST=hello
-	- [] export kip=ei===melk
-	- [] export 1hello_world
-	- [] export LS="ls -la";$LS
-- [] env
-	- [] echo $TEST
-	- [] echo "$TEST"
-	- [] echo ${TEST}
-    - [] echo "${TEST}"
-    - [] echo $1234
-    - [] echo $_1234
-- [] unset
-	- [] unset test
-	- [] unset TEST
-	- [] unset $TEST (??)
-	- [] unset PATH;ls
-- [] exit
-	- [] exit 42
-	- [] exit prints "exit\n"
-	- [] exit 1 2 3
-	- [] exit hello
-- [] ;
-- [] ''
-- [] ""
-- [] <, >, >>
-	- [] < in
-	- [] > out
-	- [] >> out
-	- [] echo > file1 hello >file2 world! > file3 | cat -e ??????
-	- [] ls >> file3 | cat < file3
-	- [] ls >>>>>>>>>> file
-- [] |
-	- [] up to 20 (??)
-- [] $?
-- [] signals
-	- [] ctrl-C SIG_INT		-> print nothing
-	- [] ctrl-D	EOF			-> print "exit\n" (??)
-	- [] ctrl-\ SIG_QUIT 	-> print "Quit\n" (ignore in parent, only for child)
+- [x] echo
+	- [x] echo ""
+	- [x] echo "yesy"
+	- [x] echo test test
+	- [x] "echo" test
+	- [x] 'echo' "test"
+	- [x] echo -n
+	- [x] echo "\""
+	- [x] echo "\"
+	- [x] echo hoi -n
+- [x] cd
+	- [x] relative path
+	- [x] absolute path
+	- [x] cd "\$HOME"
+- [x] pwd
+- [x] export
+	- [x] export test=hello
+	- [x] export TEST=hello
+	- [x] export kip=ei===melk
+	- [x] export 1hello_world
+	- [x] export LS="ls -la";$LS
+- [x] env
+	- [x] echo $TEST
+	- [x] echo "$TEST"
+	- [x] echo ${TEST}
+    - [x] echo "${TEST}"
+    - [x] echo $1234
+    - [x] echo $_1234
+- [x] unset
+	- [x] unset test
+	- [x] unset TEST
+	- [x] unset $TEST (??)
+	- [x] unset PATH;ls
+- [x] exit
+	- [x] exit 42
+	- [x] exit prints "exit\n"
+	- [x] exit 1 2 3
+	- [x] exit hello
+- [x] ;
+- [x] ''
+- [x] ""
+- [x] <, >, >>
+	- [x] < in
+	- [x] > out
+	- [x] >> out
+	- [x] ls >> file3 | cat < file3
+	- [x] ls >>>>>>>>>> file
+- [x] |
+	- [x] up to 20 (??)
+- [x] $?
+- [x] signals
+	- [x] ctrl-C SIG_INT		-> print nothing
+	- [x] ctrl-D EOF			-> print "exit\n"
+	- [x] ctrl-\ SIG_QUIT 		-> print "Quit\n" (ignore in parent, only for child)
 
-- [] echo hey > yes; cat yes; echo bye < yes | cat -e > lol; cat lol
+- [x] echo hey > yes; cat yes; echo bye < yes | cat -e > lol; cat lol
+
 - [] chmod 000 on an executable and try to use it with minishell (check exit status)
-- [] try to type something and then sending and EOF (?????????)
+- [x] try to type something and then sending and EOF (?????????)
+- [] memory leak when unterminated quoted string with an env (echo "$TEST )
 
-- [] REDO ALL THE TESTS IN VALGRIND
-- [] CHECK FOR NORM AGAIN
+- [x] REDO ALL THE TESTS IN VALGRIND
+- [x] CHECK FOR NORM AGAIN
