@@ -30,5 +30,5 @@ int		builtin_cd(char **args, t_env *env)
 			perror("lsh");
 		}
 	}
-	return (1);
+	return (0);
 }
