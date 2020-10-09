@@ -90,8 +90,6 @@ char		read_quoted_str(t_lex_state *state)
 	if (c != '"')
 		ft_printf("&eUnterminated quoted string - "
 			"we closed it for you automagically.&r\n");
-	if (start != state->offset - 1)
-		return (push_escaped_substr(state,
-			start, state->offset - (c == '"' ? 1 : 0), '"'));
-	return (1);
+	return ((start != state->offset - 1) ?
+	push_escaped_substr(state, start, state->offset - (c == '"'), '"') : 1);
 }
