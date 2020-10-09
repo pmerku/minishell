@@ -78,4 +78,7 @@ re: fclean $(NAME)
 exec: $(NAME)
 	./minishell
 
-.PHONY: all clean fclean re
+valgrind: $(NAME)
+	valgrind --undef-value-errors=no --leak-check=full ./minishell
+
+.PHONY: all clean fclean re exec valgrind
