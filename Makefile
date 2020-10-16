@@ -51,25 +51,25 @@ deps:
 	@echo "$(SRC)"
 
 $(NAME): $(addprefix $(OUT_DIR)/,$(OBJ)) $(LIBFT)
-	@echo "$(PREFIX)$(GREEN)Bundling objects...$(END)"
+	@echo "$(PREFIX)$(GREEN) Bundling objects...$(END)"
 	@$(CC) $(CFLAGS) $(DFLAGS) -I$(INC_DIR) -I$(INC_LIBFT) -o $@ $(addprefix $(OUT_DIR)/,$(OBJ)) -Llibft -lft
 
 $(OUT_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
-	@echo "$(PREFIX)$(GREEN)Compiling file $(END)$< $(GREEN)to $(END)$@"
+	@echo "$(PREFIX)$(GREEN) Compiling file $(END)$< $(GREEN)to $(END)$@"
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) $(DFLAGS) -I$(INC_DIR) -I$(INC_LIBFT) -o $@ -c $<
 
 $(LIBFT):
-	@echo "$(PREFIX)$(GREEN)Bundling libft...$(END)"
+	@echo "$(PREFIX)$(GREEN) Bundling libft...$(END)"
 	@$(MAKE) -C libft > /dev/null
 
 clean:
-	@echo "$(PREFIX)$(GREEN)Removing directory $(END)$(OUT_DIR), libft/out"
+	@echo "$(PREFIX)$(GREEN) Removing directory $(END)$(OUT_DIR), libft/out"
 	@rm -rf $(OUT_DIR)
 	@$(MAKE) -C libft clean > /dev/null
 
 fclean: clean
-	@echo "$(PREFIX)$(GREEN)Removing file $(END)$(NAME), $(LIBFT)"
+	@echo "$(PREFIX)$(GREEN) Removing file $(END)$(NAME), $(LIBFT)"
 	@rm -f $(NAME)
 	@$(MAKE) -C libft fclean > /dev/null
 
