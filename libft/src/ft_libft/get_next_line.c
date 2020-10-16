@@ -22,7 +22,7 @@ static int	clean(int fd, char **store)
 		ft_free(store[fd]);
 		store[fd] = NULL;
 	}
-	return (-1);
+	return (1);
 }
 
 static int	ft_read_line(int fd, char **store)
@@ -72,7 +72,7 @@ int			get_next_line(int fd, char **line)
 		tmp = store[fd];
 		store[fd] = ft_strdup(ptr + 1);
 		ft_free(tmp);
-		return ((!(*line) || !store[fd]) ? clean(fd, store) : 1);
+		return (clean(fd, &store[fd]));
 	}
 	*line = ft_strdup(store[fd]);
 	clean(fd, store);

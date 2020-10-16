@@ -56,7 +56,8 @@ int		make_pipes(t_executor *exec, t_parser_command **list,
 	exec->fd_out = get_out_fd(command, env);
 	if (exec->fd_out == -2 || exec->fd_out == -3)
 	{
-		ft_close(exec->fd_in);
+		if (exec->fd_in != -1)
+			ft_close(exec->fd_in);
 		error_exit_helper(exec->args, exec);
 		return (EXIT_FAILURE);
 	}

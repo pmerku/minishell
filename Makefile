@@ -52,7 +52,7 @@ deps:
 
 $(NAME): $(addprefix $(OUT_DIR)/,$(OBJ)) $(LIBFT)
 	@echo "$(PREFIX)$(GREEN)Bundling objects...$(END)"
-	@$(CC) $(CFLAGS) $(DFLAGS) -I$(INC_DIR) -I$(INC_LIBFT) -o $@ $^
+	@$(CC) $(CFLAGS) $(DFLAGS) -I$(INC_DIR) -I$(INC_LIBFT) -o $@ $(addprefix $(OUT_DIR)/,$(OBJ)) -Llibft -lft
 
 $(OUT_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
 	@echo "$(PREFIX)$(GREEN)Compiling file $(END)$< $(GREEN)to $(END)$@"
