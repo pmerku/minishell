@@ -32,7 +32,7 @@ Supported commands:
 - `ctr-D`, `ctrl-C` and `ctrl-\` like in bash
 
 ## Screenshots
-![Gif](https://raw.github.com/pmerku/minishell/pmerku_branch/images/minishell.gif)
+![alt tex](https://github.com/pmerku/minishell/raw/pmerku_branch/images/minishell.gif "minishell gif")
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
